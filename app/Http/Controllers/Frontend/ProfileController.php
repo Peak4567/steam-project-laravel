@@ -16,7 +16,7 @@ class ProfileController extends Controller
     }
     public function update(Request $request)
     {
-       $user = User::findOrFail(Auth::id());
+        $user = User::findOrFail(Auth::id());
 
         $request->validate([
             'first_name' => 'nullable|string|max:255',
@@ -42,5 +42,27 @@ class ProfileController extends Controller
         ]);
 
         return back()->with('success', 'บันทึกข้อมูลส่วนตัวเรียบร้อยแล้วครับคุณพีค!');
+    }
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'profile_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $user = User::findOrFail(Auth::id());
+
+        if ($request->hasFile('profile_image')) {
+            $image = $request->file('profile_image');
+            $fileName = ($user->nickname ?? 'user') . '-' . time() . '.' . $image->getClientOriginalExtension();
+
+            if ($user->profile && file_exists(public_path('assets/img/profile/' . $user->profile))) {
+                unlink(public_path('assets/img/profile/' . $user->profile));
+            }
+
+            $image->move(public_path('assets/img/profile'), $fileName);
+            $user->update(['profile' => $fileName]);
+
+            return back()->with('success', 'เปลี่ยนรูปเรียบร้อย!');
+        }
     }
 }

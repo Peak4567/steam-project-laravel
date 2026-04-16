@@ -32,6 +32,7 @@ class User extends Authenticatable
         'bio',
         'school_name',
         'dream_university',
+        'profile',
     ];
 
     /**
