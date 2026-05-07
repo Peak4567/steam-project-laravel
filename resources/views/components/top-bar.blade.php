@@ -1,4 +1,4 @@
-<nav class="w-full bg-[#333333] border-b border-white/5 py-2 px-6 flex items-center justify-between font-anuphan">
+<nav class="w-full bg-[#333333] border-b border-white/5 py-2 px-6 flex items-center justify-between">
     
     <div class="flex items-center gap-3">
         <span class="text-white text-[11px] font-medium uppercase tracking-wider">Toggle Light Theme</span>

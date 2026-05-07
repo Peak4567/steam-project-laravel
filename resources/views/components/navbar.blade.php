@@ -42,8 +42,13 @@
 
                         <div
                             class="w-10 h-10 rounded-full border-2 border-white/20 overflow-hidden group-hover:border-white/50 transition-all">
-                            <img src="{{ Auth::user()->profile_photo_url ?? 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->name) . '&color=7F9CF5&background=EBF4FF' }}"
-                                class="w-full h-full object-cover">
+                            @if (Auth::user()->profile)
+                                <img src="{{ asset('assets/img/profile/' . Auth::user()->profile) }}"
+                                    class="w-full h-full object-cover" alt="Profile Photo">
+                            @else
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->first_name ?? 'User') }}&color=7F9CF5&background=EBF4FF"
+                                    class="w-full h-full object-cover" alt="Default Profile Photo">
+                            @endif
                         </div>
 
                         <i class="fa-solid fa-chevron-down text-white text-[10px] transition-transform duration-300"

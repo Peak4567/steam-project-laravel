@@ -3,7 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Frontend\ProfileController;
+use App\Http\Controllers\Frontend\ProjectController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Frontend\SheetController;
 
 Route::get('/', function () {
     return view('home');
@@ -11,26 +13,56 @@ Route::get('/', function () {
 Route::get('/home', function () {
     return view('home');
 })->name('home');
-Route::get('/projects', function () {
-    return view('projects');
-})->name('projects');
+
+Route::get('/projects', [ProjectController::class, 'searchProjects'])->name('projects');
+Route::get('/project/{id}', [ProjectController::class, 'showProject'])->name('project.show');
+
+Route::get('/projects/{id}/apply', [ProjectController::class, 'applyPage'])->name('projects.applyPage');
+
+Route::post('/projects/{id}/apply', [ProjectController::class, 'requestJoin'])->name('projects.requestJoin');
+
+Route::get('/projects/reports/view/{id}', [ProjectController::class, 'viewReport'])->name('projects.viewReport');
+Route::get('/projects/reports/download/{id}', [ProjectController::class, 'downloadReport'])->name('projects.downloadReport');
+
+
+Route::get('/sheets', [SheetController::class, 'publicIndex'])->name('sheets');
+
 Route::get('/activity', function () {
     return view('activity');
 })->name('activity');
-Route::get('/sheets', function () {
-    return view('sheets');
-})->name('sheets');
 Route::get('/portfolio', function () {
     return view('portfolio');
-
 })->name('portfolio');
 
 Route::middleware(['auth'])->group(function () {
-    
+
 
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/upload-image', [ProfileController::class, 'uploadImage'])->name('profile.upload.image');
+
+    Route::get('/profile/projects', [ProjectController::class, 'index'])->name('profile.projects');
+
+    Route::post('/profile/projects/upload-doc', [ProjectController::class, 'uploadDocument'])->name('profile.projects.upload');
+
+    Route::put('/profile/projects/update', [ProjectController::class, 'update'])->name('profile.projects.update');
+
+    Route::post('/projects/{project}/invite', [ProjectController::class, 'inviteMember'])->name('projects.invite');
+
+    Route::post('/projects/{project_id}/accept/{user_id}', [ProjectController::class, 'acceptMember'])->name('projects.accept');
+    Route::post('/projects/{project_id}/decline/{user_id}', [ProjectController::class, 'declineMember'])->name('projects.decline');
+    Route::patch('/projects/{id}/status', [ProjectController::class, 'updateStatus'])->name('projects.updateStatus');
+    Route::patch('/projects/{id}/max-members', [ProjectController::class, 'updateMaxMembers'])->name('projects.updateMaxMembers');
+    Route::patch('/projects/{project_id}/position/{user_id}', [ProjectController::class, 'updatePosition'])->name('projects.updatePosition');
+    Route::patch('/projects/{id}', [ProjectController::class, 'update'])->name('projects.update');
+
+    Route::get('/profile/reports', [ProjectController::class, 'showReportsWithoutId'])->name('projects.reports');
+    Route::post('/projects/{id}/upload-reports', [ProjectController::class, 'uploadReports'])->name('projects.uploadReports');
+    Route::delete('/projects/reports/{id}', [ProjectController::class, 'deleteReport'])->name('projects.deleteReport');
+
+    Route::get('/profile/sheets', [SheetController::class, 'index'])->name('profile.sheets');
+    Route::post('/profile/sheets', [SheetController::class, 'store'])->name('profile.sheets.store');
+    Route::delete('/profile/sheets/{id}', [SheetController::class, 'destroy'])->name('profile.sheets.destroy');
 });
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');

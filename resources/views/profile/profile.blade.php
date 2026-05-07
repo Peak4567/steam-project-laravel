@@ -1,7 +1,7 @@
 @extends('profile.profile-layout')
 
 @section('profile-content')
-    <div class="font-mitr text-slate-700 max-w-7xl mx-auto">
+    <div class="text-slate-700 max-w-7xl mx-auto">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
             <div class="lg:col-span-4 space-y-4">
@@ -71,11 +71,10 @@
             </div>
 
             <div class="lg:col-span-8">
-                {{-- ใส่ Route สำหรับ Update ข้อมูล --}}
                 <form action="{{ route('profile.update') }}" method="POST"
                     class="bg-white rounded-xl border border-gray-100 p-8 shadow-sm h-full">
                     @csrf
-                    @method('PUT') {{-- ใช้ PUT สำหรับการอัปเดตข้อมูล --}}
+                    @method('PUT')
 
                     <div class="flex justify-between items-center mb-8">
                         <h2 class="text-lg text-slate-700">ข้อมูลส่วนตัว</h2>
