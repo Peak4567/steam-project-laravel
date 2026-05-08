@@ -16,6 +16,14 @@ Route::get('/home', function () {
     return view('home');
 })->name('home');
 
+Route::get('/privacy-policy', function () {
+    return view('privacy');
+})->name('privacy');
+
+Route::get('/terms-of-service', function () {
+    return view('terms');
+})->name('terms');
+
 Route::get('/projects', [ProjectController::class, 'searchProjects'])->name('projects');
 Route::get('/project/{id}', [ProjectController::class, 'showProject'])->name('project.show');
 

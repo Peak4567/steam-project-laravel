@@ -61,8 +61,8 @@
                 © 2026 <span class="text-gray-400">Steam Project.</span> All rights reserved.
             </p>
             <div class="flex gap-6">
-                <a href="#" class="text-gray-500 hover:text-gray-400 text-[12px]">Privacy Policy</a>
-                <a href="#" class="text-gray-500 hover:text-gray-400 text-[12px]">Terms of Service</a>
+                <a href="{{route('privacy')}}" class="text-gray-500 hover:text-gray-400 text-[12px]">Privacy Policy</a>
+                <a href="{{route('terms')}}" class="text-gray-500 hover:text-gray-400 text-[12px]">Terms of Service</a>
             </div>
         </div>
 
