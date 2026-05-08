@@ -6,6 +6,8 @@ use App\Http\Controllers\Frontend\ProfileController;
 use App\Http\Controllers\Frontend\ProjectController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Frontend\SheetController;
+use App\Http\Controllers\Frontend\PortfolioController;
+
 
 Route::get('/', function () {
     return view('home');
@@ -30,9 +32,10 @@ Route::get('/sheets', [SheetController::class, 'publicIndex'])->name('sheets');
 Route::get('/activity', function () {
     return view('activity');
 })->name('activity');
-Route::get('/portfolio', function () {
-    return view('portfolio');
-})->name('portfolio');
+
+
+Route::get('/portfolio', [PortfolioController::class, 'publicIndex'])->name('portfolio');
+Route::get('/portfolio/{id}', [PortfolioController::class, 'show'])->name('portfolio.show');
 
 Route::middleware(['auth'])->group(function () {
 
@@ -63,6 +66,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile/sheets', [SheetController::class, 'index'])->name('profile.sheets');
     Route::post('/profile/sheets', [SheetController::class, 'store'])->name('profile.sheets.store');
     Route::delete('/profile/sheets/{id}', [SheetController::class, 'destroy'])->name('profile.sheets.destroy');
+
+    Route::get('/profile/portfolio', [PortfolioController::class, 'index'])->name('profile.portfolio');
+    Route::post('/profile/portfolio', [PortfolioController::class, 'store'])->name('profile.portfolio.store');
+    Route::delete('/profile/portfolio/{id}', [PortfolioController::class, 'destroy'])->name('profile.portfolio.destroy');
 });
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');

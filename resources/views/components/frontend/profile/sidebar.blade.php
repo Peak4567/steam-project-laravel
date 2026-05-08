@@ -38,7 +38,7 @@
             <span class="text-sm tracking-wide {{ Route::is('profile.sheets') ? 'font-medium' : 'font-normal group-hover:font-medium group-hover:text-slate-700' }}">ชีทสรุป</span>
         </a>
 
-        <a href="{{ route('portfolio') }}"
+        <a href="{{ route('profile.portfolio') }}"
             class="flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all group {{ Route::is('portfolio') ? 'bg-[#5EBEE6]/10 text-[#5EBEE6]' : 'text-slate-500 hover:bg-gray-50' }}">
             <div class="w-5 flex justify-center">
                 <i class="fa-solid fa-suitcase text-base {{ Route::is('portfolio') ? 'text-[#5EBEE6]' : 'text-gray-400 group-hover:text-slate-600' }} transition-colors"></i>

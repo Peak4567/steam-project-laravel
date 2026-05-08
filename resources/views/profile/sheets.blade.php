@@ -1,7 +1,7 @@
 @extends('profile.profile-layout')
 @section('profile-content')
 
-<section class="max-w-screen-xl mx-auto py-8 px-4 md:px-6 font-mitr bg-gray-50/30 min-h-screen">
+<section class="max-w-screen-xl mx-auto bg-gray-50/30 min-h-screen">
 
     @if(session('success'))
         <div class="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-xl mb-6 text-sm flex items-center shadow-sm">
