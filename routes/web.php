@@ -7,6 +7,11 @@ use App\Http\Controllers\Frontend\ProjectController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Frontend\SheetController;
 use App\Http\Controllers\Frontend\PortfolioController;
+use App\Http\Controllers\Backend\HomeController as BackendHomeController;
+use App\Http\Controllers\Backend\ProjectController as BackendProjectController;
+use App\Http\Controllers\Backend\ReportController as BackendReportController;
+use App\Http\Controllers\Backend\ActivityController as BackendActivityController;
+use App\Http\Controllers\Frontend\ActivityController;
 
 
 Route::get('/', function () {
@@ -37,9 +42,9 @@ Route::get('/projects/reports/download/{id}', [ProjectController::class, 'downlo
 
 Route::get('/sheets', [SheetController::class, 'publicIndex'])->name('sheets');
 
-Route::get('/activity', function () {
-    return view('activity');
-})->name('activity');
+Route::get('/activity', [ActivityController::class, 'index'])->name('activity');
+Route::get('/activity/{id}/apply', [ActivityController::class, 'apply'])->name('activity.apply');
+Route::post('/activity/{id}/apply', [ActivityController::class, 'submitApply'])->name('activity.apply.submit');
 
 
 Route::get('/portfolio', [PortfolioController::class, 'publicIndex'])->name('portfolio');
@@ -87,3 +92,27 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/register', [RegisterController::class, 'index'])->name('register');
 Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
+
+Route::prefix('backend')->group(function () {
+    Route::get('/home', [BackendHomeController::class, 'index'])->name('backend.home');
+    Route::get('/projects', [BackendProjectController::class, 'index'])->name('backend.projects');
+    Route::get('/projects/create', [BackendProjectController::class, 'create'])->name('backend.projects.create');
+    Route::post('/projects', [BackendProjectController::class, 'store'])->name('backend.projects.store');
+
+    Route::delete('/projects/{id}', [BackendProjectController::class, 'destroy'])->name('backend.projects.destroy');
+    Route::get('/projects/{id}/edit', [BackendProjectController::class, 'edit'])->name('backend.projects.edit');
+    Route::put('/projects/{id}', [BackendProjectController::class, 'update'])->name('backend.projects.update');
+
+    Route::get('/reports', [BackendReportController::class, 'index'])->name('backend.reports');
+    Route::patch('/reports/{id}/status', [BackendReportController::class, 'updateStatus'])->name('backend.reports.update-status');
+    Route::delete('/reports/{id}', [BackendReportController::class, 'destroy'])->name('backend.reports.destroy');
+
+    Route::get('/activity', [BackendActivityController::class, 'index'])->name('backend.activity');
+    Route::get('/activity/create', [BackendActivityController::class, 'create'])->name('backend.activity.create');
+    Route::post('/activity/store', [BackendActivityController::class, 'store'])->name('backend.activity.store');
+    Route::delete('/activity/{id}', [BackendActivityController::class, 'destroy'])->name('backend.activity.destroy');
+
+    Route::get('/activity/{id}/participants', [BackendActivityController::class, 'participants'])->name('backend.activity.participants');
+    Route::patch('/activity/status/{id}', [BackendActivityController::class, 'updateStatus'])->name('backend.activity.updateStatus');
+    Route::get('/activity/{id}/print', [BackendActivityController::class, 'print'])->name('backend.activity.print');
+});

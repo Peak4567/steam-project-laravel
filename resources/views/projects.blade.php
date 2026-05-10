@@ -49,9 +49,17 @@
                         class="group cursor-pointer transition-all block">
 
                         <div class="relative h-56 rounded-xl overflow-hidden border border-gray-100 shadow-sm">
-                            <img src="{{ $project->image_path ? asset('storage/' . $project->image_path) : asset('assets/img/aerosol.jpg') }}"
-                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                alt="{{ $project->name }}">
+                            @if ($project->file_path)
+                                <img src="{{ asset($project->file_path) }}"
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    alt="{{ $project->name }}">
+                            @else
+                                <div
+                                    class="w-full h-full bg-gray-200 flex flex-col items-center justify-center text-gray-400 group-hover:scale-110 transition-transform duration-500">
+                                    <i class="fa-regular fa-image text-4xl mb-2"></i>
+                                    <span class="text-sm font-medium font-kanit">ไม่มีภาพ</span>
+                                </div>
+                            @endif
 
                             <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
 
@@ -165,7 +173,6 @@
 
         @if (isset($reports))
             @php
-                // 🌟 กรองเอาเฉพาะข้อมูลที่มีสถานะ 'approved' (อนุมัติแล้ว) เท่านั้น 🌟
                 $approvedReports = $reports->where('status', 'approved');
             @endphp
 

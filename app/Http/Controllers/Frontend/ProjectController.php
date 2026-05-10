@@ -43,7 +43,7 @@ class ProjectController extends Controller
         $projects = $projectQuery->get();
         $tags = Tag::all();
 
-        $reportQuery = \App\Models\ProjectReport::with(['project.members', 'project.tags']);
+        $reportQuery = ProjectReport::with(['project.members', 'project.tags']);
 
         if ($request->filled('year')) {
             $reportQuery->whereYear('created_at', $request->year);
@@ -269,13 +269,7 @@ class ProjectController extends Controller
         })->with(['advisors', 'tags'])->withCount('members')->first();
 
         $allProjects = Project::with(['advisors', 'tags'])->get();
-
         $reports = $project ? ProjectReport::where('project_id', $project->id)->get() : collect();
-
-        if (!$project) {
-            return view('profile.projects', compact('project', 'allProjects'))->with('error', 'คุณยังไม่มีโครงงาน');
-        }
-
         return view('profile.reports', compact('project', 'allProjects', 'reports'));
     }
 
@@ -294,7 +288,6 @@ class ProjectController extends Controller
             $file = $request->file('document');
             $timestamp = time();
 
-            // 🌟 แก้ไขตรงนี้: บังคับให้สุ่มชื่อไฟล์เป็นภาษาอังกฤษ + นามสกุลเดิม เพื่อป้องกันบัคภาษาไทยและเว้นวรรค
             $extension = $file->getClientOriginalExtension();
             $filename = $timestamp . '_' . uniqid() . '.' . $extension;
 
@@ -349,6 +342,10 @@ class ProjectController extends Controller
 
     public function showReportLibrary(Request $request)
     {
+        $project = Project::whereHas('members', function ($query) {
+            $query->where('user_id', Auth::id());
+        })->first();
+
         $query = ProjectReport::with(['project.members', 'project.tags']);
 
         if ($request->filled('year')) {
@@ -375,8 +372,9 @@ class ProjectController extends Controller
 
         $reports = $query->latest()->paginate(12)->withQueryString();
 
-        return view('profile.reports', compact('reports'));
+        return view('profile.reports', compact('reports', 'project'));
     }
+
     public function viewReport($id)
     {
         $report = ProjectReport::findOrFail($id);

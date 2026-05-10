@@ -73,7 +73,7 @@
                             </a>
 
                             @if (Auth::user()->level == 'admin')
-                                <a href="/admin"
+                                <a href="{{ route('backend.home') }}"
                                     class="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600 hover:bg-orange-50 hover:text-orange-500 rounded-lg transition-colors group">
                                     <i class="fa-solid fa-gauge-high text-gray-400 group-hover:text-orange-500"></i>
                                     <span class="font-normal">จัดการหลังบ้าน</span>
