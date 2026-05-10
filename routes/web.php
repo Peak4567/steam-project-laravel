@@ -12,6 +12,7 @@ use App\Http\Controllers\Backend\ProjectController as BackendProjectController;
 use App\Http\Controllers\Backend\ReportController as BackendReportController;
 use App\Http\Controllers\Backend\ActivityController as BackendActivityController;
 use App\Http\Controllers\Frontend\ActivityController;
+use App\Http\Controllers\Backend\SheetController as BackendSheetController;
 
 
 Route::get('/', function () {
@@ -115,4 +116,9 @@ Route::prefix('backend')->group(function () {
     Route::get('/activity/{id}/participants', [BackendActivityController::class, 'participants'])->name('backend.activity.participants');
     Route::patch('/activity/status/{id}', [BackendActivityController::class, 'updateStatus'])->name('backend.activity.updateStatus');
     Route::get('/activity/{id}/print', [BackendActivityController::class, 'print'])->name('backend.activity.print');
+
+    Route::get('/sheets', [BackendSheetController::class, 'index'])->name('backend.sheets');
+    Route::patch('/sheets/{id}/status', [BackendSheetController::class, 'updateStatus'])->name('backend.sheets.updateStatus');
+    Route::delete('/sheets/{id}', [BackendSheetController::class, 'destroy'])->name('backend.sheets.destroy');
+    
 });
