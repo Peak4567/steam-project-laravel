@@ -13,6 +13,8 @@ use App\Http\Controllers\Backend\ReportController as BackendReportController;
 use App\Http\Controllers\Backend\ActivityController as BackendActivityController;
 use App\Http\Controllers\Frontend\ActivityController;
 use App\Http\Controllers\Backend\SheetController as BackendSheetController;
+use App\Http\Controllers\Backend\PortfolioController as BackendPortfolioController;
+use App\Http\Controllers\Backend\UserController as BackendUserController;
 
 
 Route::get('/', function () {
@@ -120,5 +122,15 @@ Route::prefix('backend')->group(function () {
     Route::get('/sheets', [BackendSheetController::class, 'index'])->name('backend.sheets');
     Route::patch('/sheets/{id}/status', [BackendSheetController::class, 'updateStatus'])->name('backend.sheets.updateStatus');
     Route::delete('/sheets/{id}', [BackendSheetController::class, 'destroy'])->name('backend.sheets.destroy');
+    
+    Route::get('/portfolios', [BackendPortfolioController::class, 'index'])->name('backend.portfolios');
+    Route::patch('/portfolios/{id}/status', [BackendPortfolioController::class, 'updateStatus'])->name('backend.portfolios.updateStatus');
+    Route::delete('/portfolios/{id}', [BackendPortfolioController::class, 'destroy'])->name('backend.portfolios.destroy');
+
+    Route::get('/users', [BackendUserController::class, 'index'])->name('backend.users');
+    Route::get('/users/{id}/edit', [BackendUserController::class, 'edit'])->name('backend.users.edit');
+    Route::put('/users/{id}', [BackendUserController::class, 'update'])->name('backend.users.update');
+    Route::delete('/users/{id}', [BackendUserController::class, 'destroy'])->name('backend.users.destroy');
+
     
 });

@@ -1,15 +1,15 @@
 @extends('backend.layout')
 @section('content')
-<section class="w-full min-h-[calc(100vh-80px)] p-6 md:p-10 font-kanit bg-gray-50/50">
-    <div class="max-w-7xl mx-auto">
+<section class="w-full h-full p-6 md:p-10 font-kanit bg-gray-50/50">
         <div class="flex justify-between items-center mb-8">
             <div>
-                <h2 class="text-2xl font-bold text-slate-800">จัดการชีทสรุปเนื้อหา</h2>
-                <p class="text-sm text-gray-500">ตรวจสอบและอนุมัติไฟล์ชีทสรุปจากสมาชิก</p>
+                <h2 class="text-2xl md:text-3xl font-bold text-slate-800 tracking-tight">จัดการชีทสรุปเนื้อหา</h2>
+                <p class="text-sm text-gray-500 mt-1">ตรวจสอบและอนุมัติไฟล์ชีทสรุปจากสมาชิก</p>
             </div>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        {{-- ปรับจาก rounded-xl เป็น rounded-md --}}
+        <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-100">
@@ -39,11 +39,13 @@
                         </td>
                         <td class="p-4 text-center">
                             @if($sheet->type == 'file')
-                                <a href="{{ asset($sheet->file_path) }}" target="_blank" class="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded">
+                                {{-- ปรับจาก rounded เป็น rounded-md --}}
+                                <a href="{{ asset($sheet->file_path) }}" target="_blank" class="text-xs bg-blue-50 text-blue-600 px-2 py-1 rounded-md">
                                     <i class="fa-solid fa-file-pdf mr-1"></i> PDF
                                 </a>
                             @else
-                                <a href="{{ $sheet->file_path }}" target="_blank" class="text-xs bg-purple-50 text-purple-600 px-2 py-1 rounded">
+                                {{-- ปรับจาก rounded เป็น rounded-md --}}
+                                <a href="{{ $sheet->file_path }}" target="_blank" class="text-xs bg-purple-50 text-purple-600 px-2 py-1 rounded-md">
                                     <i class="fa-solid fa-link mr-1"></i> LINK
                                 </a>
                             @endif
@@ -51,8 +53,9 @@
                         <td class="p-4">
                             <form action="{{ route('backend.sheets.updateStatus', $sheet->id) }}" method="POST" id="form-status-{{ $sheet->id }}">
                                 @csrf @method('PATCH')
+                                {{-- ปรับจาก rounded-full เป็น rounded-md --}}
                                 <select name="status" onchange="document.getElementById('form-status-{{ $sheet->id }}').submit()"
-                                    class="text-[11px] font-bold border-none rounded-full px-3 py-1 cursor-pointer focus:ring-0
+                                    class="text-[11px] font-bold border border-transparent rounded-md px-3 py-1 cursor-pointer focus:ring-0
                                     {{ $sheet->status == 'approved' ? 'bg-emerald-100 text-emerald-600' : ($sheet->status == 'rejected' ? 'bg-rose-100 text-rose-600' : 'bg-amber-100 text-amber-600') }}">
                                     <option value="pending" {{ $sheet->status == 'pending' ? 'selected' : '' }}>PENDING</option>
                                     <option value="approved" {{ $sheet->status == 'approved' ? 'selected' : '' }}>APPROVED</option>
@@ -64,7 +67,7 @@
                             <form action="{{ route('backend.sheets.destroy', $sheet->id) }}" method="POST" onsubmit="return confirm('ยืนยันการลบชีทนี้?')">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="text-gray-300 hover:text-rose-500 transition-colors">
-                                    <i class="fa-solid fa-trash-can"></i>
+                                    <i class="fa-solid fa-trash-can text-sm"></i>
                                 </button>
                             </form>
                         </td>
@@ -76,6 +79,5 @@
                 {{ $sheets->links() }}
             </div>
         </div>
-    </div>
 </section>
 @endsection

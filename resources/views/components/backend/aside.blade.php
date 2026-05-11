@@ -38,10 +38,10 @@
                 <a href="{{route('backend.activity')}}" class="block py-2 text-sm text-gray-500 hover:text-[#5EBEE6] transition-colors relative before:content-[''] before:absolute before:left-[-16px] before:top-1/2 before:-translate-y-1/2 before:w-1.5 before:h-1.5 before:rounded-full before:bg-gray-300 hover:before:bg-[#5EBEE6]">
                     จัดการกิจกรรม
                 </a>
-                <a href="#" class="block py-2 text-sm text-gray-500 hover:text-[#5EBEE6] transition-colors relative before:content-[''] before:absolute before:left-[-16px] before:top-1/2 before:-translate-y-1/2 before:w-1.5 before:h-1.5 before:rounded-full before:bg-gray-300 hover:before:bg-[#5EBEE6]">
+                <a href="{{ route('backend.sheets') }}" class="block py-2 text-sm text-gray-500 hover:text-[#5EBEE6] transition-colors relative before:content-[''] before:absolute before:left-[-16px] before:top-1/2 before:-translate-y-1/2 before:w-1.5 before:h-1.5 before:rounded-full before:bg-gray-300 hover:before:bg-[#5EBEE6]">
                     จัดการชีทสรุป
                 </a>
-                <a href="#" class="flex items-center justify-between py-2 text-sm text-gray-500 hover:text-[#5EBEE6] transition-colors relative before:content-[''] before:absolute before:left-[-16px] before:top-1/2 before:-translate-y-1/2 before:w-1.5 before:h-1.5 before:rounded-full before:bg-gray-300 hover:before:bg-[#5EBEE6]">
+                <a href="{{ route('backend.portfolios') }}" class="flex items-center justify-between py-2 text-sm text-gray-500 hover:text-[#5EBEE6] transition-colors relative before:content-[''] before:absolute before:left-[-16px] before:top-1/2 before:-translate-y-1/2 before:w-1.5 before:h-1.5 before:rounded-full before:bg-gray-300 hover:before:bg-[#5EBEE6]">
                     <span>จัดการแฟ้มสะสมผลงาน</span>
                     <span class="bg-orange-100 text-orange-500 py-0.5 px-2 rounded-full text-[10px] font-bold">ใหม่</span>
                 </a>

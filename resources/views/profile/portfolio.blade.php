@@ -21,6 +21,7 @@
         <p class="text-xs md:text-sm text-gray-400 mt-1">เผยแพร่พอร์ตฟอลิโอให้ ผู้คนได้รับชม</p>
     </div>
 
+    {{-- ส่วนตามหามหาลัย และ ฟอร์มอัปโหลด คงเดิม --}}
     <div class="bg-white border border-gray-100 rounded-xl p-4 md:p-6 mb-8 flex flex-col md:flex-row justify-between items-center shadow-sm">
         <div>
             <h3 class="text-base md:text-lg font-bold text-slate-800">ตามหามหาลัย</h3>
@@ -84,6 +85,7 @@
         </form>
     </div>
 
+    {{-- ส่วนค้นหา คงเดิม --}}
     <form action="{{ route('profile.portfolio') }}" method="GET" class="flex flex-col md:flex-row items-center gap-3 md:gap-4 mb-8">
         <div class="relative w-full flex-grow">
             <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
@@ -111,6 +113,17 @@
         @forelse($portfolios as $index => $portfolio)
             <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden relative group hover:shadow-md transition-shadow flex flex-col h-full">
                 
+                {{-- 🌟 เพิ่ม Status Badge มุมซ้ายบน 🌟 --}}
+                <div class="absolute top-3 left-3 z-10">
+                    @if($portfolio->status == 'pending')
+                        <span class="bg-amber-100 text-amber-600 text-[9px] font-bold px-2 py-0.5 rounded-full border border-amber-200 shadow-sm uppercase tracking-wider">Pending</span>
+                    @elseif($portfolio->status == 'approved')
+                        <span class="bg-emerald-100 text-emerald-600 text-[9px] font-bold px-2 py-0.5 rounded-full border border-emerald-200 shadow-sm uppercase tracking-wider">Approved</span>
+                    @elseif($portfolio->status == 'rejected')
+                        <span class="bg-rose-100 text-rose-600 text-[9px] font-bold px-2 py-0.5 rounded-full border border-rose-200 shadow-sm uppercase tracking-wider">Rejected</span>
+                    @endif
+                </div>
+
                 <form action="{{ route('profile.portfolio.destroy', $portfolio->id) }}" method="POST" onsubmit="return confirm('ยืนยันการลบผลงานพอร์ตฟอลิโอนี้?');">
                     @csrf @method('DELETE')
                     <button type="submit" class="absolute top-3 right-3 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-[10px] opacity-0 group-hover:opacity-100 transition shadow-sm z-10 hover:bg-red-600" title="ลบผลงาน">
