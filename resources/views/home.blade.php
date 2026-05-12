@@ -66,185 +66,67 @@
     </section>
 
     {{-- โครงงาน --}}
-    <section class="max-w-[1600px] mx-auto py-12 px-6 font-mitr">
+   <section class="max-w-[1600px] mx-auto py-12 px-6 font-mitr">
 
-        <div class="flex items-center gap-4 mb-10">
-            <div class="w-2 h-10 bg-[#5EBEE6] rounded-full"></div>
-            <h2 class="text-2xl md:text-3xl text-slate-900">โครงงาน / รายการแข่งขัน</h2>
-        </div>
+    <div class="flex items-center gap-4 mb-10">
+        <div class="w-2 h-10 bg-[#5EBEE6] rounded-full"></div>
+        <h2 class="text-2xl md:text-3xl text-slate-900 font-bold">โครงงาน / รายการแข่งขัน</h2>
+    </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
-
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5">
+        @forelse($projects as $project)
             <div class="group cursor-pointer transition-all hover:-translate-y-2">
                 <div class="relative h-48 md:h-56 rounded-xl overflow-hidden border border-gray-100 shadow-sm">
-                    <img src="{{ asset('assets/img/aerosol.jpg') }}"
+                    
+                    <img src="{{ $project->file_path ? asset($project->file_path) : asset('assets/img/default-project.jpg') }}"
                         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        alt="Project">
+                        alt="{{ $project->name }}">
 
                     <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
 
-                    <div
-                        class="absolute top-3 left-3 bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
-                        <p class="text-[9px] text-green-400 uppercase tracking-wider">กำลังรับสมัคร</p>
+                    {{-- แสดงเฉพาะ Badge กำลังรับสมัคร --}}
+                    <div class="absolute top-3 left-3 bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
+                        <p class="text-[9px] text-green-400 uppercase tracking-wider font-bold">กำลังรับสมัคร</p>
                     </div>
 
                     <div class="absolute bottom-4 left-4 right-4">
                         <h4 class="text-white text-[11px] leading-tight mb-1 line-clamp-2">
-                            โครงงาน : เครื่องเพาะปลูกเพื่อเศรษฐกิจแบบอัจฉริยะด้วยระบบแอโรโพนิกส์
+                            โครงงาน : {{ $project->name }}
                         </h4>
-                        <p class="text-gray-300 text-[9px] line-clamp-1">อาจารย์ที่ปรึกษา : แอดมินสลีปปี้ สเตชั่น</p>
+                        <p class="text-gray-300 text-[9px] line-clamp-1 italic font-light">
+                            ทีม : {{ $project->team_name ?? 'ยังไม่มีชื่อทีม' }}
+                        </p>
+                        <p class="text-gray-400 text-[8px] line-clamp-1 mt-1">
+                            ดูแลโดย : {{ $project->owner_fname }} {{ $project->owner_lname }}
+                        </p>
                     </div>
                 </div>
 
                 <div class="mt-3 px-2 flex justify-between items-center">
                     <div class="flex items-center gap-1">
-                        <span class="text-[10px] text-[#5EBEE6]">จำนวนที่รับ</span>
-                        <span class="text-[10px] text-gray-400">4/5 คน</span>
+                        <span class="text-[10px] text-[#5EBEE6] font-bold uppercase">จำนวนสมาชิก</span>
+                        <span class="text-[10px] text-gray-400 font-medium">
+                            {{ $project->current_count }}/{{ $project->max_members }} คน
+                        </span>
                     </div>
-                </div>
-            </div>
-            <div class="group cursor-pointer transition-all hover:-translate-y-2">
-                <div class="relative h-48 md:h-56 rounded-xl overflow-hidden border border-gray-100 shadow-sm">
-                    <img src="{{ asset('assets/img/aerosol.jpg') }}"
-                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        alt="Project">
-
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-
-                    <div
-                        class="absolute top-3 left-3 bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
-                        <p class="text-[9px] text-green-400 uppercase tracking-wider">กำลังรับสมัคร</p>
-                    </div>
-
-                    <div class="absolute bottom-4 left-4 right-4">
-                        <h4 class="text-white text-[11px] leading-tight mb-1 line-clamp-2">
-                            โครงงาน : เครื่องเพาะปลูกเพื่อเศรษฐกิจแบบอัจฉริยะด้วยระบบแอโรโพนิกส์
-                        </h4>
-                        <p class="text-gray-300 text-[9px] line-clamp-1">อาจารย์ที่ปรึกษา : แอดมินสลีปปี้ สเตชั่น</p>
-                    </div>
-                </div>
-
-                <div class="mt-3 px-2 flex justify-between items-center">
+                    
+                    {{-- จุดแสดงสถานะจุดเล็กๆ --}}
                     <div class="flex items-center gap-1">
-                        <span class="text-[10px] text-[#5EBEE6]">จำนวนที่รับ</span>
-                        <span class="text-[10px] text-gray-400">4/5 คน</span>
+                        <span class="relative flex h-2 w-2">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                        </span>
                     </div>
                 </div>
             </div>
-            <div class="group cursor-pointer transition-all hover:-translate-y-2">
-                <div class="relative h-48 md:h-56 rounded-xl overflow-hidden border border-gray-100 shadow-sm">
-                    <img src="{{ asset('assets/img/aerosol.jpg') }}"
-                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        alt="Project">
-
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-
-                    <div
-                        class="absolute top-3 left-3 bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
-                        <p class="text-[9px] text-green-400 uppercase tracking-wider">กำลังรับสมัคร</p>
-                    </div>
-
-                    <div class="absolute bottom-4 left-4 right-4">
-                        <h4 class="text-white text-[11px] leading-tight mb-1 line-clamp-2">
-                            โครงงาน : เครื่องเพาะปลูกเพื่อเศรษฐกิจแบบอัจฉริยะด้วยระบบแอโรโพนิกส์
-                        </h4>
-                        <p class="text-gray-300 text-[9px] line-clamp-1">อาจารย์ที่ปรึกษา : แอดมินสลีปปี้ สเตชั่น</p>
-                    </div>
-                </div>
-
-                <div class="mt-3 px-2 flex justify-between items-center">
-                    <div class="flex items-center gap-1">
-                        <span class="text-[10px] text-[#5EBEE6]">จำนวนที่รับ</span>
-                        <span class="text-[10px] text-gray-400">4/5 คน</span>
-                    </div>
-                </div>
+        @empty
+            <div class="col-span-full py-20 text-center text-gray-400 border border-dashed border-gray-200 rounded-xl bg-white">
+                <i class="fa-regular fa-folder-open text-2xl mb-2"></i>
+                <p class="text-sm italic">ขณะนี้ยังไม่มีโครงงานที่กำลังเปิดรับสมัคร</p>
             </div>
-            <div class="group cursor-pointer transition-all hover:-translate-y-2">
-                <div class="relative h-48 md:h-56 rounded-xl overflow-hidden border border-gray-100 shadow-sm">
-                    <img src="{{ asset('assets/img/aerosol.jpg') }}"
-                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        alt="Project">
-
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-
-                    <div
-                        class="absolute top-3 left-3 bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
-                        <p class="text-[9px] text-green-400 uppercase tracking-wider">กำลังรับสมัคร</p>
-                    </div>
-
-                    <div class="absolute bottom-4 left-4 right-4">
-                        <h4 class="text-white text-[11px] leading-tight mb-1 line-clamp-2">
-                            โครงงาน : เครื่องเพาะปลูกเพื่อเศรษฐกิจแบบอัจฉริยะด้วยระบบแอโรโพนิกส์
-                        </h4>
-                        <p class="text-gray-300 text-[9px] line-clamp-1">อาจารย์ที่ปรึกษา : แอดมินสลีปปี้ สเตชั่น</p>
-                    </div>
-                </div>
-
-                <div class="mt-3 px-2 flex justify-between items-center">
-                    <div class="flex items-center gap-1">
-                        <span class="text-[10px] text-[#5EBEE6]">จำนวนที่รับ</span>
-                        <span class="text-[10px] text-gray-400">4/5 คน</span>
-                    </div>
-                </div>
-            </div>
-            <div class="group cursor-pointer transition-all hover:-translate-y-2">
-                <div class="relative h-48 md:h-56 rounded-xl overflow-hidden border border-gray-100 shadow-sm">
-                    <img src="{{ asset('assets/img/aerosol.jpg') }}"
-                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        alt="Project">
-
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-
-                    <div
-                        class="absolute top-3 left-3 bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
-                        <p class="text-[9px] text-green-400 uppercase tracking-wider">กำลังรับสมัคร</p>
-                    </div>
-
-                    <div class="absolute bottom-4 left-4 right-4">
-                        <h4 class="text-white text-[11px] leading-tight mb-1 line-clamp-2">
-                            โครงงาน : เครื่องเพาะปลูกเพื่อเศรษฐกิจแบบอัจฉริยะด้วยระบบแอโรโพนิกส์
-                        </h4>
-                        <p class="text-gray-300 text-[9px] line-clamp-1">อาจารย์ที่ปรึกษา : แอดมินสลีปปี้ สเตชั่น</p>
-                    </div>
-                </div>
-
-                <div class="mt-3 px-2 flex justify-between items-center">
-                    <div class="flex items-center gap-1">
-                        <span class="text-[10px] text-[#5EBEE6]">จำนวนที่รับ</span>
-                        <span class="text-[10px] text-gray-400">4/5 คน</span>
-                    </div>
-                </div>
-            </div>
-            <div class="group cursor-pointer transition-all hover:-translate-y-2">
-                <div class="relative h-48 md:h-56 rounded-xl overflow-hidden border border-gray-100 shadow-sm">
-                    <img src="{{ asset('assets/img/aerosol.jpg') }}"
-                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        alt="Project">
-
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-
-                    <div
-                        class="absolute top-3 left-3 bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
-                        <p class="text-[9px] text-green-400 uppercase tracking-wider">กำลังรับสมัคร</p>
-                    </div>
-
-                    <div class="absolute bottom-4 left-4 right-4">
-                        <h4 class="text-white text-[11px] leading-tight mb-1 line-clamp-2">
-                            โครงงาน : เครื่องเพาะปลูกเพื่อเศรษฐกิจแบบอัจฉริยะด้วยระบบแอโรโพนิกส์
-                        </h4>
-                        <p class="text-gray-300 text-[9px] line-clamp-1">อาจารย์ที่ปรึกษา : แอดมินสลีปปี้ สเตชั่น</p>
-                    </div>
-                </div>
-
-                <div class="mt-3 px-2 flex justify-between items-center">
-                    <div class="flex items-center gap-1">
-                        <span class="text-[10px] text-[#5EBEE6]">จำนวนที่รับ</span>
-                        <span class="text-[10px] text-gray-400">4/5 คน</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+        @endforelse
+    </div>
+</section>
 
     {{-- ค้นหาโครงงาน --}}
     <section class="w-full bg-[#F9F9F9] py-16 px-4">

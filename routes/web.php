@@ -15,11 +15,12 @@ use App\Http\Controllers\Frontend\ActivityController;
 use App\Http\Controllers\Backend\SheetController as BackendSheetController;
 use App\Http\Controllers\Backend\PortfolioController as BackendPortfolioController;
 use App\Http\Controllers\Backend\UserController as BackendUserController;
+use App\Http\Controllers\Frontend\HomeController as HomeController;
 
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+
 Route::get('/home', function () {
     return view('home');
 })->name('home');

@@ -48,7 +48,7 @@
             </div>
         </div>
 
-        <a href="#"
+        <a href="{{ route('backend.users') }}"
             class="flex items-center px-4 py-3 text-sm font-medium transition-colors rounded-xl text-gray-500 hover:bg-gray-50 hover:text-[#5EBEE6]">
             <i class="fa-solid fa-users w-6"></i> จัดการผู้ใช้
         </a>

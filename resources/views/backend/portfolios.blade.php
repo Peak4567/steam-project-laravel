@@ -1,12 +1,13 @@
 @extends('backend.layout')
 @section('content')
 <section class="w-full h-full p-6 md:p-10 font-kanit bg-gray-50/50">
-        <div>
+        <div class="mb-8">
             <h2 class="text-2xl md:text-3xl font-bold text-slate-800 tracking-tight">จัดการแฟ้มสะสมผลงาน</h2>
             <p class="text-sm text-gray-500 mt-1">ตรวจสอบเป้าหมายและอนุมัติเล่มผลงานของนักเรียน</p>
         </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        {{-- ปรับจาก rounded-xl เป็น rounded-md --}}
+        <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-100 uppercase">
@@ -37,20 +38,22 @@
                         </td>
                         <td class="p-4 text-center">
                             @if($pf->file_path)
+                                {{-- ปรับจาก rounded-full เป็น rounded-md --}}
                                 <a href="{{ asset($pf->file_path) }}" target="_blank" 
-                                   class="px-4 py-1.5 bg-slate-800 text-white text-[10px] font-bold rounded-full hover:bg-[#5EBEE6] transition-all">
+                                   class="px-4 py-1.5 bg-slate-800 text-white text-[10px] font-bold rounded-md hover:bg-[#5EBEE6] transition-all">
                                    view portfolio
                                 </a>
                             @else
                                 <span class="text-[10px] text-gray-300 italic">no file</span>
                             @endif
                         </td>
-                        <td class="p-4">
+                        <td class="p-4 text-center">
                             <form action="{{ route('backend.portfolios.updateStatus', $pf->id) }}" method="POST" id="form-{{ $pf->id }}">
                                 @csrf @method('PATCH')
+                                {{-- ปรับจาก rounded-full เป็น rounded-md และเพิ่ม border สีอ่อน --}}
                                 <select name="status" onchange="this.form.submit()"
-                                    class="text-[11px] font-bold border border-gray-100 rounded-full px-4 py-1.5 cursor-pointer focus:ring-0 appearance-none
-                                    {{ $pf->status == 'approved' ? 'bg-emerald-50 text-emerald-600' : ($pf->status == 'rejected' ? 'bg-rose-50 text-rose-600' : 'bg-amber-50 text-amber-600') }}">
+                                    class="text-[11px] font-bold border border-transparent rounded-md px-4 py-1.5 cursor-pointer focus:ring-0 appearance-none
+                                    {{ $pf->status == 'approved' ? 'bg-emerald-100 text-emerald-600' : ($pf->status == 'rejected' ? 'bg-rose-100 text-rose-600' : 'bg-amber-100 text-amber-600') }}">
                                     <option value="pending" {{ $pf->status == 'pending' ? 'selected' : '' }}>pending</option>
                                     <option value="approved" {{ $pf->status == 'approved' ? 'selected' : '' }}>approved</option>
                                     <option value="rejected" {{ $pf->status == 'rejected' ? 'selected' : '' }}>rejected</option>
