@@ -22,6 +22,8 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
+    {{-- Sweetalert --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     {{-- font-awesome --}}
     <link href="{{ asset('assets/font-awesome/css/all.min.css') }}" rel="stylesheet">
     {{-- css --}}
@@ -59,6 +61,13 @@
 
 <body class="bg-[#feffff]">
     <x-top-bar />
+    @if (session('success'))
+        <input type="hidden" id="laravel-flash-success" value="{{ session('success') }}">
+    @endif
+
+    @if ($errors->any())
+        <input type="hidden" id="laravel-flash-error" value="{{ $errors->first() }}">
+    @endif
     @if (Route::is('home'))
         <x-frontend.home.hero />
     @endif
@@ -68,6 +77,7 @@
     </main>
 
     <x-footer />
+    <script src="{{ asset('assets/js/sweetalert.js') }}"></script>
 </body>
 
 </html>

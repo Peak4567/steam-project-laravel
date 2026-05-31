@@ -3,16 +3,6 @@
 
 <section class="max-w-7xl mx-auto">
 
-    @if (session('success'))
-        <div class="bg-green-50 border border-green-200 text-green-700 px-6 py-3 rounded-xl mb-6 shadow-sm text-xs flex items-center">
-            <i class="fa-solid fa-circle-check mr-2"></i> {{ session('success') }}
-        </div>
-    @elseif (session('error'))
-        <div class="bg-red-50 border border-red-200 text-red-700 px-6 py-3 rounded-xl mb-6 shadow-sm text-xs flex items-center">
-            <i class="fa-solid fa-triangle-exclamation mr-2"></i> {{ session('error') }}
-        </div>
-    @endif
-
     <div class="bg-red-50 border border-red-200 text-red-600 px-6 py-3 rounded-xl flex items-center justify-between mb-6 shadow-sm">
         <p class="text-xs">
             <i class="fa-solid fa-triangle-exclamation mr-2"></i> คำเตือน: สิ่งที่คุณอัปโหลดต้องห้ามติดลิขสิทธิ์
@@ -124,7 +114,7 @@
                     <div id="upload-prompt" class="flex flex-col items-center pointer-events-none">
                         <i class="fa-solid fa-cloud-arrow-up text-3xl text-gray-400 mb-2"></i>
                         <span class="text-xs text-slate-700">คลิกเพื่ออัปโหลดเล่มรายงาน</span>
-                        <span class="text-[9px] text-gray-400 mt-1">รองรับไฟล์ PDF, WORD (สูงสุด 5MB)</span>
+                        <span class="text-[9px] text-gray-400 mt-1">รองรับไฟล์ PDF, WORD (สูงสุด 10MB)</span>
                     </div>
 
                     <div id="file-preview" class="hidden flex-col items-center relative z-10">
@@ -165,6 +155,25 @@
 <script>
     let currentObjectUrl = null;
 
+    function resetDropzone() {
+        const prompt = document.getElementById('upload-prompt');
+        const preview = document.getElementById('file-preview');
+        const dropzone = document.getElementById('dropzone-area');
+        const input = document.getElementById('document-input');
+
+        input.value = '';
+        prompt.classList.remove('hidden');
+        preview.classList.add('hidden');
+        preview.classList.remove('flex');
+        dropzone.classList.remove('bg-white', 'border-solid', 'border-[#5EBEE6]');
+        dropzone.classList.add('bg-gray-50/30', 'border-dashed', 'border-gray-300');
+
+        if (currentObjectUrl) {
+            URL.revokeObjectURL(currentObjectUrl);
+            currentObjectUrl = null;
+        }
+    }
+
     document.getElementById('document-input').addEventListener('change', function(event) {
         const file = event.target.files[0];
         const prompt = document.getElementById('upload-prompt');
@@ -176,6 +185,14 @@
         const dropzone = document.getElementById('dropzone-area');
 
         if (file) {
+            if (typeof AppAlert !== 'undefined') {
+                const isValid = AppAlert.validateFileSize(this, 10);
+                if (!isValid) {
+                    resetDropzone();
+                    return;
+                }
+            }
+
             prompt.classList.add('hidden');
             preview.classList.remove('hidden');
             preview.classList.add('flex');
@@ -201,11 +218,7 @@
                 icon.className += 'fa-file-invoice text-gray-500';
             }
         } else {
-            prompt.classList.remove('hidden');
-            preview.classList.add('hidden');
-            preview.classList.remove('flex');
-            dropzone.classList.remove('bg-white', 'border-solid', 'border-[#5EBEE6]');
-            dropzone.classList.add('bg-gray-50/30', 'border-dashed', 'border-gray-300');
+            resetDropzone();
         }
     });
 </script>

@@ -3,19 +3,6 @@
 
 <section class="max-w-screen-xl mx-auto bg-gray-50/30 min-h-screen">
 
-    @if(session('success'))
-        <div class="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-xl mb-6 text-sm flex items-center shadow-sm">
-            <i class="fa-solid fa-circle-check mr-2"></i> {{ session('success') }}
-        </div>
-    @endif
-    @if($errors->any())
-        <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6 text-sm flex flex-col shadow-sm">
-            @foreach($errors->all() as $error)
-                <span class="flex items-center"><i class="fa-solid fa-triangle-exclamation mr-2"></i> {{ $error }}</span>
-            @endforeach
-        </div>
-    @endif
-
     <div class="mb-6">
         <h2 class="text-xl md:text-2xl font-bold text-[#2E8DA3]">อัปโหลดไฟล์ชีท</h2>
         <p class="text-xs md:text-sm text-gray-400 mt-1">แชร์ชีทสรุป, ไฟล์ PDF, Canva หรือสื่อการเรียนรู้ให้เพื่อนในชั้นเรียน</p>
@@ -49,7 +36,7 @@
                 <h3 class="text-base font-bold text-slate-800">อัปโหลด</h3>
             </div>
 
-            <form action="{{ route('profile.sheets.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('profile.sheets.store') }}" method="POST" enctype="multipart/form-data" id="sheet-upload-form">
                 @csrf
                 
                 <div class="flex items-center gap-6 mb-4 pb-4 border-b border-gray-100">
@@ -135,7 +122,10 @@
                 </div>
 
                 <div id="file-input-container" class="mb-6 block">
-                    <label class="block text-xs font-bold text-[#5EBEE6] mb-1"><i class="fa-solid fa-file-arrow-up"></i> เลือกไฟล์ที่ต้องการอัปโหลด</label>
+                    <label class="block text-xs font-bold text-[#5EBEE6] mb-1">
+                        <i class="fa-solid fa-file-arrow-up"></i> เลือกไฟล์ที่ต้องการอัปโหลด 
+                        <span class="text-gray-400 font-normal text-[10px] ml-1">(ขนาดสูงสุดไม่เกิน 10MB)</span>
+                    </label>
                     <input type="file" name="document" id="document_input" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-gray-50 file:text-[#5EBEE6] hover:file:bg-[#eaf6fc] border border-gray-200 rounded-xl bg-white transition cursor-pointer shadow-sm" required>
                 </div>
 
@@ -273,6 +263,16 @@
 
     document.addEventListener("DOMContentLoaded", function() {
         const clampElements = document.querySelectorAll('.auto-clamp');
+        const fileInput = document.getElementById('document_input');
+        
+        // ดึงฟังก์ชันตรวจสอบขนาดไฟล์จากสคริปต์ส่วนกลาง AppAlert ที่แยกไว้
+        if (fileInput) {
+            fileInput.addEventListener('change', function() {
+                if (typeof AppAlert !== 'undefined') {
+                    AppAlert.validateFileSize(this, 10); // เรียกเช็คขนาดไฟล์สูงสุด 10MB
+                }
+            });
+        }
         
         function checkTruncation() {
             clampElements.forEach(el => {

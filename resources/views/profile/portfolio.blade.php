@@ -3,25 +3,11 @@
 
 <section class="max-w-screen-xl mx-auto bg-gray-50/30 min-h-screen">
 
-    @if(session('success'))
-        <div class="bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-xl mb-6 text-sm flex items-center shadow-sm">
-            <i class="fa-solid fa-circle-check mr-2"></i> {{ session('success') }}
-        </div>
-    @endif
-    @if($errors->any())
-        <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6 text-sm flex flex-col shadow-sm">
-            @foreach($errors->all() as $error)
-                <span class="flex items-center"><i class="fa-solid fa-triangle-exclamation mr-2"></i> {{ $error }}</span>
-            @endforeach
-        </div>
-    @endif
-
     <div class="mb-6">
         <h2 class="text-xl md:text-2xl font-bold text-[#2E8DA3]">อัปโหลดพอร์ตฟอลิโอ</h2>
         <p class="text-xs md:text-sm text-gray-400 mt-1">เผยแพร่พอร์ตฟอลิโอให้ ผู้คนได้รับชม</p>
     </div>
 
-    {{-- ส่วนตามหามหาลัย และ ฟอร์มอัปโหลด คงเดิม --}}
     <div class="bg-white border border-gray-100 rounded-xl p-4 md:p-6 mb-8 flex flex-col md:flex-row justify-between items-center shadow-sm">
         <div>
             <h3 class="text-base md:text-lg font-bold text-slate-800">ตามหามหาลัย</h3>
@@ -40,7 +26,7 @@
             <h3 class="text-base font-bold text-slate-800">อัปโหลด</h3>
         </div>
 
-        <form action="{{ route('profile.portfolio.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('profile.portfolio.store') }}" method="POST" enctype="multipart/form-data" id="portfolio-upload-form">
             @csrf
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -65,6 +51,9 @@
             </div>
 
             <div class="mb-6">
+                <label class="block text-xs font-bold text-[#5EBEE6] mb-1">
+                    เลือกไฟล์พอร์ตฟอลิโอของคุณ <span class="text-gray-400 font-normal text-[10px] ml-1">(ขนาดสูงสุดไม่เกิน 10MB)</span>
+                </label>
                 <input type="file" id="portfolio_upload" name="portfolio_file" accept=".pdf,.jpg,.jpeg,.png" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-gray-50 file:text-[#5EBEE6] hover:file:bg-[#eaf6fc] border border-gray-200 rounded-xl bg-white transition cursor-pointer shadow-sm" required>
                 
                 <div id="file_preview_box" class="hidden mt-3 p-3 bg-[#f8fbff] border border-[#BCE3F9] rounded-xl flex-row justify-between items-center shadow-sm">
@@ -110,10 +99,9 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         
-        @forelse($portfolios as $index => $portfolio)
+        @forelse($portfolios as $portfolio)
             <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden relative group hover:shadow-md transition-shadow flex flex-col h-full">
                 
-                {{-- 🌟 เพิ่ม Status Badge มุมซ้ายบน 🌟 --}}
                 <div class="absolute top-3 left-3 z-10">
                     @if($portfolio->status == 'pending')
                         <span class="bg-amber-100 text-amber-600 text-[9px] font-bold px-2 py-0.5 rounded-full border border-amber-200 shadow-sm uppercase tracking-wider">Pending</span>
@@ -195,6 +183,41 @@
 
 </section>
 
- <script src="{{asset('assets/js/portfolio-profile.js')}}"></script>
+<script src="{{asset('assets/js/portfolio-profile.js')}}"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const fileInput = document.getElementById('portfolio_upload');
+        const previewBox = document.getElementById('file_preview_box');
+        const formElement = document.getElementById('portfolio-upload-form');
+
+        if (fileInput) {
+            fileInput.addEventListener('change', function() {
+                // ตรวจสอบขนาดไฟล์สูงสุดไม่เกิน 10MB ผ่านฟังก์ชันส่วนกลาง AppAlert ของ sweetalert.js
+                if (typeof AppAlert !== 'undefined') {
+                    const isValid = AppAlert.validateFileSize(this, 10);
+                    if (!isValid) {
+                        // หากขนาดไฟล์เกิน 10MB ล้างสถานะพรีวิวในหน้าตัวนี้ออก
+                        if (previewBox) {
+                            previewBox.classList.add('hidden');
+                            previewBox.classList.remove('flex');
+                        }
+                        return;
+                    }
+                }
+            });
+        }
+
+        // ดักจับการกด Reset ฟอร์มเพื่อซ่อนพรีวิวไฟล์กลับตามเดิม
+        if (formElement) {
+            formElement.addEventListener('reset', function() {
+                if (previewBox) {
+                    previewBox.classList.add('hidden');
+                    previewBox.classList.remove('flex');
+                }
+            });
+        }
+    });
+</script>
 
 @endsection

@@ -112,7 +112,7 @@ class ProjectController extends Controller
             return back()->withErrors(['error' => 'เฉพาะหัวหน้าทีมหรืออาจารย์ที่ปรึกษาเท่านั้นที่กดรับสมาชิกได้']);
         }
 
-        $project->members()->updateExistingPivot($user_id, ['status' => 'accept']);
+        $project->members()->updateExistingPivot($user_id, ['status' => 'accepted']);
 
         return back()->with('success', 'รับสมาชิกเข้าทีมเรียบร้อยแล้ว!');
     }
@@ -135,7 +135,8 @@ class ProjectController extends Controller
 
     public function uploadDocument(Request $request, $id)
     {
-        $request->validate(['document' => 'required|mimes:pdf,doc,docx|max:5120']);
+        // ข้อจำกัดขนาดไฟล์เอกสารโครงงาน สูงสุดไม่เกิน 10MB (10240 KB)
+        $request->validate(['document' => 'required|mimes:pdf,doc,docx|max:10240']);
 
         $project = Project::findOrFail($id);
         if ($request->hasFile('document')) {
@@ -275,6 +276,7 @@ class ProjectController extends Controller
 
     public function uploadReports(Request $request, $id)
     {
+        // ตรวจสอบและจำกัดขนาดไฟล์รายงานเล่มโครงงาน สูงสุดไม่เกิน 10MB (10240 KB)
         $request->validate([
             'project_name' => 'required|string|max:255',
             'advisor' => 'required|string|max:255',
@@ -282,6 +284,7 @@ class ProjectController extends Controller
             'document' => 'required|mimes:pdf|max:10240'
         ]);
 
+        // 🌟 แก้ไขจุดที่พิมพ์ Class ซ้อนกัน (Project::Project) ให้เหลือแค่ Project ชั้นเดียวที่ถูกต้อง
         $project = Project::findOrFail($id);
 
         if ($request->hasFile('document')) {
