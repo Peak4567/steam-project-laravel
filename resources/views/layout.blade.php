@@ -60,16 +60,12 @@
 </head>
 
 <body class="bg-[#feffff]">
-    <x-top-bar />
     @if (session('success'))
         <input type="hidden" id="laravel-flash-success" value="{{ session('success') }}">
     @endif
 
     @if ($errors->any())
         <input type="hidden" id="laravel-flash-error" value="{{ $errors->first() }}">
-    @endif
-    @if (Route::is('home'))
-        <x-frontend.home.hero />
     @endif
     <x-navbar />
     <main>

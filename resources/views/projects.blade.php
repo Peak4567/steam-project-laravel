@@ -1,392 +1,402 @@
 @extends('layout')
 @section('content')
-    {{-- โครงงาน --}}
-    <section class="max-w-screen-xl mx-auto py-12 px-6">
 
-        <div class="flex items-center gap-4 mb-8">
-            <div class="w-2 h-10 bg-[#5EBEE6] rounded-xl"></div>
-            <h2 class="text-2xl md:text-3xl text-slate-900">ค้นหาโครงงานของคุณ</h2>
-        </div>
+    {{-- 🌟 1. Section: ค้นหาโครงงาน (Search Projects) 🌟 --}}
+    <section class="w-full bg-slate-50/50 py-16 px-4 md:px-6 font-mitr relative overflow-hidden">
+        {{-- Background Glow --}}
+        <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-[#5EBEE6]/10 rounded-full blur-3xl -z-10 pointer-events-none translate-x-1/2 -translate-y-1/2"></div>
+        <div class="absolute bottom-0 left-0 w-[300px] h-[300px] bg-blue-400/5 rounded-full blur-3xl -z-10 pointer-events-none -translate-x-1/2 translate-y-1/2"></div>
 
-        <div class="relative w-full mb-8">
-            <div class="absolute inset-y-0 left-5 flex items-center pointer-events-none">
-                <i class="fa-solid fa-magnifying-glass text-gray-400"></i>
-            </div>
-            <input type="text"
-                class="w-full bg-[#EEEEEE] border-none rounded-xl py-4 pl-14 pr-12 text-gray-600 focus:ring-2 focus:ring-[#5EBEE6] transition-all outline-none"
-                placeholder="ค้นหา">
-            <div class="absolute inset-y-0 right-5 flex items-center cursor-pointer hover:text-red-500">
-                <span class="text-gray-400 font-medium">X</span>
-            </div>
-        </div>
-
-        <div class="flex flex-wrap items-center gap-4 mb-12">
-            <a href="{{ route('projects') }}"
-                class="px-8 py-2.5 rounded-xl transition-all block text-center {{ !request('tag') ? 'bg-[#5EBEE6] text-white shadow-none' : 'bg-white border border-gray-100 text-gray-500 hover:bg-gray-50' }}">
-                ทั้งหมด
-            </a>
-            @foreach ($tags as $tag)
-                <a href="{{ route('projects', ['tag' => $tag->id]) }}"
-                    class="px-8 py-2.5 rounded-xl transition-all block text-center {{ request('tag') == $tag->id ? 'bg-[#5EBEE6] text-white shadow-none' : 'bg-white border border-gray-100 text-gray-500 hover:bg-gray-50' }}">
-                    {{ $tag->name }}
-                </a>
-            @endforeach
-        </div>
-
-        <div class="relative group">
-            <button
-                class="absolute -left-12 top-1/2 -translate-y-1/2 text-[#5EBEE6] text-4xl font-black hover:scale-125 transition-transform hidden xl:block z-10">
-                <i class="fa-solid fa-angle-left"></i>
-            </button>
-            <button
-                class="absolute -right-12 top-1/2 -translate-y-1/2 text-[#5EBEE6] text-4xl font-black hover:scale-125 transition-transform hidden xl:block z-10">
-                <i class="fa-solid fa-angle-right"></i>
-            </button>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 relative z-20">
-                @forelse($projects as $project)
-                    <a href="{{ route('projects.applyPage', $project->id) }}"
-                        class="group cursor-pointer transition-all block">
-
-                        <div class="relative h-56 rounded-xl overflow-hidden border border-gray-100 shadow-sm">
-                            @if ($project->file_path)
-                                <img src="{{ asset($project->file_path) }}"
-                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                    alt="{{ $project->name }}">
-                            @else
-                                <div
-                                    class="w-full h-full bg-gray-200 flex flex-col items-center justify-center text-gray-400 group-hover:scale-110 transition-transform duration-500">
-                                    <i class="fa-regular fa-image text-4xl mb-2"></i>
-                                    <span class="text-sm font-medium font-kanit">ไม่มีภาพ</span>
-                                </div>
-                            @endif
-
-                            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-
-                            <div
-                                class="absolute top-3 left-3 bg-black/50 backdrop-blur-sm px-3 py-1 rounded-xl border border-white/20">
-                                @if ($project->members_count < ($project->max_members ?? 5))
-                                    <p class="text-[9px] text-green-400">กำลังรับสมัคร</p>
-                                @else
-                                    <p class="text-[9px] text-red-400">เต็มแล้ว</p>
-                                @endif
-                            </div>
-
-                            <div class="absolute bottom-4 left-4 right-4 text-left">
-                                <h4 class="text-white text-[11px] leading-tight mb-1 line-clamp-2">
-                                    โครงงาน : {{ $project->name }}
-                                </h4>
-                                <p class="text-gray-300 text-[9px]">
-                                    อาจารย์ที่ปรึกษา :
-                                    @forelse($project->advisors as $advisor)
-                                        {{ $advisor->first_name }} {{ $advisor->last_name }}@if (!$loop->last)
-                                            ,
-                                        @endif
-                                    @empty
-                                        รอระบุอาจารย์ที่ปรึกษา
-                                    @endforelse
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="mt-3 px-2 flex justify-between items-center">
-                            <div class="flex items-center gap-1">
-                                <span class="text-[10px] text-[#5EBEE6]">จำนวนที่รับ</span>
-                                <span class="text-[10px] text-gray-400">
-                                    {{ $project->members_count ?? 0 }}/{{ $project->max_members ?? 5 }} คน
-                                </span>
-                            </div>
-                        </div>
-
-                    </a>
-                @empty
-                    <div class="col-span-1 sm:col-span-2 lg:col-span-4 text-center py-12 text-gray-500 font-medium">
-                        <i class="fa-solid fa-folder-open text-4xl mb-3 text-gray-300"></i>
-                        <p>ยังไม่มีโครงงานที่กำลังเปิดรับสมัครในขณะนี้</p>
-                    </div>
-                @endforelse
-            </div>
-        </div>
-
-    </section>
-
-
-    <section class="max-w-screen-xl mx-auto py-12 px-6 font-mitr">
-
-        <div class="w-full bg-white rounded-xl p-2 mb-8 flex items-center justify-between border border-gray-100 shadow-sm">
-            <h3 class="text-gray-400 text-md md:text-base ml-4">อัปโหลดเล่มรายงานของคุณ?</h3>
-            <a href="{{ route('projects.reports') ?? '#' }}"
-                class="bg-[#5EBEE6] hover:bg-[#4fb1d8] text-white px-6 py-2 rounded-xl flex items-center gap-2 transition-all text-md">
-                อัปโหลดรายงาน
-                <i class="fa-solid fa-upload"></i>
-            </a>
-        </div>
-
-        <form action="{{ url()->current() }}" method="GET"
-            class="flex flex-wrap items-center justify-between gap-4 mb-8">
-            <div class="flex flex-wrap items-center gap-3 flex-grow max-w-4xl">
-                <select name="year" onchange="this.form.submit()"
-                    class="bg-white border border-gray-100 text-gray-400 text-md rounded-xl px-4 py-2.5 outline-none focus:ring-1 focus:ring-[#5EBEE6] min-w-[150px]">
-                    <option value="">ทุกปีการศึกษา</option>
-                    @for ($i = date('Y'); $i >= date('Y') - 5; $i--)
-                        <option value="{{ $i }}" {{ request('year') == $i ? 'selected' : '' }}>
-                            {{ $i + 543 }}
-                        </option>
-                    @endfor
-                </select>
-
-                <select name="category" onchange="this.form.submit()"
-                    class="bg-white border border-gray-100 text-gray-400 text-md rounded-xl px-4 py-2.5 outline-none focus:ring-1 focus:ring-[#5EBEE6] min-w-[150px]">
-                    <option value="">ทุกหมวดหมู่</option>
-                    <option value="school" {{ request('category') == 'school' ? 'selected' : '' }}>โรงเรียน</option>
-                </select>
-
-                <div class="relative flex-grow">
-                    <input type="text" name="search" value="{{ request('search') }}"
-                        placeholder="ค้นหาเล่มรายงาน, ผู้จัดทำ"
-                        class="w-full bg-white border border-gray-100 text-md rounded-xl px-4 py-2.5 outline-none focus:ring-1 focus:ring-[#5EBEE6]">
-                    <button type="submit"
-                        class="absolute right-2 top-1/2 -translate-y-1/2 bg-[#5EBEE6] text-white px-4 py-1 rounded-lg text-md hover:bg-[#45a8d1] transition-colors">
-                        ค้นหา
-                    </button>
+        <div class="max-w-6xl mx-auto">
+            <div class="flex items-center gap-4 mb-8">
+                <div class="w-2.5 h-10 bg-gradient-to-b from-[#5EBEE6] to-blue-500 rounded-full shadow-sm"></div>
+                <div>
+                    <span class="inline-block text-[#5EBEE6] text-xs font-bold uppercase tracking-widest mb-1">Explore</span>
+                    <h2 class="text-3xl md:text-4xl text-slate-900 font-extrabold tracking-tight">ค้นหาโครงงานของคุณ</h2>
                 </div>
             </div>
-            <div class="flex items-center gap-2">
-                <button type="button" class="p-2 bg-white border border-gray-100 rounded-lg text-[#5EBEE6] shadow-sm"><i
-                        class="fa-solid fa-table-cells-large"></i></button>
-                <button type="button"
-                    class="p-2 bg-white border border-gray-100 rounded-lg text-gray-400 hover:text-gray-600"><i
-                        class="fa-solid fa-list"></i></button>
-            </div>
-        </form>
 
-        <div class="flex items-center gap-4 mb-10 overflow-x-auto pb-2">
-            <a href="{{ request()->fullUrlWithQuery(['tag' => null]) }}"
-                class="px-8 py-2 rounded-full text-md whitespace-nowrap {{ !request('tag') ? 'bg-[#5EBEE6] text-white' : 'bg-white border border-gray-100 text-gray-400 hover:bg-gray-50' }}">ทั้งหมด</a>
-            <a href="{{ request()->fullUrlWithQuery(['tag' => 'เกษตร']) }}"
-                class="px-8 py-2 rounded-full text-md whitespace-nowrap {{ request('tag') == 'เกษตร' ? 'bg-[#5EBEE6] text-white' : 'bg-white border border-gray-100 text-gray-400 hover:bg-gray-50' }}">เกษตร</a>
-            <a href="{{ request()->fullUrlWithQuery(['tag' => 'แข่งขัน']) }}"
-                class="px-8 py-2 rounded-full text-md whitespace-nowrap {{ request('tag') == 'แข่งขัน' ? 'bg-[#5EBEE6] text-white' : 'bg-white border border-gray-100 text-gray-400 hover:bg-gray-50' }}">แข่งขัน</a>
-            <a href="{{ request()->fullUrlWithQuery(['tag' => 'เคมี']) }}"
-                class="px-8 py-2 rounded-full text-md whitespace-nowrap {{ request('tag') == 'เคมี' ? 'bg-[#5EBEE6] text-white' : 'bg-white border border-gray-100 text-gray-400 hover:bg-gray-50' }}">เคมี</a>
-        </div>
-
-        @if (isset($reports))
-            @php
-                $approvedReports = $reports->where('status', 'approved');
-            @endphp
-
-            <div class="flex justify-between items-center mb-6">
-                <h4 class="text-gray-800 text-2xl">รายงานโครงงาน</h4>
-                <p class="text-[12px] text-gray-500 font-medium">
-                    แสดง <span class="text-[#5EBEE6]">{{ $approvedReports->count() }}</span>
-                    จาก <span class="text-[#5EBEE6]">{{ $reports->total() ?? 0 }}</span> รายการ
-                </p>
+            <div class="relative w-full mb-8 shadow-sm">
+                <div class="absolute inset-y-0 left-6 flex items-center pointer-events-none">
+                    <i class="fa-solid fa-magnifying-glass text-[#5EBEE6] text-lg"></i>
+                </div>
+                <input type="text"
+                    class="w-full bg-white border border-gray-100 rounded-2xl py-4.5 pl-14 pr-12 text-slate-600 focus:ring-2 focus:ring-[#5EBEE6]/50 focus:border-[#5EBEE6] transition-all outline-none shadow-[0_8px_30px_rgba(0,0,0,0.02)]"
+                    placeholder="พิมพ์ชื่อโครงงาน หรือคีย์เวิร์ดที่สนใจ...">
+                <div class="absolute inset-y-0 right-6 flex items-center cursor-pointer hover:text-red-500 transition-colors">
+                    <span class="text-gray-300 font-medium hover:text-red-400"><i class="fa-solid fa-xmark text-lg"></i></span>
+                </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-2 font-mitr">
-                @forelse($approvedReports as $report)
-                    <div class="max-w-sm font-mitr">
-                        <a href="{{ route('projects.viewReport', $report->id) }}" target="_blank"
-                            class="group cursor-pointer bg-white block rounded-lg overflow-hidden border border-gray-50 transition-all duration-300 hover:-translate-y-2 shadow-md">
+            <div class="flex flex-wrap items-center gap-3 mb-12">
+                <a href="{{ route('projects') }}"
+                    class="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all block text-center {{ !request('tag') ? 'bg-gradient-to-r from-[#5EBEE6] to-blue-500 text-white shadow-md shadow-blue-500/20' : 'bg-white border border-gray-100 text-slate-500 hover:bg-slate-50 hover:text-[#5EBEE6] shadow-sm' }}">
+                    ทั้งหมด
+                </a>
+                @foreach ($tags as $tag)
+                    <a href="{{ route('projects', ['tag' => $tag->id]) }}"
+                        class="px-6 py-2.5 rounded-xl text-sm font-semibold transition-all block text-center {{ request('tag') == $tag->id ? 'bg-gradient-to-r from-[#5EBEE6] to-blue-500 text-white shadow-md shadow-blue-500/20' : 'bg-white border border-gray-100 text-slate-500 hover:bg-slate-50 hover:text-[#5EBEE6] shadow-sm' }}">
+                        {{ $tag->name }}
+                    </a>
+                @endforeach
+            </div>
 
-                            <div class="relative bg-gray-50 h-[380px] overflow-hidden flex items-center justify-center">
-                                @php
-                                    $ext = strtolower(pathinfo($report->file_path, PATHINFO_EXTENSION));
-                                @endphp
+            <div class="relative group">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 relative z-20">
+                    @forelse($projects as $project)
+                        <a href="{{ route('projects.applyPage', $project->id) }}"
+                            class="group cursor-pointer bg-white rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(0,0,0,0.04)] border border-gray-100 flex flex-col overflow-hidden block">
 
-                                <div
-                                    class="absolute top-4 right-4 bg-gray-900/80 text-white text-[10px] px-3.5 py-1 rounded-full z-10 backdrop-blur-sm tracking-wider select-none uppercase">
-                                    {{ $ext }}
-                                </div>
-
-                                @if ($ext === 'pdf')
-                                    <canvas
-                                        class="pdf-thumbnail w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                        data-pdf-url="{{ route('projects.viewReport', $report->id) }}"></canvas>
+                            <div class="relative h-48 md:h-52 overflow-hidden bg-slate-100">
+                                @if ($project->file_path)
+                                    <img src="{{ asset($project->file_path) }}"
+                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out"
+                                        alt="{{ $project->name }}">
                                 @else
-                                    <img src="{{ asset('assets/img/project.png') }}"
-                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                        alt="หน้าปกเล่มรายงาน">
+                                    <div class="w-full h-full flex flex-col items-center justify-center text-slate-300 group-hover:scale-105 transition-transform duration-700 bg-slate-50">
+                                        <i class="fa-regular fa-image text-4xl mb-2"></i>
+                                        <span class="text-sm font-medium font-kanit">ไม่มีภาพ</span>
+                                    </div>
                                 @endif
 
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/5 via-transparent to-transparent">
-                                </div>
-                            </div>
+                                <div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/30 to-transparent opacity-80"></div>
 
-                            <div class="bg-white p-6 pt-5 text-left">
-                                <div
-                                    class="inline-block px-3 py-0.5 bg-[#5EBEE6]/10 text-[#5EBEE6] rounded-full text-[10px] mb-2 tracking-wide">
-                                    พ.ศ. {{ $report->created_at->format('Y') + 543 }}
-                                </div>
-
-                                <h5
-                                    class="text-lg text-slate-900 mb-2 line-clamp-2 leading-snug tracking-tight group-hover:text-[#2E8DA3] transition-colors">
-                                    {{ $report->project_name }}
-                                </h5>
-
-                                <div class="flex items-center gap-1.5 mb-4 text-slate-500">
-                                    <i class="fa-solid fa-school text-[11px]"></i>
-                                    <p class="text-[13px] font-medium">
-                                        {{ $report->project->team_name ?? 'ไม่ระบุชื่อทีม/โรงเรียน' }}
+                                <div class="absolute top-3 left-3 backdrop-blur-md px-2.5 py-1 rounded-full border {{ $project->members_count < ($project->max_members ?? 5) ? 'bg-emerald-500/20 border-emerald-500/30' : 'bg-red-500/20 border-red-500/30' }} flex items-center gap-1.5 shadow-sm">
+                                    <span class="relative flex h-1.5 w-1.5">
+                                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full {{ $project->members_count < ($project->max_members ?? 5) ? 'bg-emerald-400' : 'bg-red-400' }} opacity-75"></span>
+                                      <span class="relative inline-flex rounded-full h-1.5 w-1.5 {{ $project->members_count < ($project->max_members ?? 5) ? 'bg-emerald-500' : 'bg-red-500' }}"></span>
+                                    </span>
+                                    <p class="text-[9px] {{ $project->members_count < ($project->max_members ?? 5) ? 'text-emerald-300' : 'text-red-300' }} uppercase tracking-wider font-bold">
+                                        {{ $project->members_count < ($project->max_members ?? 5) ? 'กำลังรับสมัคร' : 'เต็มแล้ว' }}
                                     </p>
                                 </div>
 
-                                <p class="text-[12px] font-normal text-slate-400 line-clamp-2 leading-relaxed mb-6">
-                                    {{ $report->subject ?? 'ไม่มีรายละเอียดวิชา/โครงงาน' }}
-                                </p>
-
-                                <div class="flex justify-between items-center pt-4 border-t border-gray-100">
-                                    <div class="flex items-center gap-4 text-slate-500">
-                                        <div class="flex items-center gap-1.5 group/icon">
-                                            <i
-                                                class="fa-solid fa-user text-xs group-hover/icon:text-[#2E8DA3] transition-colors"></i>
-                                            <span
-                                                class="text-xs tracking-tight">{{ $report->project->members_count ?? 1 }}
-                                                <span class="text-[10px] text-slate-400">ผู้จัดทำ</span>
-                                            </span>
-                                        </div>
-                                        <div class="flex items-center gap-1.5 group/icon">
-                                            <i
-                                                class="fa-solid fa-eye text-xs group-hover/icon:text-[#2E8DA3] transition-colors"></i>
-                                            <span class="text-xs tracking-tight">{{ number_format($report->views ?? 0) }}
-                                                <span class="text-[10px] text-slate-400">วิว</span>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="text-[#5EBEE6] opacity-0 group-hover:opacity-100 transition-all">
-                                        <i class="fa-solid fa-arrow-right-long text-lg"></i>
-                                    </div>
+                                <div class="absolute bottom-4 left-4 right-4 text-left z-10">
+                                    <h4 class="text-white text-sm font-bold leading-tight mb-1 line-clamp-2">
+                                        {{ $project->name }}
+                                    </h4>
+                                    <p class="text-blue-200 text-[10px] line-clamp-1 flex items-center gap-1.5">
+                                        <i class="fa-solid fa-user-tie text-[9px]"></i> 
+                                        @forelse($project->advisors as $advisor)
+                                            {{ $advisor->first_name }} {{ $advisor->last_name }}@if (!$loop->last), @endif
+                                        @empty
+                                            รอระบุที่ปรึกษา
+                                        @endforelse
+                                    </p>
                                 </div>
                             </div>
+
+                            <div class="p-3 bg-white flex justify-between items-center border-t border-gray-50">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-6 h-6 rounded-full bg-blue-50 flex items-center justify-center">
+                                        <i class="fa-solid fa-users text-[#5EBEE6] text-[10px]"></i>
+                                    </div>
+                                    <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wide">รับสมัคร</span>
+                                </div>
+                                <span class="text-xs text-slate-800 font-bold bg-slate-50 px-2 py-1 rounded-md">
+                                    {{ $project->members_count ?? 0 }} <span class="text-slate-400 font-normal">/</span> {{ $project->max_members ?? 5 }}
+                                </span>
+                            </div>
+
                         </a>
+                    @empty
+                        <div class="col-span-full py-16 text-center border border-dashed border-slate-200 rounded-3xl bg-white shadow-sm flex flex-col items-center justify-center">
+                            <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
+                                <i class="fa-solid fa-folder-open text-3xl text-slate-300"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-700 mb-1">ยังไม่มีโครงงานเปิดรับสมัคร</h3>
+                            <p class="text-sm text-slate-400">กรุณากลับมาตรวจสอบใหม่อีกครั้งในภายหลัง</p>
+                        </div>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{-- 🌟 2. Section: เล่มรายงาน (Reports) 🌟 --}}
+    <section class="w-full bg-white py-16 px-4 md:px-6 font-mitr relative border-t border-slate-100">
+        <div class="max-w-6xl mx-auto">
+
+            <div class="w-full bg-gradient-to-r from-slate-50 to-white rounded-2xl p-4 md:p-6 mb-10 flex flex-col md:flex-row items-center justify-between border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.02)]">
+                <div class="flex items-center gap-4 mb-4 md:mb-0">
+                    <div class="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center border border-slate-50">
+                        <i class="fa-solid fa-file-pdf text-[#5EBEE6] text-xl"></i>
                     </div>
-                @empty
-                    <div class="col-span-full text-center py-16 bg-white rounded-xl border border-gray-100">
-                        <i class="fa-solid fa-folder-open text-4xl text-gray-300 mb-3 block"></i>
-                        <p class="text-gray-500">ยังไม่มีรายการเล่มรายงานในระบบ</p>
+                    <div>
+                        <h3 class="text-slate-900 text-lg font-bold">คลังเล่มรายงาน</h3>
+                        <p class="text-slate-500 text-xs">ค้นหาและศึกษาเล่มรายงานโครงงานปีก่อนๆ หรืออัปโหลดของคุณเอง</p>
                     </div>
-                @endforelse
+                </div>
+                <a href="{{ route('projects.reports') ?? '#' }}"
+                    class="w-full md:w-auto bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl flex items-center justify-center gap-2 transition-all text-sm font-semibold shadow-md active:scale-95">
+                    อัปโหลดรายงาน <i class="fa-solid fa-cloud-arrow-up"></i>
+                </a>
             </div>
 
-            @if (method_exists($reports, 'links') && $reports->hasPages())
-                <div class="mt-8 flex justify-center">
-                    {{ $reports->links() }}
+            <form action="{{ url()->current() }}" method="GET" class="bg-white border border-slate-100 p-3 rounded-2xl shadow-sm mb-8 flex flex-col md:flex-row items-center justify-between gap-3">
+                <div class="flex flex-col md:flex-row items-center gap-3 w-full md:w-auto flex-grow">
+                    <select name="year" onchange="this.form.submit()"
+                        class="w-full md:w-auto bg-slate-50 border-none text-slate-600 text-sm font-medium rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#5EBEE6]/30 cursor-pointer">
+                        <option value="">ทุกปีการศึกษา</option>
+                        @for ($i = date('Y'); $i >= date('Y') - 5; $i--)
+                            <option value="{{ $i }}" {{ request('year') == $i ? 'selected' : '' }}>
+                                พ.ศ. {{ $i + 543 }}
+                            </option>
+                        @endfor
+                    </select>
+
+                    <select name="category" onchange="this.form.submit()"
+                        class="w-full md:w-auto bg-slate-50 border-none text-slate-600 text-sm font-medium rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-[#5EBEE6]/30 cursor-pointer">
+                        <option value="">ทุกหมวดหมู่</option>
+                        <option value="school" {{ request('category') == 'school' ? 'selected' : '' }}>โครงงานโรงเรียน</option>
+                    </select>
+
+                    <div class="relative flex-grow w-full">
+                        <input type="text" name="search" value="{{ request('search') }}"
+                            placeholder="ค้นหาชื่อรายงาน, ผู้จัดทำ..."
+                            class="w-full bg-slate-50 border-none text-sm text-slate-700 rounded-xl pl-10 pr-24 py-3 outline-none focus:ring-2 focus:ring-[#5EBEE6]/30 transition-all">
+                        <i class="fa-solid fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <button type="submit"
+                            class="absolute right-1.5 top-1/2 -translate-y-1/2 bg-[#5EBEE6] text-white px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-[#45a8d1] transition-colors shadow-sm">
+                            ค้นหา
+                        </button>
+                    </div>
                 </div>
+            </form>
+
+            <div class="flex items-center gap-3 mb-10 overflow-x-auto pb-4 scrollbar-hide">
+                <a href="{{ request()->fullUrlWithQuery(['tag' => null]) }}"
+                    class="px-6 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-colors {{ !request('tag') ? 'bg-slate-800 text-white shadow-md shadow-slate-200' : 'bg-white border border-slate-200 text-slate-500 hover:bg-slate-50' }}">ทั้งหมด</a>
+                <a href="{{ request()->fullUrlWithQuery(['tag' => 'เกษตร']) }}"
+                    class="px-6 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-colors {{ request('tag') == 'เกษตร' ? 'bg-slate-800 text-white shadow-md shadow-slate-200' : 'bg-white border border-slate-200 text-slate-500 hover:bg-slate-50' }}">เกษตร</a>
+                <a href="{{ request()->fullUrlWithQuery(['tag' => 'แข่งขัน']) }}"
+                    class="px-6 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-colors {{ request('tag') == 'แข่งขัน' ? 'bg-slate-800 text-white shadow-md shadow-slate-200' : 'bg-white border border-slate-200 text-slate-500 hover:bg-slate-50' }}">แข่งขัน</a>
+                <a href="{{ request()->fullUrlWithQuery(['tag' => 'เคมี']) }}"
+                    class="px-6 py-2 rounded-xl text-xs font-bold whitespace-nowrap transition-colors {{ request('tag') == 'เคมี' ? 'bg-slate-800 text-white shadow-md shadow-slate-200' : 'bg-white border border-slate-200 text-slate-500 hover:bg-slate-50' }}">เคมี</a>
+            </div>
+
+            @if (isset($reports))
+                @php
+                    $approvedReports = $reports->where('status', 'approved');
+                @endphp
+
+                <div class="flex justify-between items-end mb-6 border-b border-slate-100 pb-4">
+                    <h4 class="text-slate-900 text-2xl font-bold tracking-tight">รายงานโครงงานล่าสุด</h4>
+                    <p class="text-xs text-slate-500 font-medium bg-slate-50 px-3 py-1 rounded-lg">
+                        แสดง <span class="text-[#5EBEE6] font-bold">{{ $approvedReports->count() }}</span>
+                        จาก <span class="text-[#5EBEE6] font-bold">{{ $reports->total() ?? 0 }}</span> รายการ
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    @forelse($approvedReports as $report)
+                        <div class="font-mitr h-full flex">
+                            <a href="{{ route('projects.viewReport', $report->id) }}" target="_blank"
+                                class="w-full group cursor-pointer bg-white flex flex-col rounded-2xl overflow-hidden border border-slate-100 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(0,0,0,0.06)] shadow-sm">
+
+                                <div class="relative bg-slate-50 h-[300px] overflow-hidden flex items-center justify-center border-b border-slate-100">
+                                    @php
+                                        $ext = strtolower(pathinfo($report->file_path, PATHINFO_EXTENSION));
+                                    @endphp
+
+                                    <div class="absolute top-3 right-3 bg-white/90 text-slate-800 border border-slate-200 text-[9px] font-bold px-3 py-1 rounded-full z-10 backdrop-blur-md uppercase shadow-sm">
+                                        {{ $ext }}
+                                    </div>
+
+                                    @if ($ext === 'pdf')
+                                        <canvas class="pdf-thumbnail w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                                            data-pdf-url="{{ route('projects.viewReport', $report->id) }}"></canvas>
+                                    @else
+                                        <img src="{{ asset('assets/img/project.png') }}"
+                                            class="w-full h-full object-cover opacity-50 group-hover:scale-105 transition-transform duration-700" alt="Cover">
+                                    @endif
+                                </div>
+
+                                <div class="bg-white p-5 flex flex-col flex-grow text-left">
+                                    <div class="inline-block px-2.5 py-1 bg-blue-50 border border-blue-100/50 text-[#5EBEE6] font-bold rounded-md text-[9px] mb-3 self-start tracking-wider">
+                                        พ.ศ. {{ $report->created_at->format('Y') + 543 }}
+                                    </div>
+
+                                    <h5 class="text-base font-bold text-slate-800 mb-2 line-clamp-2 leading-tight group-hover:text-[#5EBEE6] transition-colors">
+                                        {{ $report->project_name }}
+                                    </h5>
+
+                                    <div class="flex items-center gap-2 mb-3 text-slate-500">
+                                        <i class="fa-solid fa-school text-[10px] text-slate-400"></i>
+                                        <p class="text-xs font-medium line-clamp-1">
+                                            {{ $report->project->team_name ?? 'ไม่ระบุชื่อทีม/โรงเรียน' }}
+                                        </p>
+                                    </div>
+
+                                    <div class="mt-auto pt-4 border-t border-slate-50 flex justify-between items-center">
+                                        <div class="flex items-center gap-3 text-slate-400">
+                                            <div class="flex items-center gap-1.5" title="ผู้จัดทำ">
+                                                <i class="fa-solid fa-users text-[10px]"></i>
+                                                <span class="text-[11px] font-semibold">{{ $report->project->members_count ?? 1 }}</span>
+                                            </div>
+                                            <div class="flex items-center gap-1.5" title="ยอดเข้าชม">
+                                                <i class="fa-solid fa-eye text-[10px]"></i>
+                                                <span class="text-[11px] font-semibold">{{ number_format($report->views ?? 0) }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="w-7 h-7 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-[#5EBEE6] group-hover:text-white transition-colors">
+                                            <i class="fa-solid fa-arrow-right text-[10px] -rotate-45"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    @empty
+                        <div class="col-span-full text-center py-20 bg-slate-50 rounded-3xl border border-dashed border-slate-200">
+                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm">
+                                <i class="fa-regular fa-file-pdf text-3xl text-slate-300"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-700 mb-1">ยังไม่มีเล่มรายงาน</h3>
+                            <p class="text-sm text-slate-400">ยังไม่มีผู้ทำการอัปโหลดเล่มรายงานเข้าสู่ระบบ</p>
+                        </div>
+                    @endforelse
+                </div>
+
+                @if (method_exists($reports, 'links') && $reports->hasPages())
+                    <div class="mt-10 flex justify-center">
+                        {{ $reports->links() }}
+                    </div>
+                @endif
             @endif
-        @endif
 
+        </div>
     </section>
 
-    {{-- hall of fame --}}
-    <section class="mx-auto py-16 px-6 font-mitr bg-[#FFFAE8]">
+    {{-- 🌟 3. Section: Hall of Fame 🌟 --}}
+    <section class="w-full py-20 px-4 md:px-6 font-mitr bg-gradient-to-b from-[#FFFDF5] to-white border-t border-yellow-50 overflow-hidden relative">
+        {{-- Glow Effects --}}
+        <div class="absolute top-10 right-10 w-72 h-72 bg-yellow-300/10 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="flex justify-center items-center mb-16 relative">
-            <img src="{{ asset('assets/img/halloffame.png') }}" alt="Hall of Fame"
-                class="w-full max-w-[600px] md:max-w-[700px] h-auto object-contain select-none">
-        </div>
+        <div class="max-w-6xl mx-auto">
+            <div class="flex justify-center items-center mb-16 relative">
+                <img src="{{ asset('assets/img/halloffame.png') }}" alt="Hall of Fame"
+                    class="w-full max-w-[500px] md:max-w-[600px] h-auto object-contain select-none drop-shadow-xl hover:scale-105 transition-transform duration-700">
+            </div>
 
-        <div class="flex items-center gap-4 mb-10 max-w-screen-xl mx-auto px-4">
-            <div class="w-2 h-10 bg-[#5EBEE6] rounded-full"></div>
-            <h2 class="text-2xl md:text-3xl text-slate-900">ผู้ได้รับรางวัลยอดเยี่ยม</h2>
-        </div>
+            <div class="flex items-center gap-4 mb-10 text-center justify-center">
+                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">🏆 ผู้ได้รับรางวัลยอดเยี่ยม</h2>
+            </div>
 
-        <div class="max-w-screen-xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 px-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
 
-            <div class="group cursor-pointer transition-all hover:-translate-y-2">
-                <div class="relative h-48 md:h-56 rounded-xl overflow-hidden border-2 border-slate-900 shadow-none">
-                    <img src="{{ asset('assets/img/peak_student.png') }}"
-                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        alt="Person">
+                {{-- Card Hall of Fame --}}
+                <div class="group cursor-pointer transition-all duration-300 hover:-translate-y-3">
+                    <div class="relative h-64 md:h-72 rounded-[2rem] overflow-hidden border-4 border-yellow-400 shadow-[0_15px_30px_rgba(250,204,21,0.2)] group-hover:shadow-[0_20px_40px_rgba(250,204,21,0.3)] group-hover:border-yellow-300">
+                        
+                        <img src="{{ asset('assets/img/peak_student.png') }}"
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                            alt="Peak">
 
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent"></div>
 
-                    <div
-                        class="absolute top-3 left-3 bg-[#5EBEE6] backdrop-blur-sm px-3 py-1 rounded-xl border border-white/20">
-                        <p class="text-[9px] text-white uppercase tracking-wider">อันดับที่ 1</p>
-                    </div>
+                        <div class="absolute top-4 left-4 bg-gradient-to-r from-yellow-400 to-yellow-500 shadow-md shadow-yellow-500/30 px-3 py-1.5 rounded-xl border border-yellow-200">
+                            <p class="text-[10px] text-yellow-900 font-black uppercase tracking-widest flex items-center gap-1">
+                                <i class="fa-solid fa-medal"></i> อันดับที่ 1
+                            </p>
+                        </div>
 
-                    <div class="absolute bottom-4 left-4 right-4 text-left">
-                        <h4 class="text-white text-[12px] leading-tight mb-1 line-clamp-2">
-                            ศรัณยกร เทพสุนทร (Peak) ม.9/4
-                        </h4>
-                        <p class="text-gray-300 text-[10px] line-clamp-1">Young Agri Future 2026</p>
+                        <div class="absolute bottom-5 left-5 right-5 text-left z-10">
+                            <h4 class="text-white text-sm font-bold leading-tight mb-1.5 line-clamp-2 drop-shadow-md">
+                                ศรัณยกร เทพสุนทร (Peak)
+                            </h4>
+                            <div class="flex items-center gap-2">
+                                <span class="bg-white/20 backdrop-blur-md text-white text-[9px] px-2 py-0.5 rounded-md font-medium border border-white/20">ม.9/4</span>
+                                <p class="text-yellow-300 text-[10px] font-medium line-clamp-1">Young Agri Future 2026</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
             </div>
         </div>
-
     </section>
 
+    {{-- 🌟 4. Section: STEAM4INNOVATOR 🌟 --}}
+    <section class="w-full bg-slate-900 py-24 px-4 md:px-6 font-mitr overflow-hidden relative">
+        {{-- Background Design --}}
+        <div class="absolute inset-0 bg-[url('{{ asset('assets/img/pattern.svg') }}')] opacity-5 pointer-events-none"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#5EBEE6]/10 rounded-full blur-[100px] pointer-events-none"></div>
 
-    {{-- STEAM 4 --}}
+        <div class="max-w-6xl mx-auto relative z-10">
 
-    <section class="w-full bg-white py-20 px-4 font-mitr overflow-hidden">
-        <div class="max-w-screen-xl mx-auto relative">
-
-            <div class="text-center mb-20 relative">
-                <h2
-                    class="text-5xl md:text-6xl font-black text-[#5EBEE6]/10 absolute inset-0 flex justify-center items-center select-none uppercase tracking-widest">
-                    STEAM4INNOVATOR
+            <div class="text-center mb-24 relative">
+                <h2 class="text-5xl md:text-7xl lg:text-[8rem] font-black text-white/5 absolute inset-0 flex justify-center items-center select-none uppercase tracking-[0.2em] -mt-4">
+                    INNOVATOR
                 </h2>
                 <div class="relative z-10">
-                    <h3 class="text-[#5EBEE6] text-3xl md:text-4xl font-bold mb-2">STEAM4INNOVATOR</h3>
-                    <p class="text-slate-500 font-medium tracking-wide">แผนการพัฒนาศักยภาพด้านนวัตกรรม</p>
+                    <span class="inline-block px-4 py-1.5 bg-[#5EBEE6]/20 text-[#5EBEE6] border border-[#5EBEE6]/30 font-bold text-xs uppercase tracking-widest rounded-full mb-4">4 Steps to Success</span>
+                    <h3 class="text-white text-4xl md:text-5xl font-black mb-3 tracking-tight">STEAM<span class="text-[#5EBEE6]">4</span>INNOVATOR</h3>
+                    <p class="text-slate-400 text-sm md:text-base font-medium tracking-wide">แผนการพัฒนาศักยภาพด้านนวัตกรรม สู่การลงมือทำจริง</p>
                 </div>
             </div>
 
-            <div class="relative">
-                <div
-                    class="hidden lg:block absolute top-16 left-[10%] right-[10%] h-[2px] bg-gradient-to-r from-transparent via-[#5EBEE6]/30 to-transparent z-0">
-                </div>
+            <div class="relative mt-12">
+                {{-- Timeline Line --}}
+                <div class="hidden lg:block absolute top-12 left-[12%] right-[12%] h-0.5 bg-gradient-to-r from-transparent via-[#5EBEE6]/30 to-transparent z-0 border-t border-dashed border-[#5EBEE6]/50"></div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 relative z-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 relative z-10">
 
-                    <div
-                        class="group flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-2">
-                        <div
-                            class="w-24 h-24 bg-white border-4 border-[#E0F2FE] rounded-full flex items-center justify-center mb-6 shadow-xl group-hover:border-[#5EBEE6] transition-colors duration-500">
-                            <i class="fa-solid fa-brain text-4xl text-[#2E8DA3]"></i>
+                    {{-- Step 1 --}}
+                    <div class="group flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-3">
+                        <div class="relative mb-6">
+                            <div class="absolute inset-0 bg-[#5EBEE6] rounded-full blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-500"></div>
+                            <div class="w-24 h-24 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center relative z-10 shadow-xl group-hover:border-[#5EBEE6] group-hover:bg-slate-900 transition-colors duration-500">
+                                <span class="absolute -top-2 -right-2 w-7 h-7 bg-[#5EBEE6] text-slate-900 text-[11px] font-black rounded-full flex items-center justify-center shadow-lg border-2 border-slate-900">1</span>
+                                <i class="fa-solid fa-brain text-3xl text-white group-hover:text-[#5EBEE6] transition-colors"></i>
+                            </div>
                         </div>
-                        <h4 class="text-xl text-slate-800 mb-3">รู้ลึกรู้จริง</h4>
-                        <p class="text-[13px] text-slate-500 leading-relaxed px-4">
+                        <h4 class="text-lg font-bold text-white mb-2">รู้ลึกรู้จริง</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed px-2 font-medium">
                             เริ่มต้นกระบวนการสร้างสรรค์ธุรกิจนวัตกรรมด้วยการรับรู้สิ่งแวดล้อมรอบตัว
                         </p>
                     </div>
 
-                    <div
-                        class="group flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-2">
-                        <div
-                            class="w-24 h-24 bg-white border-4 border-[#E0F2FE] rounded-full flex items-center justify-center mb-6 shadow-xl group-hover:border-[#5EBEE6] transition-colors duration-500">
-                            <i class="fa-solid fa-lightbulb text-4xl text-[#2E8DA3]"></i>
+                    {{-- Step 2 --}}
+                    <div class="group flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-3">
+                        <div class="relative mb-6">
+                            <div class="absolute inset-0 bg-[#5EBEE6] rounded-full blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-500"></div>
+                            <div class="w-24 h-24 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center relative z-10 shadow-xl group-hover:border-[#5EBEE6] group-hover:bg-slate-900 transition-colors duration-500">
+                                <span class="absolute -top-2 -right-2 w-7 h-7 bg-[#5EBEE6] text-slate-900 text-[11px] font-black rounded-full flex items-center justify-center shadow-lg border-2 border-slate-900">2</span>
+                                <i class="fa-solid fa-lightbulb text-3xl text-white group-hover:text-[#5EBEE6] transition-colors"></i>
+                            </div>
                         </div>
-                        <h4 class="text-xl text-slate-800 mb-3">สร้างสรรค์ไอเดีย</h4>
-                        <p class="text-[13px] text-slate-500 leading-relaxed px-4">
+                        <h4 class="text-lg font-bold text-white mb-2">สร้างสรรค์ไอเดีย</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed px-2 font-medium">
                             ต่อยอดความคิดสร้างสรรค์ กำหนดปัญหาเป้าหมายในการแก้ไขที่ชัดเจน
                         </p>
                     </div>
 
-                    <div
-                        class="group flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-2">
-                        <div
-                            class="w-24 h-24 bg-white border-4 border-[#E0F2FE] rounded-full flex items-center justify-center mb-6 shadow-xl group-hover:border-[#5EBEE6] transition-colors duration-500">
-                            <i class="fa-solid fa-handshake text-4xl text-[#2E8DA3]"></i>
+                    {{-- Step 3 --}}
+                    <div class="group flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-3">
+                        <div class="relative mb-6">
+                            <div class="absolute inset-0 bg-[#5EBEE6] rounded-full blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-500"></div>
+                            <div class="w-24 h-24 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center relative z-10 shadow-xl group-hover:border-[#5EBEE6] group-hover:bg-slate-900 transition-colors duration-500">
+                                <span class="absolute -top-2 -right-2 w-7 h-7 bg-[#5EBEE6] text-slate-900 text-[11px] font-black rounded-full flex items-center justify-center shadow-lg border-2 border-slate-900">3</span>
+                                <i class="fa-solid fa-handshake text-3xl text-white group-hover:text-[#5EBEE6] transition-colors"></i>
+                            </div>
                         </div>
-                        <h4 class="text-xl text-slate-800 mb-3">แผนพัฒนาธุรกิจ</h4>
-                        <p class="text-[13px] text-slate-500 leading-relaxed px-4">
-                            แนวคิดและแผนบริหารจัดการทั้งหมด ซึ่งจะเกี่ยวข้องทั้งการเชื่อมโยงคน
+                        <h4 class="text-lg font-bold text-white mb-2">แผนพัฒนาธุรกิจ</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed px-2 font-medium">
+                            แนวคิดและแผนบริหารจัดการทั้งหมด เชื่อมโยงคนและทรัพยากร
                         </p>
                     </div>
 
-                    <div
-                        class="group flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-2">
-                        <div
-                            class="w-24 h-24 bg-white border-4 border-[#E0F2FE] rounded-full flex items-center justify-center mb-6 shadow-xl group-hover:border-[#5EBEE6] transition-colors duration-500">
-                            <i class="fa-solid fa-gears text-4xl text-[#2E8DA3]"></i>
+                    {{-- Step 4 --}}
+                    <div class="group flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-3">
+                        <div class="relative mb-6">
+                            <div class="absolute inset-0 bg-[#5EBEE6] rounded-full blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-500"></div>
+                            <div class="w-24 h-24 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center relative z-10 shadow-xl group-hover:border-[#5EBEE6] group-hover:bg-slate-900 transition-colors duration-500">
+                                <span class="absolute -top-2 -right-2 w-7 h-7 bg-[#5EBEE6] text-slate-900 text-[11px] font-black rounded-full flex items-center justify-center shadow-lg border-2 border-slate-900">4</span>
+                                <i class="fa-solid fa-rocket text-3xl text-white group-hover:text-[#5EBEE6] transition-colors"></i>
+                            </div>
                         </div>
-                        <h4 class="text-xl text-slate-800 mb-3">การผลิตและการกระจาย</h4>
-                        <p class="text-[13px] text-slate-500 leading-relaxed px-4">
+                        <h4 class="text-lg font-bold text-white mb-2">ผลิตและกระจาย</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed px-2 font-medium">
                             ลงมือสร้างผลงานนวัตกรรมและการลงมือทำอย่างจริงจังให้เกิดผลลัพธ์
                         </p>
                     </div>
