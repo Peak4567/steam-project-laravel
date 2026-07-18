@@ -13,8 +13,6 @@
     {{-- google font --}}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600;700&display=swap"
         rel="stylesheet">
 
@@ -32,12 +30,12 @@
     <title>Document</title>
 </head>
 
-<body class="bg-[#feffff]">
+<body class="bg-[#feffff] antialiased">
     <div class="flex h-screen overflow-hidden">
 
         @include('components.backend.aside')
 
-        <div class="flex flex-col flex-1 overflow-hidden">
+        <div class="flex flex-col flex-1 h-screen overflow-y-auto custom-scrollbar">
             @yield('content')
         </div>
 

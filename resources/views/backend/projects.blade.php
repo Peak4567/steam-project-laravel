@@ -1,162 +1,188 @@
 @extends('backend.layout')
 @section('content')
-    <section class="w-full h-full p-6 md:p-10 font-kanit bg-gray-50/50">
+    <section class="w-full h-full p-4 md:p-8 font-mitr bg-slate-50/50">
 
-        <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        {{-- 🔝 1. ส่วนหัวหัวข้อการจัดการโครงงาน (Header Section) --}}
+        <div class="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
             <div>
-                <h2 class="text-2xl md:text-3xl font-bold text-slate-800 tracking-tight">จัดการโครงงาน</h2>
-                <p class="text-sm text-gray-500 mt-1">ตรวจสอบและบริหารจัดการโครงงานทั้งหมดในระบบ</p>
+                <div class="flex items-center gap-2.5">
+                    <div class="w-2.5 h-6 bg-gradient-to-b from-[#5EBEE6] to-blue-500 rounded-full shadow-sm"></div>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">ระบบจัดการโครงงาน (Projects)</h2>
+                </div>
+                <p class="text-xs md:text-sm text-slate-400 font-medium mt-1">มอนิเตอร์ ตรวจสอบ ควบคุมสถานะ และบริหารจัดการระบบคลังโครงงานของนักเรียนทั้งหมด</p>
             </div>
 
             <a href="{{ route('backend.projects.create') }}"
-                class="bg-[#5EBEE6] hover:bg-[#4fb1d8] text-white px-6 py-2.5 rounded-md text-sm font-medium transition-all shadow-sm flex items-center gap-2 w-fit">
-                <i class="fa-solid fa-plus"></i> เพิ่มโครงงานใหม่
+                class="bg-slate-900 hover:bg-slate-800 text-white px-5 py-3 rounded-xl text-xs font-bold transition-all shadow-md active:scale-95 flex items-center justify-center gap-2 w-full sm:w-auto shrink-0">
+                <i class="fa-solid fa-plus text-[10px]"></i> เพิ่มโครงงานใหม่เข้าคลัง
             </a>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-md border border-gray-100 shadow-sm relative overflow-hidden group">
-                <div class="absolute right-0 top-0 h-full w-1 bg-indigo-500"></div>
+        {{-- 📊 2. แผงกล่องข้อมูลสถิติแยกประเภท (Analytics Stats Cards Grid) --}}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
+            {{-- โครงงานทั้งหมด --}}
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm relative overflow-hidden group hover:-translate-y-0.5 transition-all duration-300">
+                <div class="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-[#5EBEE6] to-blue-500"></div>
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">โครงงานทั้งหมด</p>
-                        <h3 class="text-3xl font-black text-slate-800">{{ number_format($stats['total']) }}</h3>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">โครงงานในระบบทั้งหมด</p>
+                        <h3 class="text-2xl font-black text-slate-800 leading-none">{{ number_format($stats['total']) }} <span class="text-xs font-normal text-slate-400">กลุ่ม</span></h3>
                     </div>
-                    <div class="w-14 h-14 rounded-md bg-indigo-50 flex items-center justify-center text-indigo-500 relative">
-                        <i class="fa-solid fa-layer-group text-2xl relative z-10"></i>
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 border border-blue-100/30 flex items-center justify-center text-[#5EBEE6] shrink-0">
+                        <i class="fa-solid fa-layer-group text-lg"></i>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-md border border-gray-100 shadow-sm relative overflow-hidden group">
-                <div class="absolute right-0 top-0 h-full w-1 bg-orange-400"></div>
+            {{-- สำเร็จแล้ว --}}
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm relative overflow-hidden group hover:-translate-y-0.5 transition-all duration-300">
+                <div class="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-emerald-400 to-teal-500"></div>
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">สําเร็จ</p>
-                        <h3 class="text-3xl font-black text-slate-800">{{ number_format($stats['complated']) }}</h3>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">ดำเนินการสำเร็จเสร็จสิ้น</p>
+                        <h3 class="text-2xl font-black text-slate-800 leading-none">{{ number_format($stats['complated']) }} <span class="text-xs font-normal text-slate-400">โครงงาน</span></h3>
                     </div>
-                    <div class="w-14 h-14 rounded-md bg-orange-50 flex items-center justify-center text-orange-400 relative">
-                        <i class="fa-solid fa-clock-rotate-left text-2xl relative z-10"></i>
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-100/30 flex items-center justify-center text-emerald-500 shrink-0">
+                        <i class="fa-solid fa-circle-check text-lg"></i>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-md border border-gray-100 shadow-sm relative overflow-hidden group">
-                <div class="absolute right-0 top-0 h-full w-1 bg-red-500"></div>
+            {{-- ยกเลิกโครงการ --}}
+            <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm relative overflow-hidden group hover:-translate-y-0.5 transition-all duration-300">
+                <div class="absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b from-rose-400 to-red-500"></div>
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">ยกเลิก</p>
-                        <h3 class="text-3xl font-black text-slate-800">{{ number_format($stats['canceled']) }}</h3>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">โครงงานที่ถูกระงับ/ยกเลิก</p>
+                        <h3 class="text-2xl font-black text-slate-800 leading-none">{{ number_format($stats['canceled']) }} <span class="text-xs font-normal text-slate-400">รายการ</span></h3>
                     </div>
-                    <div class="w-14 h-14 rounded-md bg-red-50 flex items-center justify-center text-red-500 relative">
-                        <i class="fa-duotone fa-regular fa-ban text-2xl relative z-10"></i>
+                    <div class="w-12 h-12 rounded-xl bg-rose-50 border border-rose-100/30 flex items-center justify-center text-rose-500 shrink-0">
+                        <i class="fa-solid fa-ban text-lg"></i>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="bg-white p-4 rounded-md border border-gray-100 shadow-sm mb-6">
-            <form action="{{ route('backend.projects') }}" method="GET" class="flex flex-col sm:flex-row gap-4">
-                <div class="flex-grow relative">
-                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                    <input type="text" name="search" value="{{ request('search') }}" placeholder="ค้นหาชื่อโครงงาน..."
-                        class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-md text-sm focus:outline-none focus:border-[#5EBEE6] focus:ring-1 focus:ring-[#5EBEE6] transition-colors">
+        {{-- 🔍 3. ส่วนช่องค้นหาและคัดกรองสถานะขั้นสูง (Advanced Filters Form Box) --}}
+        <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.01)] mb-6">
+            <form action="{{ route('backend.projects') }}" method="GET" class="flex flex-col md:flex-row gap-3.5">
+                <div class="flex-grow relative shadow-sm rounded-xl">
+                    <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                        <i class="fa-solid fa-magnifying-glass text-[#5EBEE6]"></i>
+                    </div>
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="ค้นหาด้วยชื่อโครงงาน หรือชื่อทีมงานผู้รับผิดชอบ..."
+                        class="w-full pl-11 pr-4 py-3 bg-slate-50/50 border border-slate-100 rounded-xl text-xs font-medium outline-none focus:bg-white focus:border-[#5EBEE6] focus:ring-4 focus:ring-[#5EBEE6]/10 transition-all text-slate-700">
                 </div>
-                <select name="status"
-                    class="py-2.5 px-4 bg-gray-50 border border-gray-200 rounded-md text-sm text-gray-600 focus:outline-none focus:border-[#5EBEE6] min-w-[150px] cursor-pointer"
-                    onchange="this.form.submit()">
-                    <option value="all" {{ request('status') == 'all' ? 'selected' : '' }}>ทุกสถานะ</option>
-                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>รอพิจารณา</option>
-                    <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>อนุมัติแล้ว</option>
-                    <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>ถูกปฏิเสธ</option>
-                </select>
+                
+                <div class="relative min-w-[160px] shadow-sm rounded-xl">
+                    <select name="status"
+                        class="appearance-none w-full py-3 pl-4 pr-10 bg-slate-50/50 border border-slate-100 rounded-xl text-xs font-bold text-slate-600 outline-none focus:bg-white focus:border-[#5EBEE6] cursor-pointer transition-all"
+                        onchange="this.form.submit()">
+                        <option value="all" {{ request('status') == 'all' ? 'selected' : '' }}>ทุกสถานะโครงงาน</option>
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>⏳ รอพิจารณา</option>
+                        <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>✅ อนุมัติแล้ว</option>
+                        <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>❌ ถูกปฏิเสธ</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
+                        <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                    </div>
+                </div>
+
                 <button type="submit"
-                    class="bg-[#5EBEE6] hover:bg-[#4fb1d8] text-white px-8 py-2.5 rounded-md text-sm font-medium transition-all whitespace-nowrap">
-                    ค้นหา
+                    class="bg-gradient-to-r from-[#5EBEE6] to-[#3B9ADE] hover:opacity-95 text-white px-8 py-3 rounded-xl text-xs font-bold shadow-md shadow-blue-500/10 transition-all active:scale-95 whitespace-nowrap">
+                    ค้นหาข้อมูล
                 </button>
             </form>
         </div>
 
-        <div class="bg-white rounded-md border border-gray-100 shadow-sm overflow-hidden">
+        {{-- 📋 4. ตารางแสดงผลรายการคลังวิชาโครงงานหลัก (Data Table View Box) --}}
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.02)] overflow-hidden">
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
+                <table class="w-full text-left border-collapse min-w-[800px]">
                     <thead>
-                        <tr class="bg-gray-100/50 text-gray-600 text-[11px] uppercase tracking-widest border-b border-gray-100">
-                            <th class="px-6 py-4 font-bold">ข้อมูลโครงงาน</th>
-                            <th class="px-6 py-4 font-bold text-center">ผู้จัดทำ</th>
-                            <th class="px-6 py-4 font-bold text-center">วันที่สร้าง</th>
-                            <th class="px-6 py-4 font-bold text-center">สถานะ</th>
-                            <th class="px-6 py-4 font-bold text-right">การจัดการ</th>
+                        <tr class="bg-slate-50/80 text-slate-400 text-[10px] font-bold uppercase tracking-wider border-b border-slate-100">
+                            <th class="px-6 py-4 w-96">ข้อมูลหัวข้อวิชาโครงงาน</th>
+                            <th class="px-6 py-4 text-center w-52">ผู้จัดทำหลัก (Owner)</th>
+                            <th class="px-6 py-4 text-center w-32">วันที่บันทึก</th>
+                            <th class="px-6 py-4 text-center w-36">สถานะคิว</th>
+                            <th class="px-6 py-4 text-right w-36">การสั่งการ</th>
                         </tr>
                     </thead>
-                    <tbody class="text-sm text-slate-700 divide-y divide-gray-100">
+                    <tbody class="text-xs text-slate-600 font-medium divide-y divide-slate-50">
 
                         @forelse($projects as $project)
-                            <tr class="hover:bg-blue-50/20 transition-colors">
+                            <tr class="hover:bg-slate-50/40 transition-colors group">
+                                {{-- ชื่อโครงงาน --}}
                                 <td class="px-6 py-4">
-                                    <p class="font-bold text-slate-800 line-clamp-1">
-                                        {{ $project->name ?? 'ไม่ระบุชื่อโครงงาน' }}
+                                    <p class="font-bold text-slate-800 text-sm line-clamp-1 group-hover:text-[#5EBEE6] transition-colors">
+                                        {{ $project->name ?? 'ไม่ระบุชื่อโครงงานสตรีม' }}
                                     </p>
-                                    <div class="flex items-center gap-2 mt-1">
-                                        <span class="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-sm font-medium border border-gray-200">ID: {{ $project->id }}</span>
-                                        <span class="text-[10px] text-gray-400 font-light italic">ทีม: {{ $project->team_name ?? '-' }}</span>
+                                    <div class="flex items-center gap-2 mt-1.5">
+                                        <span class="text-[9px] bg-slate-50 text-slate-400 px-2 py-0.5 rounded-md font-bold border border-slate-100 shadow-inner">ID: #{{ $project->id }}</span>
+                                        <span class="text-[10px] text-slate-400 font-medium flex items-center gap-1"><i class="fa-solid fa-user-group text-[9px]"></i> ทีม: {{ $project->team_name ?? 'ไม่มีชื่อกลุ่มทีมงาน' }}</span>
                                     </div>
                                 </td>
 
+                                {{-- ข้อมูลเจ้าของโครงงาน --}}
                                 <td class="px-6 py-4">
-                                    <div class="flex flex-col items-center justify-center min-w-[120px]">
+                                    <div class="flex items-center gap-3 justify-center min-w-[150px] text-left">
                                         @if ($project->user && $project->user->profile_image)
                                             <img src="{{ asset($project->user->profile_image) }}"
-                                                class="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm mb-1">
+                                                class="w-8 h-8 rounded-full object-cover border-2 border-white shadow-sm shrink-0">
                                         @else
-                                            <div class="w-9 h-9 rounded-full bg-blue-50 text-[#5EBEE6] flex items-center justify-center border border-blue-100 mb-1">
-                                                <i class="fa-solid fa-user-pen text-sm"></i>
+                                            <div class="w-8 h-8 rounded-full bg-blue-50 border border-blue-100/50 text-[#5EBEE6] flex items-center justify-center shrink-0 text-[10px]">
+                                                <i class="fa-solid fa-user-gear"></i>
                                             </div>
                                         @endif
-                                        <p class="font-bold text-gray-600 text-[11px] text-center">
-                                            {{ $project->user ? $project->user->first_name . ' ' . $project->user->last_name : 'Admin System' }}
-                                        </p>
+                                        <div class="overflow-hidden">
+                                            <p class="font-bold text-slate-700 truncate">
+                                                {{ $project->user ? $project->user->first_name . ' ' . $project->user->last_name : 'Admin System' }}
+                                            </p>
+                                            <p class="text-[9px] text-slate-400 font-medium">ผู้สร้างโปรเจกต์</p>
+                                        </div>
                                     </div>
                                 </td>
 
-                                <td class="px-6 py-4 text-center text-gray-500 text-xs">
-                                    <span class="font-medium">{{ $project->created_at->format('d/m/Y') }}</span><br>
-                                    <span class="text-[10px] opacity-60">{{ $project->created_at->format('H:i') }} น.</span>
+                                {{-- วันที่สร้าง --}}
+                                <td class="px-6 py-4 text-center text-slate-400 text-[11px] whitespace-nowrap">
+                                    <span class="font-bold text-slate-600"><i class="fa-regular fa-calendar text-[10px] mr-0.5"></i> {{ $project->created_at->format('d/m/Y') }}</span><br>
+                                    <span class="text-[9px] font-medium opacity-70">{{ $project->created_at->format('H:i') }} น.</span>
                                 </td>
 
+                                {{-- ป้ายแสดงผลสถานะ --}}
                                 <td class="px-6 py-4 text-center">
                                     @if ($project->status == 'approved')
-                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-100">
-                                            <i class="fa-solid fa-check-double"></i> อนุมัติแล้ว
+                                        <span class="inline-flex items-center gap-1 bg-emerald-50 border border-emerald-100 text-emerald-500 px-2.5 py-1 rounded-lg font-bold text-[10px] tracking-wide">
+                                            <i class="fa-solid fa-circle-check text-[9px]"></i> อนุมัติแล้ว
                                         </span>
                                     @elseif($project->status == 'rejected')
-                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-[10px] font-bold bg-red-50 text-red-500 border border-red-100">
-                                            <i class="fa-solid fa-ban"></i> ปฏิเสธ
+                                        <span class="inline-flex items-center gap-1 bg-rose-50 border border-rose-100 text-rose-500 px-2.5 py-1 rounded-lg font-bold text-[10px] tracking-wide">
+                                            <i class="fa-solid fa-circle-xmark text-[9px]"></i> ถูกปฏิเสธ
                                         </span>
                                     @else
-                                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-[10px] font-bold bg-orange-50 text-orange-500 border border-orange-100">
-                                            <span class="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span>
-                                            รอพิจารณา
+                                        <span class="inline-flex items-center gap-1 bg-orange-50 border border-orange-100 text-orange-500 px-2.5 py-1 rounded-lg font-bold text-[10px] tracking-wide">
+                                            <span class="w-1 h-1 rounded-full bg-orange-500 animate-pulse"></span> รอการพิจารณา
                                         </span>
                                     @endif
                                 </td>
 
+                                {{-- 🛠️ บล็อกปุ่มแก้ไข/ลบคำสั่งงาน (แสดงผลถาวร ไม่ต้องรอ Hover) 🛠️ --}}
                                 <td class="px-6 py-4">
-                                    <div class="flex items-center justify-end gap-2">
+                                    <div class="flex items-center justify-end gap-1.5">
                                         <a href="{{ route('backend.projects.edit', $project->id) }}"
-                                            class="w-8 h-8 rounded-md bg-white text-orange-400 flex items-center justify-center hover:bg-orange-400 hover:text-white transition-all border border-gray-100 shadow-sm"
-                                            title="แก้ไข">
-                                            <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                            class="w-7 h-7 rounded-lg bg-slate-50 text-orange-400 flex items-center justify-center hover:bg-orange-400 hover:text-white border border-slate-100 shadow-sm transition-all"
+                                            title="แก้ไขข้อมูล">
+                                            <i class="fa-solid fa-pen-to-square text-[11px]"></i>
                                         </a>
                                         <form action="{{ route('backend.projects.destroy', $project->id) }}" method="POST"
-                                            class="inline-block"
-                                            onsubmit="return confirm('⚠️ ต้องการลบโครงงาน {{ $project->name }} หรือไม่?');">
+                                            class="inline-flex"
+                                            onsubmit="return confirm('⚠️ คุณต้องการดำเนินการยืนยันคำสั่งเพื่อลบโครงงานวิชา [ {{ $project->name }} ] ออกจากคลังระบบถาวรใช่หรือไม่?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
-                                                class="w-8 h-8 rounded-md bg-white text-red-500 flex items-center justify-center hover:bg-red-500 hover:text-white transition-all border border-gray-100 shadow-sm"
-                                                title="ลบ">
-                                                <i class="fa-regular fa-trash-can text-xs"></i>
+                                                class="w-7 h-7 rounded-lg bg-slate-50 text-rose-500 flex items-center justify-center hover:bg-rose-500 hover:text-white border border-slate-100 shadow-sm transition-all"
+                                                title="ลบข้อมูล">
+                                                <i class="fa-regular fa-trash-can text-[11px]"></i>
                                             </button>
                                         </form>
                                     </div>
@@ -164,12 +190,13 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-20 text-center text-gray-400">
-                                    <div class="flex flex-col items-center">
-                                        <div class="w-16 h-16 bg-gray-50 text-gray-200 rounded-full flex items-center justify-center mb-4">
-                                            <i class="fa-solid fa-box-open text-3xl"></i>
+                                <td colspan="5" class="px-6 py-16 text-center text-slate-400">
+                                    <div class="flex flex-col items-center justify-center">
+                                        <div class="w-14 h-14 bg-slate-50 border border-slate-100 rounded-full flex items-center justify-center mb-3">
+                                            <i class="fa-solid fa-box-open text-2xl text-slate-300"></i>
                                         </div>
-                                        <p class="text-sm font-bold text-slate-400 uppercase tracking-widest">No Projects Found</p>
+                                        <h4 class="text-sm font-bold text-slate-700 mb-0.5">ไม่พบข้อมูลรายชื่อวิชาโครงงาน</h4>
+                                        <p class="text-xs text-slate-400 font-medium">ไม่มีโครงงานที่ตรงกับเงื่อนไขการค้นหาในสถิติขณะนี้</p>
                                     </div>
                                 </td>
                             </tr>
@@ -179,8 +206,9 @@
                 </table>
             </div>
 
+            {{-- หมายเลขแบ่งหน้าข้อมูล --}}
             @if ($projects->hasPages())
-                <div class="px-6 py-4 border-t border-gray-50 bg-white">
+                <div class="px-6 py-4 border-t border-slate-50 bg-white">
                     {{ $projects->links() }}
                 </div>
             @endif

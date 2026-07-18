@@ -21,13 +21,22 @@ class ProjectController extends Controller
             $query->where('user_id', Auth::id());
         })->with(['members' => function ($query) {
             $query->withPivot('position', 'status');
-        }])->withCount('members')->first();
+        }, 'advisors', 'tags'])->withCount('members')->first();
 
         $allProjects = Project::with(['advisors', 'tags'])->get();
 
-        return view('profile.projects', compact('project', 'allProjects'));
+        // 🌟 ดึงข้อมูลรายชื่อนักเรียนดีเด่นสำหรับทำเนียบเกียรติยศ (Hall of Fame)
+        $hallOfFameUsers = \Illuminate\Support\Facades\DB::table('users')
+            ->where('is_hall_of_fame', 1)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return view('profile.projects', compact('project', 'allProjects', 'hallOfFameUsers'));
     }
 
+    /**
+     * 2. ระบบสืบค้น ค้นหา และกรองโครงงาน (Frontend Project Search Engine)
+     */
     public function searchProjects(Request $request)
     {
         $projectQuery = Project::with(['advisors', 'tags'])
@@ -59,6 +68,7 @@ class ProjectController extends Controller
                     });
             });
         }
+
         if ($request->filled('tag')) {
             $tag = $request->tag;
             $reportQuery->whereHas('project.tags', function ($q) use ($tag) {
@@ -68,7 +78,12 @@ class ProjectController extends Controller
 
         $reports = $reportQuery->latest()->paginate(12)->withQueryString();
 
-        return view('projects', compact('projects', 'tags', 'reports'));
+        $hallOfFameUsers = \Illuminate\Support\Facades\DB::table('users')
+            ->where('is_hall_of_fame', 1)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return view('projects', compact('projects', 'tags', 'reports', 'hallOfFameUsers'));
     }
 
     public function showProject($id)
@@ -276,7 +291,6 @@ class ProjectController extends Controller
 
     public function uploadReports(Request $request, $id)
     {
-        // ตรวจสอบและจำกัดขนาดไฟล์รายงานเล่มโครงงาน สูงสุดไม่เกิน 10MB (10240 KB)
         $request->validate([
             'project_name' => 'required|string|max:255',
             'advisor' => 'required|string|max:255',
@@ -284,7 +298,6 @@ class ProjectController extends Controller
             'document' => 'required|mimes:pdf|max:10240'
         ]);
 
-        // 🌟 แก้ไขจุดที่พิมพ์ Class ซ้อนกัน (Project::Project) ให้เหลือแค่ Project ชั้นเดียวที่ถูกต้อง
         $project = Project::findOrFail($id);
 
         if ($request->hasFile('document')) {
@@ -378,6 +391,9 @@ class ProjectController extends Controller
         return view('profile.reports', compact('reports', 'project'));
     }
 
+    /**
+     * 18. เรียกแสดงเนื้อหาไฟล์รายงานสดบนหน้าต่างเบราว์เซอร์
+     */
     public function viewReport($id)
     {
         $report = ProjectReport::findOrFail($id);

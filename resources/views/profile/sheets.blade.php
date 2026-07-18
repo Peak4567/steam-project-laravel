@@ -1,216 +1,207 @@
 @extends('profile.profile-layout')
 @section('profile-content')
 
-<section class="max-w-screen-xl mx-auto bg-gray-50/30 min-h-screen">
+<section class="w-full font-mitr max-w-6xl mx-auto text-slate-700">
 
-    <div class="mb-6">
-        <h2 class="text-xl md:text-2xl font-bold text-[#2E8DA3]">อัปโหลดไฟล์ชีท</h2>
-        <p class="text-xs md:text-sm text-gray-400 mt-1">แชร์ชีทสรุป, ไฟล์ PDF, Canva หรือสื่อการเรียนรู้ให้เพื่อนในชั้นเรียน</p>
+    <div class="mb-8 border-b border-slate-100 pb-4 flex flex-col md:flex-row justify-between items-start md:items-end gap-3">
+        <div>
+            <div class="flex items-center gap-2.5">
+                <div class="w-2.5 h-6 bg-gradient-to-b from-[#5EBEE6] to-blue-500 rounded-full shadow-sm"></div>
+                <h2 class="text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight">อัปโหลดจัดการชีทสรุป</h2>
+            </div>
+            <p class="text-xs text-slate-400 font-medium mt-1">แบ่งปันชีทสรุปบทเรียน, สื่อการเรียนรู้ PDF หรือคลังสไลด์ Canva เพื่อร่วมสร้างสรรค์การแบ่งปันในห้องเรียน</p>
+        </div>
     </div>
 
-    <div class="flex flex-col gap-6 mb-8">
+    <div class="flex flex-col gap-6 mb-10">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm text-center">
-                <h3 class="text-2xl font-bold text-slate-800">{{ number_format($totalFiles) }}</h3>
-                <p class="text-[10px] text-gray-400 mt-1">ไฟล์ทั้งหมด</p>
+            <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center group transition-all duration-300 hover:-translate-y-0.5">
+                <h3 class="text-2xl font-black text-slate-800 tracking-tight">{{ number_format($totalFiles) }}</h3>
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-1">ไฟล์อัปโหลด</p>
             </div>
-            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm text-center">
-                <h3 class="text-2xl font-bold text-slate-800">{{ number_format($totalDownloads) }}</h3>
-                <p class="text-[10px] text-gray-400 mt-1">ยอดดาวน์โหลดรวม</p>
+            <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center group transition-all duration-300 hover:-translate-y-0.5">
+                <h3 class="text-2xl font-black text-[#5EBEE6] tracking-tight">{{ number_format($totalDownloads) }}</h3>
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-1">ยอดดาวน์โหลดรวม</p>
             </div>
-            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm text-center">
-                <h3 class="text-2xl font-bold text-slate-800">{{ number_format($totalSubjects) }}</h3>
-                <p class="text-[10px] text-gray-400 mt-1">วิชาทั้งหมด</p>
+            <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center group transition-all duration-300 hover:-translate-y-0.5">
+                <h3 class="text-2xl font-black text-slate-800 tracking-tight">{{ number_format($totalSubjects) }}</h3>
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-1">จำนวนวิชา</p>
             </div>
-            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm text-center">
-                <h3 class="text-2xl font-bold text-slate-800">{{ number_format($totalViews) }}</h3>
-                <p class="text-[10px] text-gray-400 mt-1">ยอดวิวรวมทั้งสิ้น</p>
+            <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-center group transition-all duration-300 hover:-translate-y-0.5">
+                <h3 class="text-2xl font-black text-slate-800 tracking-tight">{{ number_format($totalViews) }}</h3>
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-1">ยอดเข้าชมรวม</p>
             </div>
         </div>
 
-        <div class="bg-white p-5 md:p-6 rounded-xl border border-gray-100 shadow-sm">
-            <div class="flex items-center gap-3 mb-5">
-                <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500">
-                    <i class="fa-solid fa-cloud-arrow-up"></i>
+        <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.02)]">
+            <div class="flex items-center gap-3.5 mb-5 text-[#5EBEE6] border-b border-slate-50 pb-3">
+                <div class="w-9 h-9 bg-blue-50 border border-blue-100/50 rounded-xl flex items-center justify-center">
+                    <i class="fa-solid fa-cloud-arrow-up text-base"></i>
                 </div>
-                <h3 class="text-base font-bold text-slate-800">อัปโหลด</h3>
+                <h3 class="text-sm font-extrabold text-slate-900 tracking-tight">ส่งเอกสารสรุปบทเรียน</h3>
             </div>
 
             <form action="{{ route('profile.sheets.store') }}" method="POST" enctype="multipart/form-data" id="sheet-upload-form">
                 @csrf
                 
-                <div class="flex items-center gap-6 mb-4 pb-4 border-b border-gray-100">
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="type_check" value="file" checked onchange="toggleInputType('file')" class="w-4 h-4 text-[#5EBEE6] focus:ring-[#5EBEE6]">
-                        <span class="text-xs text-gray-700 font-medium">ประเภทไฟล์ (PDF, Word, รูปภาพ)</span>
+                <div class="flex flex-wrap items-center gap-6 mb-5 pb-4 border-b border-slate-50">
+                    <label class="flex items-center gap-2 cursor-pointer group">
+                        <input type="radio" name="type_check" value="file" checked onchange="toggleInputType('file')" class="w-4 h-4 text-[#5EBEE6] border-slate-200 focus:ring-[#5EBEE6]/40">
+                        <span class="text-xs text-slate-600 font-bold group-hover:text-slate-800 transition-colors">ประเภทไฟล์เอกสาร (PDF, Word, Image)</span>
                     </label>
-                    <label class="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" name="type_check" value="link" onchange="toggleInputType('link')" class="w-4 h-4 text-[#5EBEE6] focus:ring-[#5EBEE6]">
-                        <span class="text-xs text-gray-700 font-medium">ประเภทลิงก์ (Google Drive, Canva, ฯลฯ)</span>
+                    <label class="flex items-center gap-2 cursor-pointer group">
+                        <input type="radio" name="type_check" value="link" onchange="toggleInputType('link')" class="w-4 h-4 text-orange-500 border-slate-200 focus:ring-orange-500/40">
+                        <span class="text-xs text-slate-600 font-bold group-hover:text-slate-800 transition-colors">ประเภทลิงก์ภายนอก (Canva, Google Drive)</span>
                     </label>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">ชื่อชีท</label>
-                        <input type="text" name="sheet_name" placeholder="ระบุชื่อเอกสาร..." class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-2.5 outline-none focus:ring-1 focus:ring-[#5EBEE6] transition shadow-sm" required>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-slate-500 pl-0.5">ชื่อชีทสรุป</label>
+                        <input type="text" name="sheet_name" placeholder="ระบุชื่อเรียกเอกสารชีทสรุป..." class="w-full bg-slate-50/50 border border-slate-100 text-xs font-medium rounded-xl p-3 outline-none focus:bg-white focus:border-[#5EBEE6] focus:ring-4 focus:ring-[#5EBEE6]/10 transition-all text-slate-700" required>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">ระดับชั้น</label>
-                        <select name="level" class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-2.5 outline-none focus:ring-1 focus:ring-[#5EBEE6] transition shadow-sm" required>
-                            <option value="">-- เลือกระดับชั้น --</option>
-                            <optgroup label="อนุบาล">
-                                <option value="อนุบาล 1">อนุบาล 1</option>
-                                <option value="อนุบาล 2">อนุบาล 2</option>
-                                <option value="อนุบาล 3">อนุบาล 3</option>
-                            </optgroup>
-                            <optgroup label="ประถมศึกษา">
-                                <option value="ประถมศึกษาปีที่ 1">ประถมศึกษาปีที่ 1</option>
-                                <option value="ประถมศึกษาปีที่ 2">ประถมศึกษาปีที่ 2</option>
-                                <option value="ประถมศึกษาปีที่ 3">ประถมศึกษาปีที่ 3</option>
-                                <option value="ประถมศึกษาปีที่ 4">ประถมศึกษาปีที่ 4</option>
-                                <option value="ประถมศึกษาปีที่ 5">ประถมศึกษาปีที่ 5</option>
-                                <option value="ประถมศึกษาปีที่ 6">ประถมศึกษาปีที่ 6</option>
-                            </optgroup>
-                            <optgroup label="มัธยมศึกษาตอนต้น">
-                                <option value="มัธยมศึกษาปีที่ 1">มัธยมศึกษาปีที่ 1</option>
-                                <option value="มัธยมศึกษาปีที่ 2">มัธยมศึกษาปีที่ 2</option>
-                                <option value="มัธยมศึกษาปีที่ 3">มัธยมศึกษาปีที่ 3</option>
-                            </optgroup>
-                            <optgroup label="มัธยมศึกษาตอนปลาย">
-                                <option value="มัธยมศึกษาปีที่ 4">มัธยมศึกษาปีที่ 4</option>
-                                <option value="มัธยมศึกษาปีที่ 5">มัธยมศึกษาปีที่ 5</option>
-                                <option value="มัธยมศึกษาปีที่ 6">มัธยมศึกษาปีที่ 6</option>
-                            </optgroup>
-                            <optgroup label="อาชีวศึกษา">
-                                <option value="ปวช. 1">ปวช. 1</option>
-                                <option value="ปวช. 2">ปวช. 2</option>
-                                <option value="ปวช. 3">ปวช. 3</option>
-                                <option value="ปวส. 1">ปวส. 1</option>
-                                <option value="ปวส. 2">ปวส. 2</option>
-                            </optgroup>
-                            <optgroup label="มหาวิทยาลัย">
-                                <option value="มหาวิทยาลัย ปี 1">มหาวิทยาลัย ปี 1</option>
-                                <option value="มหาวิทยาลัย ปี 2">มหาวิทยาลัย ปี 2</option>
-                                <option value="มหาวิทยาลัย ปี 3">มหาวิทยาลัย ปี 3</option>
-                                <option value="มหาวิทยาลัย ปี 4">มหาวิทยาลัย ปี 4</option>
-                                <option value="มหาวิทยาลัย ปี 5">มหาวิทยาลัย ปี 5</option>
-                                <option value="มหาวิทยาลัย ปี 6">มหาวิทยาลัย ปี 6</option>
-                            </optgroup>
-                            <option value="อื่นๆ">อื่นๆ</option>
-                        </select>
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-slate-500 pl-0.5">ระดับชั้นเรียน</label>
+                        <div class="relative">
+                            <select name="level" class="appearance-none w-full bg-slate-50/50 border border-slate-100 text-xs font-medium rounded-xl p-3 outline-none focus:bg-white focus:border-[#5EBEE6] focus:ring-4 focus:ring-[#5EBEE6]/10 transition-all text-slate-700 cursor-pointer" required>
+                                <option value="">-- เลือกระดับชั้นการศึกษา --</option>
+                                <optgroup label="มัธยมศึกษาตอนต้น" class="font-bold text-slate-400">
+                                    <option value="มัธยมศึกษาปีที่ 1" class="text-slate-700 font-medium">มัธยมศึกษาปีที่ 1</option>
+                                    <option value="มัธยมศึกษาปีที่ 2" class="text-slate-700 font-medium">มัธยมศึกษาปีที่ 2</option>
+                                    <option value="มัธยมศึกษาปีที่ 3" class="text-slate-700 font-medium">มัธยมศึกษาปีที่ 3</option>
+                                </optgroup>
+                                <optgroup label="มัธยมศึกษาตอนปลาย" class="font-bold text-slate-400">
+                                    <option value="มัธยมศึกษาปีที่ 4" class="text-slate-700 font-medium">มัธยมศึกษาปีที่ 4</option>
+                                    <option value="มัธยมศึกษาปีที่ 5" class="text-slate-700 font-medium">มัธยมศึกษาปีที่ 5</option>
+                                    <option value="มัธยมศึกษาปีที่ 6" class="text-slate-700 font-medium">มัธยมศึกษาปีที่ 6</option>
+                                </optgroup>
+                                <option value="อื่นๆ" class="text-slate-700 font-medium">อื่นๆ</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
+                                <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">วิชา</label>
-                        <input type="text" name="subject" placeholder="ระบุวิชา..." class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-2.5 outline-none focus:ring-1 focus:ring-[#5EBEE6] transition shadow-sm" required>
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-slate-500 pl-0.5">รายวิชา</label>
+                        <input type="text" name="subject" placeholder="ระบุกลุ่มสาระวิชาเรียน..." class="w-full bg-slate-50/50 border border-slate-100 text-xs font-medium rounded-xl p-3 outline-none focus:bg-white focus:border-[#5EBEE6] focus:ring-4 focus:ring-[#5EBEE6]/10 transition-all text-slate-700" required>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">ภาค</label>
-                        <select name="term" class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-2.5 outline-none focus:ring-1 focus:ring-[#5EBEE6] transition shadow-sm" required>
-                            <option value="">-- เลือกภาคเรียน --</option>
-                            <option value="ภาคเรียนที่ 1">ภาคเรียนที่ 1</option>
-                            <option value="ภาคเรียนที่ 2">ภาคเรียนที่ 2</option>
-                            <option value="ภาคเรียนที่ 3">ภาคเรียนที่ 3</option>
-                            <option value="กลางภาคเรียนที่ 1">กลางภาคเรียนที่ 1</option>
-                            <option value="ปลายภาคเรียนที่ 1">ปลายภาคเรียนที่ 1</option>
-                            <option value="กลางภาคเรียนที่ 2">กลางภาคเรียนที่ 2</option>
-                            <option value="ปลายภาคเรียนที่ 2">ปลายภาคเรียนที่ 2</option>
-                            <option value="ภาคฤดูร้อน">ภาคฤดูร้อน (Summer)</option>
-                            <option value="อื่นๆ">อื่นๆ</option>
-                        </select>
+                    <div class="space-y-1">
+                        <label class="block text-xs font-bold text-slate-500 pl-0.5">ภาคเรียน / ช่วงการสอบ</label>
+                        <div class="relative">
+                            <select name="term" class="appearance-none w-full bg-slate-50/50 border border-slate-100 text-xs font-medium rounded-xl p-3 outline-none focus:bg-white focus:border-[#5EBEE6] focus:ring-4 focus:ring-[#5EBEE6]/10 transition-all text-slate-700 cursor-pointer" required>
+                                <option value="">-- เลือกภาคสอบ/ภาคเรียน --</option>
+                                <option value="กลางภาคเรียนที่ 1">กลางภาคเรียนที่ 1</option>
+                                <option value="ปลายภาคเรียนที่ 1">ปลายภาคเรียนที่ 1</option>
+                                <option value="กลางภาคเรียนที่ 2">กลางภาคเรียนที่ 2</option>
+                                <option value="ปลายภาคเรียนที่ 2">ปลายภาคเรียนที่ 2</option>
+                                <option value="อื่นๆ">อื่นๆ</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400">
+                                <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div id="file-input-container" class="mb-6 block">
-                    <label class="block text-xs font-bold text-[#5EBEE6] mb-1">
-                        <i class="fa-solid fa-file-arrow-up"></i> เลือกไฟล์ที่ต้องการอัปโหลด 
-                        <span class="text-gray-400 font-normal text-[10px] ml-1">(ขนาดสูงสุดไม่เกิน 10MB)</span>
+                <div id="file-input-container" class="mb-5 block space-y-1.5">
+                    <label class="block text-xs font-bold text-[#5EBEE6] pl-0.5">
+                        <i class="fa-solid fa-file-arrow-up"></i> เลือกไฟล์สรุปเอกสารในเครื่องของคุณ 
+                        <span class="text-slate-400 font-medium text-[10px] ml-1">(ขนาดรวมไฟล์ห้ามเกิน 10MB)</span>
                     </label>
-                    <input type="file" name="document" id="document_input" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-gray-50 file:text-[#5EBEE6] hover:file:bg-[#eaf6fc] border border-gray-200 rounded-xl bg-white transition cursor-pointer shadow-sm" required>
+                    <input type="file" name="document" id="document_input" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-[#5EBEE6] hover:file:bg-[#eaf6fc] border border-slate-100 rounded-xl bg-white transition cursor-pointer shadow-sm" required>
                 </div>
 
-                <div id="link-input-container" class="mb-6 hidden">
-                    <label class="block text-xs font-bold text-orange-500 mb-1"><i class="fa-solid fa-link"></i> วางลิงก์ที่นี่</label>
-                    <input type="url" name="link_url" id="link_input" placeholder="https://..." class="w-full bg-white border border-gray-200 text-xs rounded-xl p-2.5 outline-none focus:ring-1 focus:ring-orange-400 transition shadow-sm">
+                <div id="link-input-container" class="mb-5 hidden space-y-1.5">
+                    <label class="block text-xs font-bold text-orange-500 pl-0.5"><i class="fa-solid fa-link"></i> วาง URL ลิงก์ที่ต้องการแบ่งปันแชร์ข้อมูล</label>
+                    <input type="url" name="link_url" id="link_input" placeholder="วางลิงก์ตัวอย่างแชร์ เช่น https://canva.com/..." class="w-full bg-white border border-slate-100 text-xs font-medium rounded-xl p-3 outline-none focus:border-orange-400 focus:ring-4 focus:ring-orange-500/10 transition-all text-slate-700">
                 </div>
 
-                <div class="flex justify-center md:justify-end gap-3 border-t border-gray-100 pt-4 mt-2">
-                    <button type="reset" class="px-8 py-2 bg-red-500 hover:bg-red-600 text-white text-xs font-bold rounded-xl transition shadow-sm">ยกเลิก</button>
-                    <button type="submit" class="px-8 py-2 bg-white border-2 border-green-400 text-green-500 hover:bg-green-50 text-xs font-bold rounded-xl transition shadow-sm">ยืนยัน</button>
+                <div class="flex justify-end gap-2 border-t border-slate-50 pt-4 mt-2">
+                    <button type="reset" class="px-5 py-2.5 bg-slate-100 font-bold hover:bg-slate-200 transition text-slate-500 rounded-xl text-xs active:scale-95">ยกเลิก</button>
+                    <button type="submit" class="px-6 py-2.5 bg-slate-900 font-bold hover:bg-slate-800 transition text-white rounded-xl text-xs shadow-md active:scale-95">ยืนยันจัดส่งชีท</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+    <div class="bg-white rounded-2xl border border-slate-100 shadow-lg overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse table-fixed min-w-[800px]">
+            <table class="w-full text-left border-collapse table-fixed min-w-[850px]">
                 <thead>
-                    <tr class="border-b border-gray-100 bg-gray-50/50">
-                        <th class="py-4 px-6 text-xs font-bold text-gray-400 w-28">หมวดหมู่</th>
-                        <th class="py-4 px-6 text-xs font-bold text-gray-400 w-56">วิชา</th>
-                        <th class="py-4 px-6 text-xs font-bold text-gray-400 w-64">ชื่อชีทสรุป</th>
-                        <th class="py-4 px-6 text-xs font-bold text-gray-400 text-center w-28">ระดับชั้น</th>
-                        <th class="py-4 px-6 text-xs font-bold text-gray-400 text-center w-28">วันที่</th>
-                        <th class="py-4 px-6 text-xs font-bold text-gray-400 text-center w-32">สถานะ</th>
-                        <th class="py-4 px-6 text-xs font-bold text-gray-400 text-center w-36">จัดการ</th>
+                    <tr class="border-b border-slate-100 bg-slate-50/70 font-bold text-slate-400 text-xs uppercase tracking-wider">
+                        <th class="py-4 px-6 w-28">ประเภท</th>
+                        <th class="py-4 px-6 w-52">กลุ่มวิชาเรียน</th>
+                        <th class="py-4 px-6">ชื่อเอกสารข้อมูลชีท</th>
+                        <th class="py-4 px-6 text-center w-28">ระดับชั้น</th>
+                        <th class="py-4 px-6 text-center w-28">วันที่ส่ง</th>
+                        <th class="py-4 px-6 text-center w-28">สถานะ</th>
+                        <th class="py-4 px-6 text-center w-36">จัดการ</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-50">
+                <tbody class="divide-y divide-slate-50 text-slate-600 text-xs font-medium">
                     @forelse($sheets as $sheet)
-                    <tr class="hover:bg-gray-50/50 transition align-top">
+                    <tr class="hover:bg-slate-50/50 transition align-top group">
                         <td class="py-4 px-6">
                             @if($sheet->type == 'file')
-                                <span class="inline-flex items-center gap-1.5 whitespace-nowrap bg-[#E5F3FF] text-[#5EBEE6] text-[10px] font-bold px-4 py-1.5 rounded-xl border border-[#BCE3F9]"><i class="fa-solid fa-file"></i> ไฟล์</span>
+                                <span class="inline-flex items-center gap-1.5 whitespace-nowrap bg-blue-50 text-[#5EBEE6] text-[10px] font-bold px-3 py-1.5 rounded-xl border border-blue-100/50"><i class="fa-solid fa-file-pdf"></i> ไฟล์เอกสาร</span>
                             @else
-                                <span class="inline-flex items-center gap-1.5 whitespace-nowrap bg-orange-50 text-orange-500 text-[10px] font-bold px-4 py-1.5 rounded-xl border border-orange-200"><i class="fa-solid fa-link"></i> ลิงก์</span>
+                                <span class="inline-flex items-center gap-1.5 whitespace-nowrap bg-orange-50 text-orange-500 text-[10px] font-bold px-3 py-1.5 rounded-xl border border-orange-100/50"><i class="fa-solid fa-link"></i> ลิงก์แชร์</span>
                             @endif
                         </td>
                         <td class="py-4 px-6">
-                            <div class="max-w-[200px] w-full mb-1">
-                                <p class="text-sm font-bold text-slate-800 auto-clamp line-clamp-1 break-words">{{ $sheet->subject }}</p>
-                                <button onclick="toggleText(this)" class="hidden text-[9px] text-[#5EBEE6] hover:text-[#45a8d1] mt-0.5 outline-none font-medium">ดูทั้งหมด <i class="fa-solid fa-chevron-down text-[8px] ml-0.5"></i></button>
+                            <div class="max-w-[180px] w-full mb-1">
+                                <p class="text-sm font-bold text-slate-800 auto-clamp line-clamp-1 break-words group-hover:text-[#5EBEE6] transition-colors">{{ $sheet->subject }}</p>
+                                <button onclick="toggleText(this)" class="hidden text-[9px] text-[#5EBEE6] hover:text-[#45a8d1] mt-1 outline-none font-bold">ดูทั้งหมด <i class="fa-solid fa-chevron-down text-[8px] ml-0.5"></i></button>
                             </div>
-                            <div class="max-w-[200px] w-full">
-                                <p class="text-[9px] text-gray-400 auto-clamp line-clamp-1 break-words">{{ $sheet->term }}</p>
-                                <button onclick="toggleText(this)" class="hidden text-[9px] text-[#5EBEE6] hover:text-[#45a8d1] mt-0.5 outline-none font-medium">ดูทั้งหมด <i class="fa-solid fa-chevron-down text-[8px] ml-0.5"></i></button>
+                            <div class="max-w-[180px] w-full">
+                                <p class="text-[10px] text-slate-400 font-semibold auto-clamp line-clamp-1 break-words bg-slate-50 border border-slate-100 px-2 py-0.5 rounded inline-block">{{ $sheet->term }}</p>
+                                <button onclick="toggleText(this)" class="hidden text-[9px] text-[#5EBEE6] hover:text-[#45a8d1] mt-1 outline-none font-bold">ดูทั้งหมด <i class="fa-solid fa-chevron-down text-[8px] ml-0.5"></i></button>
                             </div>
                         </td>
                         <td class="py-4 px-6">
                             <div class="max-w-[220px] w-full">
-                                <p class="text-sm font-bold text-slate-800 auto-clamp line-clamp-1 break-words">{{ $sheet->sheet_name }}</p>
-                                <button onclick="toggleText(this)" class="hidden text-[9px] text-[#5EBEE6] hover:text-[#45a8d1] mt-0.5 outline-none font-medium">ดูทั้งหมด <i class="fa-solid fa-chevron-down text-[8px] ml-0.5"></i></button>
+                                <p class="text-sm font-bold text-slate-700 auto-clamp line-clamp-1 break-words">{{ $sheet->sheet_name }}</p>
+                                <button onclick="toggleText(this)" class="hidden text-[9px] text-[#5EBEE6] hover:text-[#45a8d1] mt-1 outline-none font-bold">ดูทั้งหมด <i class="fa-solid fa-chevron-down text-[8px] ml-0.5"></i></button>
                             </div>
                         </td>
-                        <td class="py-4 px-6 text-center text-xs text-gray-600 font-medium">{{ $sheet->level }}</td>
-                        <td class="py-4 px-6 text-center text-xs text-gray-600">{{ $sheet->created_at->format('d/m/y') }}</td>
+                        <td class="py-4 px-6 text-center text-slate-600 font-bold">{{ $sheet->level }}</td>
+                        <td class="py-4 px-6 text-center text-slate-400">{{ $sheet->created_at->format('d/m/y') }}</td>
                         <td class="py-4 px-6 text-center">
                             @if($sheet->status == 'pending')
-                                <span class="text-xs font-bold text-orange-400">รอพิจารณา</span>
+                                <span class="text-orange-500 bg-orange-50 border border-orange-100/50 px-2 py-0.5 rounded-md font-bold">รออนุมัติ</span>
                             @elseif($sheet->status == 'approved')
-                                <span class="text-xs font-bold text-green-500">อนุมัติแล้ว</span>
+                                <span class="text-emerald-500 bg-emerald-50 border border-emerald-100/50 px-2 py-0.5 rounded-md font-bold">อนุมัติแล้ว</span>
                             @else
-                                <span class="text-xs font-bold text-red-500">ปฏิเสธ</span>
+                                <span class="text-rose-500 bg-rose-50 border border-rose-100/50 px-2 py-0.5 rounded-md font-bold">ปฏิเสธ</span>
                             @endif
                         </td>
-                        <td class="py-4 px-6">
-                            <div class="flex items-center justify-center gap-2">
+                        <td class="py-4 px-6 text-center">
+                            <div class="flex items-center justify-center gap-1.5">
                                 @if($sheet->type == 'file')
-                                    <a href="{{ asset($sheet->file_path) }}" target="_blank" class="px-3 py-1.5 border border-[#5EBEE6] text-[#5EBEE6] hover:bg-[#5EBEE6] hover:text-white rounded-xl text-[10px] font-bold transition shadow-sm">ดู</a>
+                                    <a href="{{ asset($sheet->file_path) }}" target="_blank" class="w-8 h-8 rounded-xl bg-slate-50 border border-slate-100 text-slate-500 hover:bg-[#5EBEE6] hover:text-white hover:border-[#5EBEE6] transition-all flex items-center justify-center text-xs shadow-sm" title="เปิดดูไฟล์">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
                                 @else
-                                    <a href="{{ $sheet->file_path }}" target="_blank" class="px-3 py-1.5 border border-orange-400 text-orange-500 hover:bg-orange-400 hover:text-white rounded-xl text-[10px] font-bold transition shadow-sm">เปิด</a>
+                                    <a href="{{ $sheet->file_path }}" target="_blank" class="w-8 h-8 rounded-xl bg-orange-50 border border-orange-100/30 text-orange-500 hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-all flex items-center justify-center text-xs shadow-sm" title="เปิดลิงก์ภายนอก">
+                                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                                    </a>
                                 @endif
                                 
-                                <form action="{{ route('profile.sheets.destroy', $sheet->id) }}" method="POST" onsubmit="return confirm('ยืนยันการลบ?')">
+                                <form action="{{ route('profile.sheets.destroy', $sheet->id) }}" method="POST" onsubmit="return confirm('ยืนยันประสงค์ต้องการลบชีทสรุปวิชานี้จากระบบ?')" class="inline-flex">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="px-3 py-1.5 border border-red-400 text-red-500 hover:bg-red-50 rounded-xl text-[10px] font-bold transition shadow-sm">ลบ</button>
+                                    <button type="submit" class="w-8 h-8 rounded-xl bg-rose-50 border border-rose-100 text-rose-500 hover:bg-rose-500 hover:text-white hover:border-rose-500 transition-all flex items-center justify-center text-xs shadow-sm" title="ลบข้อมูล">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
                                 </form>
                             </div>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="py-10 text-center text-gray-400 text-sm">ยังไม่มีไฟล์ชีทที่อัปโหลด</td>
+                        <td colspan="7" class="py-12 text-center text-slate-400 font-medium">
+                            <i class="fa-solid fa-folder-open text-2xl mb-2 opacity-30 block"></i> ยังไม่มีรายการไฟล์ชีทสรุปบทเรียนที่คุณเคยอัปโหลดไว้ในระบบ
+                        </td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -218,7 +209,7 @@
         </div>
 
         @if(isset($sheets) && $sheets->hasPages())
-        <div class="p-4 border-t border-gray-100">
+        <div class="p-4 border-t border-slate-100 bg-slate-50/30">
             {{ $sheets->links() }}
         </div>
         @endif
@@ -265,11 +256,10 @@
         const clampElements = document.querySelectorAll('.auto-clamp');
         const fileInput = document.getElementById('document_input');
         
-        // ดึงฟังก์ชันตรวจสอบขนาดไฟล์จากสคริปต์ส่วนกลาง AppAlert ที่แยกไว้
         if (fileInput) {
             fileInput.addEventListener('change', function() {
                 if (typeof AppAlert !== 'undefined') {
-                    AppAlert.validateFileSize(this, 10); // เรียกเช็คขนาดไฟล์สูงสุด 10MB
+                    AppAlert.validateFileSize(this, 10); 
                 }
             });
         }

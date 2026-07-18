@@ -332,63 +332,97 @@
         </div>
     </section>
 
-    {{-- ประกาศประชาสัมพันธ์ --}}
-    <section class="w-full bg-slate-50 py-6 md:py-8 px-4 md:px-6 font-mitr border-t border-gray-200">
-        <div class="max-w-6xl mx-auto">
-            
-            <div class="mb-5 flex flex-col md:flex-row justify-between items-end gap-4 border-b border-gray-200 pb-4">
-                <div class="flex items-start gap-3">
-                    <div class="w-2.5 h-full min-h-[50px] bg-gradient-to-b from-[#5EBEE6] to-[#3B9ADE] rounded-full mt-1 shadow-sm"></div>
-                    <div>
-                        <span class="inline-block text-[#5EBEE6] text-xs font-bold uppercase tracking-widest mb-1">News & Announcements</span>
-                        <h2 class="text-2xl md:text-3xl text-slate-900 font-extrabold tracking-tight mb-1">ประกาศ / ข่าวประชาสัมพันธ์</h2>
-                        <p class="text-slate-500 text-sm max-w-2xl">อัปเดตข่าวสาร กิจกรรม และประกาศสำคัญจากศูนย์โครงการสตีมที่ไม่ควรพลาด</p>
-                    </div>
-                </div>
-                <div class="hidden md:block shrink-0">
-                    <a href="#" class="text-sm font-semibold text-slate-500 hover:text-[#5EBEE6] transition-colors flex items-center gap-2 px-2 py-1 group">
-                        ดูข่าวทั้งหมด <i class="fa-solid fa-arrow-right text-xs transform group-hover:translate-x-1 transition-transform"></i>
-                    </a>
+    {{-- 📢 Section: ประกาศประชาสัมพันธ์ & ADS (บังคับวิ่งเข้าอ่านหน้าดีเทลภายในก่อนเสมือนกันหมด) 📢 --}}
+<section class="w-full bg-slate-50/50 py-10 px-4 md:px-6 font-mitr border-t border-slate-100">
+    <div class="max-w-6xl mx-auto">
+
+        {{-- 🔝 ส่วนหัวข้อประชาสัมพันธ์ (Section Header) --}}
+        <div class="mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-100 pb-5">
+            <div class="flex items-start gap-3.5">
+                <div class="w-2.5 h-14 bg-gradient-to-b from-[#5EBEE6] to-blue-500 rounded-full shadow-sm"></div>
+                <div>
+                    <span class="inline-block text-[#5EBEE6] text-xs font-bold uppercase tracking-widest mb-1">News & Announcements</span>
+                    <h2 class="text-2xl md:text-3xl text-slate-800 font-extrabold tracking-tight mb-1">ประกาศ / ข่าวประชาสัมพันธ์ล่าสุด</h2>
+                    <p class="text-slate-400 text-xs md:text-sm font-medium">อัปเดตกระดานกิจกรรม ข้อมูลข่าวสาร และป้ายประชาสัมพันธ์สำคัญจากศูนย์โครงการ STEAM</p>
                 </div>
             </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 xl:gap-6">
-
-                {{-- Loop Mockup --}}
-                @for ($i = 0; $i < 4; $i++)
-                <div class="group cursor-pointer bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md flex flex-col">
-                    <div class="relative h-36 md:h-40 overflow-hidden">
-                        <img src="{{ asset('assets/img/aerosol.jpg') }}"
-                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
-                            alt="News Image">
-                        
-                        <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2.5 py-1 rounded-full shadow-sm">
-                            <p class="text-[10px] text-[#5EBEE6] font-bold uppercase tracking-wide">กิจกรรม</p>
-                        </div>
-                    </div>
-
-                    <div class="p-4 flex flex-col flex-grow">
-                        <div class="flex items-center gap-2 mb-2 text-slate-400">
-                            <i class="fa-regular fa-calendar text-[10px]"></i>
-                            <p class="text-[10px] font-medium">1 ม.ค. 2569</p>
-                        </div>
-                        <h4 class="text-slate-800 text-sm font-bold leading-snug line-clamp-2 mb-2 group-hover:text-[#5EBEE6] transition-colors">
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry
-                        </h4>
-                        <p class="text-slate-500 text-xs line-clamp-2 mt-auto">
-                            เนื้อหาข่าวแบบสรุปย่อ แจ้งให้ทราบถึงกิจกรรมที่จะเกิดขึ้นภายในศูนย์สตีม...
-                        </p>
-                    </div>
-                </div>
-                @endfor
-
-            </div>
-            
-            <div class="mt-6 text-center md:hidden">
-                <a href="#" class="inline-flex items-center justify-center gap-2 text-sm font-semibold text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 transition px-5 py-2.5 rounded-xl w-full shadow-sm">
-                    ดูข่าวประชาสัมพันธ์ทั้งหมด <i class="fa-solid fa-arrow-right text-xs"></i>
+            <div class="hidden sm:block shrink-0">
+                <a href="#" class="text-xs font-bold text-slate-400 hover:text-[#5EBEE6] transition-colors flex items-center gap-1.5 px-3 py-2 bg-white rounded-xl border border-slate-100 shadow-sm group">
+                    ดูข่าวประกาศทั้งหมด <i class="fa-solid fa-arrow-right text-[10px] transform group-hover:translate-x-0.5 transition-transform"></i>
                 </a>
             </div>
         </div>
-    </section>
+
+        {{-- 📋 บล็อก Grid การแสดงผลการ์ดแบนเนอร์จริง --}}
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 xl:gap-6">
+
+            @forelse($publicAds ?? [] as $ad)
+                @php
+                    $images = json_decode($ad->image_path, true);
+                    $firstImage = is_array($images) && count($images) > 0 ? $images[0] : null;
+                @endphp
+
+                {{-- 🛠️ ปรับปรุง: ถอนฟังก์ชันสลับลิงก์นอกออก ยิงเป้าหมายเข้าหน้าอ่านข่าวสารภายใน (news.show) 100% --}}
+                <a href="{{ route('news.show', $ad->slug) }}"
+                    class="group bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.01)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_15px_30px_rgba(0,0,0,0.04)] flex flex-col">
+
+                    {{-- พื้นที่แสดงรูปภาพปกประชาสัมพันธ์ --}}
+                    <div class="relative aspect-[16/10] overflow-hidden bg-slate-50">
+                        @if ($firstImage)
+                            <img src="{{ asset($firstImage) }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" alt="{{ $ad->title }}">
+                        @else
+                            <div class="w-full h-full flex flex-col items-center justify-center text-slate-300">
+                                <i class="fa-regular fa-image text-3xl mb-1"></i>
+                            </div>
+                        @endif
+
+                        <div class="absolute top-3 left-3 bg-slate-900/70 backdrop-blur-sm px-2.5 py-1 rounded-md text-[9px] text-emerald-400 font-bold border border-white/10 tracking-wider">
+                            <span class="w-1 h-1 rounded-full bg-emerald-400 inline-block mr-1"></span> ประชาสัมพันธ์
+                        </div>
+                    </div>
+
+                    {{-- บล็อกข้อมูลข้อความ --}}
+                    <div class="p-4 flex flex-col flex-grow space-y-2">
+                        <div class="flex items-center gap-1.5 text-slate-400 font-medium text-[10px]">
+                            <i class="fa-regular fa-calendar-check text-[11px] text-[#5EBEE6]"></i>
+                            <p>{{ date('d/m/Y', strtotime($ad->created_at)) }}</p>
+                        </div>
+
+                        <h4 class="text-slate-800 text-sm font-bold leading-snug line-clamp-2 group-hover:text-[#5EBEE6] transition-colors">
+                            {{ $ad->title }}
+                        </h4>
+
+                        <p class="text-slate-400 text-xs font-medium line-clamp-2 pt-1 leading-relaxed">
+                            {{ $ad->description ?? 'ไม่มีรายละเอียดข้อความประกอบ...' }}
+                        </p>
+
+                        {{-- ปุ่ม Action ท้ายการ์ดแสดงผลเสมอกันทุกเล่ม --}}
+                        <div class="pt-3 border-t border-slate-50 mt-auto flex items-center justify-between text-[10px] text-slate-400 font-bold">
+                            <span class="text-slate-300 font-medium">ID: #{{ $ad->id }}</span>
+                            <span class="text-[#5EBEE6] group-hover:underline flex items-center gap-0.5">
+                                อ่านต่อฉบับเต็ม <i class="fa-solid fa-angle-right text-[8px]"></i>
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            @empty
+                <div class="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 bg-white p-12 rounded-2xl border border-slate-100 text-center shadow-sm">
+                    <div class="w-12 h-12 bg-slate-50 border border-slate-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fa-solid fa-bullhorn text-lg text-slate-300"></i>
+                    </div>
+                    <h4 class="text-sm font-bold text-slate-700">ไม่มีข้อมูลการประกาศประชาสัมพันธ์</h4>
+                    <p class="text-xs text-slate-400 font-medium mt-0.5">ขณะนี้ระบบยังไม่มีข่าวสารหรือป้ายกิจกรรมใหม่ลงบอร์ดแสดงผล</p>
+                </div>
+            @endforelse
+
+        </div>
+
+        {{-- ปุ่มดูทั้งหมดเวอร์ชัน Mobile --}}
+        <div class="mt-6 text-center sm:hidden">
+            <a href="#" class="inline-flex items-center justify-center gap-2 text-xs font-bold text-slate-500 bg-white border border-slate-200 hover:bg-slate-50 transition px-5 py-3 rounded-xl w-full shadow-sm">
+                ดูข่าวประชาสัมพันธ์ทั้งหมด <i class="fa-solid fa-arrow-right text-xs"></i>
+            </a>
+        </div>
+    </div>
+</section>
 @endsection

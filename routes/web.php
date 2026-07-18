@@ -33,6 +33,8 @@ Route::get('/terms-of-service', function () {
     return view('terms');
 })->name('terms');
 
+Route::get('/news/{slug}', [\App\Http\Controllers\Frontend\HomeController::class, 'showNews'])->name('news.show');
+
 Route::get('/projects', [ProjectController::class, 'searchProjects'])->name('projects');
 Route::get('/project/{id}', [ProjectController::class, 'showProject'])->name('project.show');
 
@@ -133,5 +135,13 @@ Route::prefix('backend')->group(function () {
     Route::put('/users/{id}', [BackendUserController::class, 'update'])->name('backend.users.update');
     Route::delete('/users/{id}', [BackendUserController::class, 'destroy'])->name('backend.users.destroy');
 
-    
+    Route::get('/settings', [\App\Http\Controllers\Backend\SettingController::class, 'index'])->name('backend.settings');
+    Route::put('/settings', [\App\Http\Controllers\Backend\SettingController::class, 'update'])->name('backend.settings.update');
+
+    Route::get('/ads', [\App\Http\Controllers\Backend\AdController::class, 'index'])->name('backend.ads');
+    Route::get('/ads/create', [\App\Http\Controllers\Backend\AdController::class, 'create'])->name('backend.ads.create');
+    Route::post('/ads', [\App\Http\Controllers\Backend\AdController::class, 'store'])->name('backend.ads.store');
+    Route::get('/ads/{id}/edit', [\App\Http\Controllers\Backend\AdController::class, 'edit'])->name('backend.ads.edit');
+    Route::put('/ads/{id}', [\App\Http\Controllers\Backend\AdController::class, 'update'])->name('backend.ads.update');
+    Route::delete('/ads/{id}', [\App\Http\Controllers\Backend\AdController::class, 'destroy'])->name('backend.ads.destroy');
 });

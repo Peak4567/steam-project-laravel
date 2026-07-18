@@ -267,54 +267,75 @@
         </div>
     </section>
 
-    {{-- 🌟 3. Section: Hall of Fame 🌟 --}}
-    <section class="w-full py-20 px-4 md:px-6 font-mitr bg-gradient-to-b from-[#FFFDF5] to-white border-t border-yellow-50 overflow-hidden relative">
-        {{-- Glow Effects --}}
-        <div class="absolute top-10 right-10 w-72 h-72 bg-yellow-300/10 rounded-full blur-3xl pointer-events-none"></div>
+<section class="w-full py-20 px-4 md:px-6 font-mitr bg-gradient-to-b from-[#FFFDF5] to-white border-t border-yellow-50 overflow-hidden relative">
+    <div class="absolute top-10 right-10 w-72 h-72 bg-yellow-300/10 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="max-w-6xl mx-auto">
-            <div class="flex justify-center items-center mb-16 relative">
-                <img src="{{ asset('assets/img/halloffame.png') }}" alt="Hall of Fame"
-                    class="w-full max-w-[500px] md:max-w-[600px] h-auto object-contain select-none drop-shadow-xl hover:scale-105 transition-transform duration-700">
-            </div>
+    <div class="max-w-6xl mx-auto">
+        <div class="flex justify-center items-center mb-16 relative">
+            <img src="{{ asset('assets/img/halloffame.png') }}" alt="Hall of Fame"
+                class="w-full max-w-[500px] md:max-w-[600px] h-auto object-contain select-none drop-shadow-xl hover:scale-105 transition-transform duration-700">
+        </div>
 
-            <div class="flex items-center gap-4 mb-10 text-center justify-center">
-                <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">🏆 ผู้ได้รับรางวัลยอดเยี่ยม</h2>
-            </div>
+        <div class="flex items-center gap-4 mb-10 text-center justify-center">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">🏆 นักเรียนผู้ได้รับรางวัลเกียรติยศ</h2>
+        </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
 
-                {{-- Card Hall of Fame --}}
+            @forelse($hallOfFameUsers ?? [] as $index => $fameUser)
                 <div class="group cursor-pointer transition-all duration-300 hover:-translate-y-3">
-                    <div class="relative h-64 md:h-72 rounded-[2rem] overflow-hidden border-4 border-yellow-400 shadow-[0_15px_30px_rgba(250,204,21,0.2)] group-hover:shadow-[0_20px_40px_rgba(250,204,21,0.3)] group-hover:border-yellow-300">
+                    <div class="relative h-64 md:h-72 rounded-[2rem] overflow-hidden border-4 border-yellow-400 shadow-[0_15px_30px_rgba(250,204,21,0.15)] group-hover:shadow-[0_20px_40px_rgba(250,204,21,0.25)] group-hover:border-yellow-300 bg-slate-900 flex items-center justify-center">
                         
-                        <img src="{{ asset('assets/img/peak_student.png') }}"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                            alt="Peak">
+                        @if($fameUser->profile)
+                            <img src="{{ asset('assets/img/profile/' . $fameUser->profile) }}"
+                                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                alt="{{ $fameUser->first_name }}">
+                        @else
+                            <div class="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 flex flex-col items-center justify-center text-center p-4">
+                                <div class="w-20 h-20 rounded-full bg-yellow-400/10 border-2 border-yellow-400/40 flex items-center justify-center mb-8 group-hover:scale-105 transition-transform duration-500">
+                                    <span class="text-2xl font-black text-yellow-400 uppercase">{{ substr($fameUser->first_name, 0, 1) }}</span>
+                                </div>
+                            </div>
+                        @endif
 
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent"></div>
-
-                        <div class="absolute top-4 left-4 bg-gradient-to-r from-yellow-400 to-yellow-500 shadow-md shadow-yellow-500/30 px-3 py-1.5 rounded-xl border border-yellow-200">
-                            <p class="text-[10px] text-yellow-900 font-black uppercase tracking-widest flex items-center gap-1">
-                                <i class="fa-solid fa-medal"></i> อันดับที่ 1
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
+                        
+                        <div class="absolute top-4 left-4 bg-gradient-to-r from-yellow-400 to-yellow-500 shadow-md shadow-yellow-500/20 px-3 py-1.5 rounded-xl border border-yellow-200">
+                            <p class="text-[9px] text-yellow-900 font-black uppercase tracking-widest flex items-center gap-1">
+                                <i class="fa-solid fa-star"></i> สมาชิกดีเด่น
                             </p>
                         </div>
 
                         <div class="absolute bottom-5 left-5 right-5 text-left z-10">
-                            <h4 class="text-white text-sm font-bold leading-tight mb-1.5 line-clamp-2 drop-shadow-md">
-                                ศรัณยกร เทพสุนทร (Peak)
+                            <h4 class="text-white text-sm font-bold leading-tight mb-2 drop-shadow-md truncate">
+                                {{ $fameUser->prefix }}{{ $fameUser->first_name }} {{ $fameUser->last_name }}
                             </h4>
-                            <div class="flex items-center gap-2">
-                                <span class="bg-white/20 backdrop-blur-md text-white text-[9px] px-2 py-0.5 rounded-md font-medium border border-white/20">ม.9/4</span>
-                                <p class="text-yellow-300 text-[10px] font-medium line-clamp-1">Young Agri Future 2026</p>
+                            <div class="flex items-center gap-1.5">
+                                <span class="bg-white/20 backdrop-blur-md text-white text-[9px] font-bold px-2 py-0.5 rounded-md border border-white/10 uppercase">
+                                    {{ $fameUser->grade_level ?? 'ไม่ระบุชั้น' }}
+                                </span>
+                                @if($fameUser->nickname)
+                                    <span class="bg-yellow-400/20 text-yellow-300 text-[9px] font-bold px-2 py-0.5 rounded-md border border-yellow-400/20">
+                                        ชื่อเล่น: {{ $fameUser->nickname }}
+                                    </span>
+                                @endif
                             </div>
                         </div>
                     </div>
                 </div>
+            @empty
+                <div class="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-5 bg-white/60 p-12 rounded-[2rem] border border-yellow-100 text-center shadow-sm">
+                    <div class="w-12 h-12 bg-yellow-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fa-solid fa-trophy text-lg text-yellow-500"></i>
+                    </div>
+                    <h4 class="text-sm font-bold text-slate-700">อยู่ระหว่างการอัปเดตข้อมูลทำเนียบ</h4>
+                    <p class="text-xs text-slate-400 font-medium mt-0.5">ขณะนี้ยังไม่มีรายชื่อประกาศเกียรติคุณจัดแสดงบนหน้ากระดานระบบหลัก</p>
+                </div>
+            @endforelse
 
-            </div>
         </div>
-    </section>
+    </div>
+</section>
 
     {{-- 🌟 4. Section: STEAM4INNOVATOR 🌟 --}}
     <section class="w-full bg-slate-900 py-24 px-4 md:px-6 font-mitr overflow-hidden relative">

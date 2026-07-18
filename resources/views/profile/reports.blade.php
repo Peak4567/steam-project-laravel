@@ -1,73 +1,79 @@
 @extends('profile.profile-layout')
 @section('profile-content')
 
-<section class="max-w-7xl mx-auto">
+<section class="w-full font-mitr max-w-6xl mx-auto text-slate-700">
 
-    <div class="bg-red-50 border border-red-200 text-red-600 px-6 py-3 rounded-xl flex items-center justify-between mb-6 shadow-sm">
-        <p class="text-xs">
-            <i class="fa-solid fa-triangle-exclamation mr-2"></i> คำเตือน: สิ่งที่คุณอัปโหลดต้องห้ามติดลิขสิทธิ์
+    <div class="w-full bg-rose-50/60 backdrop-blur-sm border border-rose-100 text-rose-600 px-5 py-3.5 rounded-2xl flex items-center justify-between mb-8 shadow-sm">
+        <p class="text-xs font-medium flex items-center gap-2">
+            <i class="fa-solid fa-triangle-exclamation text-base"></i> <span>คำเตือนสำคัญ: สิ่งที่คุณอัปโหลดต้องห้ามติดสิทธิ์หรือละเมิดลิขสิทธิ์ผลงานผู้อื่น</span>
         </p>
-        <button onclick="this.parentElement.remove()" class="text-red-400 hover:text-red-600 text-sm">
-            <i class="fa-solid fa-xmark"></i>
+        <button onclick="this.parentElement.remove()" class="w-6 h-7 rounded-lg hover:bg-rose-100/50 text-rose-400 hover:text-rose-600 transition-colors flex items-center justify-center">
+            <i class="fa-solid fa-xmark text-sm"></i>
         </button>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         
-        <div class="lg:col-span-7 space-y-4">
-            <div class="flex items-center justify-between mb-2">
-                <h2 class="text-base text-slate-800">รายการเล่มโครงงานของคุณ</h2>
+        <div class="lg:col-span-7 space-y-5">
+            <div class="flex items-center gap-3 mb-6 px-1">
+                <div class="w-2.5 h-6 bg-gradient-to-b from-[#5EBEE6] to-blue-500 rounded-full shadow-sm"></div>
+                <h2 class="text-base font-extrabold text-slate-900 tracking-tight">รายการเล่มโครงงานของคุณ</h2>
             </div>
 
             @if(isset($reports) && $reports->count() > 0)
                 @foreach($reports as $report)
-                    <div class="bg-gradient-to-r from-[#2A7696] to-[#4BA3C6] p-5 rounded-md text-white shadow-none flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative overflow-hidden">
-                        <div class="absolute -right-6 -bottom-6 text-white/10 text-9xl">
-                            <i class="fa-solid fa-book-open"></i>
-                        </div>
-
-                        <div class="flex items-center gap-5 z-10 w-full md:w-auto">
-                            <a href="{{ route('projects.viewReport', $report->id) }}" target="_blank" class="w-14 h-18 bg-white rounded-lg shadow-sm flex flex-col items-center justify-center text-slate-700 p-1 relative overflow-hidden hover:scale-105 transition-transform" title="คลิกเพื่อดูไฟล์">
+                    <div class="bg-white border border-slate-100 rounded-2xl p-5 shadow-[0_8px_30px_rgba(0,0,0,0.02)] hover:shadow-md transition-all duration-300 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-5 group relative overflow-hidden">
+                        
+                        <div class="flex items-center gap-4 z-10 w-full sm:w-auto">
+                            <a href="{{ route('projects.viewReport', $report->id) }}" target="_blank" 
+                               class="w-12 h-16 bg-gradient-to-br from-[#5EBEE6]/10 to-blue-500/5 rounded-xl border border-slate-100 shadow-sm flex flex-col items-center justify-center text-slate-700 p-1 shrink-0 hover:scale-105 transition-transform" title="คลิกเพื่อดูไฟล์">
                                 @php
                                     $extension = strtolower(pathinfo($report->file_path, PATHINFO_EXTENSION));
                                 @endphp
                                 
                                 @if ($extension === 'pdf')
-                                    <i class="fa-solid fa-file-pdf text-red-500 text-xl mb-1"></i>
+                                    <i class="fa-solid fa-file-pdf text-rose-500 text-xl mb-0.5"></i>
                                 @elseif ($extension === 'docx' || $extension === 'doc')
-                                    <i class="fa-solid fa-file-word text-blue-600 text-xl mb-1"></i>
+                                    <i class="fa-solid fa-file-word text-blue-500 text-xl mb-0.5"></i>
                                 @else
-                                    <i class="fa-solid fa-file-invoice text-gray-500 text-xl mb-1"></i>
+                                    <i class="fa-solid fa-file-invoice text-slate-400 text-xl mb-0.5"></i>
                                 @endif
-                                <span class="text-[8px] text-slate-400 block tracking-wider uppercase">.{{ $extension }}</span>
+                                <span class="text-[8px] text-slate-400 font-bold block uppercase tracking-wider">.{{ $extension }}</span>
                             </a>
                             
-                            <div>
-                                <span class="inline-block bg-yellow-500 text-white text-[9px] px-2.5 py-0.5 rounded-full mb-2">
-                                    {{ ucfirst($report->status) }}
-                                </span>
-                                <h4 class="text-sm leading-tight mb-1">{{ $report->project_name }}</h4>
-                                <p class="text-[9px] text-white/80">อาจารย์ที่ปรึกษา: {{ $report->advisor }}</p>
-                                <p class="text-[9px] text-white/80">วิชา: {{ $report->subject }}</p>
+                            <div class="overflow-hidden">
+                                @if($report->status == 'approved')
+                                    <span class="inline-block bg-emerald-50 border border-emerald-100/50 text-emerald-500 text-[9px] font-bold px-2 py-0.5 rounded-md mb-2 uppercase tracking-wide">Approved</span>
+                                @elseif($report->status == 'pending')
+                                    <span class="inline-block bg-orange-50 border border-orange-100/50 text-orange-500 text-[9px] font-bold px-2 py-0.5 rounded-md mb-2 uppercase tracking-wide">Pending</span>
+                                @else
+                                    <span class="inline-block bg-slate-50 border border-slate-100 text-slate-400 text-[9px] font-bold px-2 py-0.5 rounded-md mb-2 uppercase tracking-wide">{{ $report->status }}</span>
+                                @endif
+
+                                <h4 class="text-sm font-bold text-slate-800 leading-tight mb-1.5 line-clamp-1 group-hover:text-[#5EBEE6] transition-colors">{{ $report->project_name }}</h4>
+                                <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-slate-400 font-medium">
+                                    <p class="flex items-center gap-1"><i class="fa-solid fa-user-tie text-[9px]"></i> ที่ปรึกษา: {{ $report->advisor }}</p>
+                                    <p class="flex items-center gap-1"><i class="fa-solid fa-book-open text-[9px]"></i> วิชา: {{ $report->subject }}</p>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="z-10 flex flex-row md:flex-col items-start md:items-end justify-between md:justify-center h-full gap-2 w-full md:w-auto border-t border-white/20 pt-3 md:pt-0 md:border-t-0">
-                            <span class="text-[9px] text-white/70">{{ $report->created_at->format('Y-m-d') }}</span>
-                            <div class="flex gap-2">
+                        <div class="z-10 flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-center h-full gap-2 w-full sm:w-auto border-t sm:border-t-0 pt-3 sm:pt-0 border-slate-50">
+                            <span class="text-[10px] font-bold text-slate-400 bg-slate-50 px-2 py-0.5 rounded-md shadow-inner"><i class="fa-regular fa-calendar-check text-[9px] mr-0.5"></i> {{ $report->created_at->format('Y-m-d') }}</span>
+                            <div class="flex items-center gap-1.5">
                                 <a href="{{ route('projects.viewReport', $report->id) }}" target="_blank" 
-                                   class="text-[10px] bg-white/20 px-3 py-1.5 rounded-lg text-white hover:bg-white/30 transition flex items-center gap-1 shadow-sm">
-                                    <i class="fa-solid fa-eye"></i> ดู
+                                   class="w-8 h-8 rounded-xl bg-slate-50 border border-slate-100 text-slate-500 hover:bg-[#5EBEE6] hover:text-white hover:border-[#5EBEE6] transition-all flex items-center justify-center text-xs shadow-sm" title="เปิดดูเล่ม">
+                                    <i class="fa-solid fa-eye"></i>
                                 </a>
                                 <a href="{{ route('projects.downloadReport', $report->id) }}" 
-                                   class="text-[10px] bg-[#5EBEE6] hover:bg-[#45a8d1] px-3 py-1.5 rounded-lg text-white transition flex items-center gap-1 shadow-sm">
-                                    <i class="fa-solid fa-download"></i> โหลด
+                                   class="w-8 h-8 rounded-xl bg-blue-50 border border-blue-100/30 text-[#5EBEE6] hover:bg-[#5EBEE6] hover:text-white hover:border-[#5EBEE6] transition-all flex items-center justify-center text-xs shadow-sm" title="ดาวน์โหลดเล่ม">
+                                    <i class="fa-solid fa-download"></i>
                                 </a>
-                                <form action="{{ route('projects.deleteReport', $report->id) }}" method="POST" onsubmit="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบเอกสารนี้?');">
+                                <form action="{{ route('projects.deleteReport', $report->id) }}" method="POST" onsubmit="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบเอกสารโครงงานชิ้นนี้?');" class="inline-flex">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-[10px] bg-red-500 hover:bg-red-600 px-3 py-1.5 rounded-lg text-white transition flex items-center gap-1 shadow-sm">
-                                        <i class="fa-solid fa-trash"></i> ลบ
+                                    <button type="submit" class="w-8 h-8 rounded-xl bg-rose-50 border border-rose-100 text-rose-500 hover:bg-rose-500 hover:text-white hover:border-rose-500 transition-all flex items-center justify-center text-xs shadow-sm" title="ลบเล่ม">
+                                        <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </form>
                             </div>
@@ -75,59 +81,64 @@
                     </div>
                 @endforeach
             @else
-                <div class="text-center py-10 bg-white border border-gray-200 rounded-xl text-gray-400">
-                    <i class="fa-solid fa-folder-open text-3xl mb-2 opacity-50 block"></i>
-                    ยังไม่มีรายการเล่มโครงงานที่อัปโหลด
+                <div class="text-center py-16 bg-white border border-slate-100 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.02)] flex flex-col items-center justify-center text-slate-400">
+                    <div class="w-14 h-14 bg-slate-50 border border-slate-100 rounded-full flex items-center justify-center mb-3">
+                        <i class="fa-solid fa-folder-open text-2xl text-slate-300"></i>
+                    </div>
+                    <h3 class="text-sm font-bold text-slate-700 mb-0.5">ยังไม่มีรายการเล่มโครงงาน</h3>
+                    <p class="text-xs text-slate-400 font-medium">คุณยังไม่ได้อัปโหลดเล่มรายงานโครงงานไว้ในระบบ</p>
                 </div>
             @endif
         </div>
 
-        <div class="lg:col-span-5 bg-white p-6 rounded-xl border border-gray-200 shadow-none">
-            <div class="flex items-center gap-3 mb-6 border-b border-gray-100 pb-4">
-                <i class="fa-solid fa-cloud-arrow-up text-xl text-[#5EBEE6]"></i>
-                <h3 class="text-sm text-slate-800">อัปโหลดเล่มรายงาน</h3>
+        <div class="lg:col-span-5 bg-white p-6 rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.02)]">
+            <div class="flex items-center gap-3.5 mb-6 border-b border-slate-50 pb-4 text-[#5EBEE6]">
+                <div class="w-10 h-10 bg-blue-50 border border-blue-100/50 rounded-xl flex items-center justify-center">
+                    <i class="fa-solid fa-cloud-arrow-up text-lg"></i>
+                </div>
+                <h3 class="text-sm font-extrabold text-slate-900 tracking-tight">อัปโหลดส่งรายงานโครงงาน</h3>
             </div>
 
             <form action="{{ route('projects.uploadReports', $project->id ?? 1) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                 @csrf
 
-                <div>
-                    <label class="block text-[10px] text-gray-400 uppercase tracking-wider mb-1">ชื่อเล่มโครงงาน</label>
-                    <input type="text" name="project_name" placeholder="ชื่อเล่มโครงงาน..." 
-                        class="w-full bg-gray-50 border border-gray-200 text-xs rounded-lg p-2.5 focus:ring-1 focus:ring-[#5EBEE6] outline-none transition text-gray-600" required>
+                <div class="space-y-1">
+                    <label class="block text-xs font-bold text-slate-500 pl-0.5">ชื่อเล่มโครงงาน</label>
+                    <input type="text" name="project_name" placeholder="ป้อนชื่อเล่มรายงานโครงงาน..." 
+                        class="w-full bg-slate-50/50 border border-slate-100 text-xs font-medium rounded-xl p-3 outline-none focus:bg-white focus:border-[#5EBEE6] focus:ring-4 focus:ring-[#5EBEE6]/10 transition-all text-slate-700" required>
                 </div>
 
-                <div>
-                    <label class="block text-[10px] text-gray-400 uppercase tracking-wider mb-1">อาจารย์ที่ปรึกษา</label>
-                    <input type="text" name="advisor" placeholder="อาจารย์ที่ปรึกษา..." 
-                        class="w-full bg-gray-50 border border-gray-200 text-xs rounded-lg p-2.5 focus:ring-1 focus:ring-[#5EBEE6] outline-none transition text-gray-600" required>
+                <div class="space-y-1">
+                    <label class="block text-xs font-bold text-slate-500 pl-0.5">อาจารย์ที่ปรึกษาโครงงาน</label>
+                    <input type="text" name="advisor" placeholder="ระบุชื่ออาจารย์ที่ปรึกษา..." 
+                        class="w-full bg-slate-50/50 border border-slate-100 text-xs font-medium rounded-xl p-3 outline-none focus:bg-white focus:border-[#5EBEE6] focus:ring-4 focus:ring-[#5EBEE6]/10 transition-all text-slate-700" required>
                 </div>
 
-                <div>
-                    <label class="block text-[10px] text-gray-400 uppercase tracking-wider mb-1">วิชา</label>
-                    <input type="text" name="subject" placeholder="วิชา..." 
-                        class="w-full bg-gray-50 border border-gray-200 text-xs rounded-lg p-2.5 focus:ring-1 focus:ring-[#5EBEE6] outline-none transition text-gray-600" required>
+                <div class="space-y-1">
+                    <label class="block text-xs font-bold text-slate-500 pl-0.5">รายวิชาเรียน</label>
+                    <input type="text" name="subject" placeholder="ป้อนชื่อวิชา (เช่น คอมพิวเตอร์, เคมี)..." 
+                        class="w-full bg-slate-50/50 border border-slate-100 text-xs font-medium rounded-xl p-3 outline-none focus:bg-white focus:border-[#5EBEE6] focus:ring-4 focus:ring-[#5EBEE6]/10 transition-all text-slate-700" required>
                 </div>
 
-                <div id="dropzone-area" class="mt-6 border border-dashed border-gray-300 rounded-xl p-5 hover:border-[#5EBEE6] transition-all bg-gray-50/30 relative text-center cursor-pointer flex flex-col items-center justify-center min-h-[140px]" onclick="if(event.target.tagName !== 'A') document.getElementById('document-input').click()">
+                <div id="dropzone-area" class="mt-6 border border-dashed border-slate-200 rounded-2xl p-6 hover:border-[#5EBEE6] transition-all bg-slate-50/30 relative text-center cursor-pointer flex flex-col items-center justify-center min-h-[140px] shadow-inner" onclick="if(event.target.tagName !== 'A') document.getElementById('document-input').click()">
                     
                     <div id="upload-prompt" class="flex flex-col items-center pointer-events-none">
-                        <i class="fa-solid fa-cloud-arrow-up text-3xl text-gray-400 mb-2"></i>
-                        <span class="text-xs text-slate-700">คลิกเพื่ออัปโหลดเล่มรายงาน</span>
-                        <span class="text-[9px] text-gray-400 mt-1">รองรับไฟล์ PDF, WORD (สูงสุด 10MB)</span>
+                        <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-300 mb-2 group-hover:text-[#5EBEE6]"></i>
+                        <span class="text-xs font-bold text-slate-700">คลิกเพื่อเลือกหรือลากไฟล์มาวางอัปโหลด</span>
+                        <span class="text-[10px] text-slate-400 font-medium mt-1">รองรับเอกสารนามสกุล PDF, WORD (จำกัดสูงสุด 10MB)</span>
                     </div>
 
                     <div id="file-preview" class="hidden flex-col items-center relative z-10">
                         <i id="file-icon" class="fa-solid fa-file-invoice text-4xl mb-2"></i>
-                        <span id="file-name" class="text-[11px] text-slate-700 truncate max-w-[200px] mb-1">filename.pdf</span>
-                        <span id="file-size" class="text-[9px] text-gray-400 mb-3">0 MB</span>
+                        <span id="file-name" class="text-xs font-bold text-slate-800 truncate max-w-[220px] mb-1">filename.pdf</span>
+                        <span id="file-size" class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded shadow-inner">0 MB</span>
                         
-                        <div class="flex gap-2">
-                            <a id="view-local-file" href="#" target="_blank" class="text-[10px] bg-[#5EBEE6] text-white px-3 py-1.5 rounded-lg hover:bg-[#45a8d1] transition flex items-center gap-1 shadow-sm" onclick="event.stopPropagation();">
-                                <i class="fa-solid fa-eye"></i> ดูไฟล์ที่เลือก
+                        <div class="flex gap-2 mt-4">
+                            <a id="view-local-file" href="#" target="_blank" class="text-[10px] bg-blue-50 border border-blue-100 text-[#5EBEE6] font-bold px-3 py-1.5 rounded-lg hover:bg-[#5EBEE6] hover:text-white transition shadow-sm" onclick="event.stopPropagation();">
+                                <i class="fa-solid fa-eye"></i> ตรวจสอบไฟล์
                             </a>
-                            <span class="text-[10px] text-red-500 bg-red-50 border border-red-100 px-3 py-1.5 rounded-lg hover:bg-red-100 transition cursor-pointer shadow-sm">
-                                เปลี่ยนไฟล์
+                            <span class="text-[10px] text-rose-500 font-bold bg-rose-50 border border-rose-100 px-3 py-1.5 rounded-lg hover:bg-rose-500 hover:text-white transition cursor-pointer shadow-sm">
+                                เปลี่ยนไฟล์ใหม่
                             </span>
                         </div>
                     </div>
@@ -135,16 +146,16 @@
                     <input type="file" name="document" id="document-input" class="hidden" accept=".pdf,.doc,.docx" required>
                 </div>
 
-                <p class="text-[9px] text-red-500 text-center italic mt-2">
-                    *เล่มรายงานที่แชร์จะถูกตรวจสอบโดย อาจารย์ผู้เชี่ยวชาญ ก่อนแสดงผลผ่านหน้าเว็บ
+                <p class="text-[10px] font-medium text-rose-400 text-center italic mt-2">
+                    *หมายเหตุ: เล่มรายงานที่ส่งต่อคลังจะได้รับการพิจารณาและตรวจสอบโดยคณาจารย์ก่อนเริ่มแสดงผลสู่ที่สาธารณะ
                 </p>
 
-                <div class="flex justify-end gap-3 mt-5 border-t border-gray-100 pt-4">
-                    <button type="button" class="px-5 py-2 bg-red-500 hover:bg-red-600 transition text-white rounded-lg shadow-none text-[10px]">
-                        ยกเลิก
+                <div class="flex justify-end gap-2 mt-6 border-t border-slate-50 pt-4">
+                    <button type="button" class="px-5 py-2.5 bg-slate-100 font-bold hover:bg-slate-200 transition text-slate-500 rounded-xl text-xs active:scale-95">
+                        ล้างฟอร์ม
                     </button>
-                    <button type="submit" class="px-5 py-2 bg-green-500 hover:bg-green-600 transition text-white rounded-lg shadow-none text-[10px]">
-                        ยืนยัน
+                    <button type="submit" class="px-6 py-2.5 bg-slate-900 font-bold hover:bg-slate-800 transition text-white rounded-xl text-xs shadow-md active:scale-95">
+                        ยืนยันการส่งเล่ม
                     </button>
                 </div>
             </form>
@@ -211,11 +222,11 @@
             const extension = file.name.split('.').pop().toLowerCase();
             icon.className = 'fa-solid text-4xl mb-2 ';
             if (extension === 'pdf') {
-                icon.className += 'fa-file-pdf text-red-500';
+                icon.className += 'fa-file-pdf text-rose-500';
             } else if (extension === 'doc' || extension === 'docx') {
-                icon.className += 'fa-file-word text-blue-600';
+                icon.className += 'fa-file-word text-blue-500';
             } else {
-                icon.className += 'fa-file-invoice text-gray-500';
+                icon.className += 'fa-file-invoice text-slate-400';
             }
         } else {
             resetDropzone();

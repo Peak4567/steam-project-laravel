@@ -1,84 +1,112 @@
 @extends('backend.layout')
 @section('content')
-<section class="w-full h-full p-6 md:p-10 font-kanit bg-gray-50/50">
-        <div class="mb-8">
-            <h2 class="text-2xl md:text-3xl font-bold text-slate-800 tracking-tight">จัดการแฟ้มสะสมผลงาน</h2>
-            <p class="text-sm text-gray-500 mt-1">ตรวจสอบเป้าหมายและอนุมัติเล่มผลงานของนักเรียน</p>
+    <section class="w-full h-full p-4 md:p-8 font-mitr bg-slate-50/50">
+        
+        {{-- 🔝 1. ส่วนหัวข้อการจัดการพอร์ตโฟลิโอ (Header Section) --}}
+        <div class="mb-8 border-b border-slate-100 pb-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <div class="flex items-center gap-2.5">
+                    <div class="w-2.5 h-6 bg-gradient-to-b from-[#5EBEE6] to-blue-500 rounded-full shadow-sm"></div>
+                    <h2 class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">จัดการแฟ้มสะสมผลงาน</h2>
+                </div>
+                <p class="text-xs md:text-sm text-slate-400 font-medium mt-1">ตรวจสอบเป้าหมายมหาวิทยาลัย คัดกรองความถูกต้อง และอนุมัติเล่มพอร์ตโฟลิโอ (Portfolio) ของนักเรียนเข้าสู่ระบบคลังหลัก</p>
+            </div>
         </div>
 
-        {{-- ปรับจาก rounded-xl เป็น rounded-md --}}
-        <div class="bg-white rounded-md shadow-sm border border-gray-100 overflow-hidden">
-            <table class="w-full text-left border-collapse">
+        {{-- 📋 2. ตารางแสดงผลรายการพอร์ตโฟลิโอคิวหลังบ้าน (Data Table Control Container) --}}
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.02)] overflow-hidden">
+            <table class="w-full text-left border-collapse min-w-[850px]">
                 <thead>
-                    <tr class="bg-gray-50 border-b border-gray-100 uppercase">
-                        <th class="p-4 text-[11px] font-bold text-gray-400 tracking-widest w-16 text-center">id</th>
-                        <th class="p-4 text-[11px] font-bold text-gray-400 tracking-widest">portfolio detail</th>
-                        <th class="p-4 text-[11px] font-bold text-gray-400 tracking-widest">submitted by</th>
-                        <th class="p-4 text-[11px] font-bold text-gray-400 tracking-widest text-center">preview</th>
-                        <th class="p-4 text-[11px] font-bold text-gray-400 tracking-widest text-center">status</th>
-                        <th class="p-4 text-[11px] font-bold text-gray-400 tracking-widest text-center">action</th>
+                    <tr class="bg-slate-50/80 text-slate-400 text-[10px] font-bold uppercase tracking-wider border-b border-slate-100">
+                        <th class="px-4 py-4 w-20 text-center">ID</th>
+                        <th class="px-4 py-4 w-80">รายละเอียดแฟ้มผลงาน / เป้าหมาย</th>
+                        <th class="px-4 py-4 w-52">ผู้จัดส่งข้อมูล</th>
+                        <th class="px-4 py-4 text-center w-36">ไฟล์เอกสาร</th>
+                        <th class="px-4 py-4 text-center w-36">สถานะคิว</th>
+                        <th class="px-4 py-4 text-center w-24">การจัดการ</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-50 text-lowercase">
+                <tbody class="divide-y divide-slate-50 text-xs font-medium text-slate-600">
                     @forelse($portfolios as $pf)
-                    <tr class="hover:bg-gray-50/50 transition-colors">
-                        <td class="p-4 text-xs text-gray-400 text-center">{{ $pf->id }}</td>
-                        <td class="p-4">
-                            <div class="font-bold text-slate-700 text-sm">
-                                {{ $pf->first_name }} {{ $pf->last_name }}
+                    <tr class="hover:bg-slate-50/40 transition-colors group">
+                        {{-- ไอดีเอกสาร --}}
+                        <td class="px-4 py-4 text-slate-400 font-bold text-center shadow-inner bg-slate-50/20">#{{ $pf->id }}</td>
+                        
+                        {{-- รายละเอียดผลงาน --}}
+                        <td class="px-4 py-4">
+                            <div class="font-bold text-slate-800 text-sm leading-tight">{{ $pf->first_name }} {{ $pf->last_name }}</div>
+                            <div class="text-[10px] text-[#5EBEE6] font-bold uppercase mt-1 inline-block bg-blue-50 border border-blue-100/30 px-2 py-0.5 rounded">
+                                <i class="fa-solid fa-graduation-cap mr-1.5 text-[9px]"></i>Target: {{ $pf->university ?? 'ไม่ระบุสถาบันเป้าหมาย' }}
                             </div>
-                            <div class="text-[10px] text-[#5EBEE6] font-bold">
-                                <i class="fa-solid fa-graduation-cap mr-1"></i> target: {{ $pf->university ?? '-' }}
-                            </div>
-                            <div class="text-[10px] text-gray-400 line-clamp-1 mt-1">{{ $pf->description }}</div>
+                            <div class="text-[10px] text-slate-400 font-medium line-clamp-1 mt-1.5 leading-relaxed" title="{{ $pf->description }}">{{ $pf->description }}</div>
                         </td>
-                        <td class="p-4">
-                            <div class="text-xs font-semibold text-slate-600">{{ $pf->owner_fname }} {{ $pf->owner_lname }}</div>
-                            <div class="text-[10px] text-gray-400 italic">nickname: {{ $pf->nickname ?? '-' }}</div>
+                        
+                        {{-- สมาชิกผู้จัดส่ง --}}
+                        <td class="px-4 py-4">
+                            <p class="font-bold text-slate-700"><i class="fa-regular fa-user text-[10px] text-slate-400 mr-1"></i> {{ $pf->owner_fname }} {{ $pf->owner_lname }}</p>
+                            <span class="text-[10px] text-slate-400 font-semibold mt-0.5 inline-block">ชื่อเล่น: {{ $pf->nickname ?? '-' }}</span>
                         </td>
-                        <td class="p-4 text-center">
+                        
+                        {{-- ปุ่มตรวจสอบเปิดดูไฟล์ผลงาน --}}
+                        <td class="px-4 py-4 text-center">
                             @if($pf->file_path)
-                                {{-- ปรับจาก rounded-full เป็น rounded-md --}}
                                 <a href="{{ asset($pf->file_path) }}" target="_blank" 
-                                   class="px-4 py-1.5 bg-slate-800 text-white text-[10px] font-bold rounded-md hover:bg-[#5EBEE6] transition-all">
-                                   view portfolio
+                                   class="inline-flex items-center gap-1.5 bg-slate-900 border border-slate-800 text-white px-3 py-1.5 rounded-xl text-[10px] font-bold shadow-sm transition-all hover:bg-[#5EBEE6] hover:border-[#5EBEE6] active:scale-95">
+                                   <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i> VIEW PORTFOLIO
                                 </a>
                             @else
-                                <span class="text-[10px] text-gray-300 italic">no file</span>
+                                <span class="text-[10px] font-bold text-slate-300 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-100/70 inline-block italic"><i class="fa-solid fa-circle-minus text-[9px] mr-1"></i> No File</span>
                             @endif
                         </td>
-                        <td class="p-4 text-center">
-                            <form action="{{ route('backend.portfolios.updateStatus', $pf->id) }}" method="POST" id="form-{{ $pf->id }}">
+                        
+                        {{-- ดรอปดาวน์สถานะตรวจสอบ --}}
+                        <td class="px-4 py-4 text-center">
+                            <form action="{{ route('backend.portfolios.updateStatus', $pf->id) }}" method="POST" id="form-{{ $pf->id }}" class="inline-block shadow-sm rounded-xl overflow-hidden">
                                 @csrf @method('PATCH')
-                                {{-- ปรับจาก rounded-full เป็น rounded-md และเพิ่ม border สีอ่อน --}}
                                 <select name="status" onchange="this.form.submit()"
-                                    class="text-[11px] font-bold border border-transparent rounded-md px-4 py-1.5 cursor-pointer focus:ring-0 appearance-none
-                                    {{ $pf->status == 'approved' ? 'bg-emerald-100 text-emerald-600' : ($pf->status == 'rejected' ? 'bg-rose-100 text-rose-600' : 'bg-amber-100 text-amber-600') }}">
-                                    <option value="pending" {{ $pf->status == 'pending' ? 'selected' : '' }}>pending</option>
-                                    <option value="approved" {{ $pf->status == 'approved' ? 'selected' : '' }}>approved</option>
-                                    <option value="rejected" {{ $pf->status == 'rejected' ? 'selected' : '' }}>rejected</option>
+                                    class="appearance-none text-[11px] font-bold border border-slate-100/50 rounded-xl px-4 py-2 cursor-pointer focus:ring-4 focus:ring-[#5EBEE6]/10 outline-none transition-all pr-8 relative text-center
+                                    {{ $pf->status == 'approved' ? 'bg-emerald-50 text-emerald-500 border-emerald-100' : ($pf->status == 'rejected' ? 'bg-rose-50 text-rose-500 border-rose-100' : 'bg-orange-50 text-orange-500 border-orange-100') }}">
+                                    <option value="pending" {{ $pf->status == 'pending' ? 'selected' : '' }}>PENDING</option>
+                                    <option value="approved" {{ $pf->status == 'approved' ? 'selected' : '' }}>APPROVED</option>
+                                    <option value="rejected" {{ $pf->status == 'rejected' ? 'selected' : '' }}>REJECTED</option>
                                 </select>
                             </form>
                         </td>
-                        <td class="p-4 text-center">
-                            <form action="{{ route('backend.portfolios.destroy', $pf->id) }}" method="POST" onsubmit="return confirm('delete this portfolio?')">
+                        
+                        {{-- 🛠️ ปุ่มลบคำสั่งงาน (แสดงเด่นชัดถาวร ไม่ต้องรอ Hover) 🛠️ --}}
+                        <td class="px-4 py-4 text-center">
+                            <form action="{{ route('backend.portfolios.destroy', $pf->id) }}" method="POST" onsubmit="return confirm('⚠️ ยืนยันประสงค์ต้องการทำการลบข้อมูลแฟ้มผลงานพอร์ตโฟลิโอนี้ออกจากคลังระบบถาวรใช่หรือไม่?')" class="inline-flex">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="text-gray-300 hover:text-rose-500 transition-colors">
-                                    <i class="fa-solid fa-trash-can text-sm"></i>
+                                <button type="submit" class="w-7 h-7 rounded-lg bg-slate-50 text-slate-400 hover:bg-rose-500 hover:text-white border border-slate-100 shadow-sm transition-all flex items-center justify-center">
+                                    <i class="fa-solid fa-trash-can text-[11px]"></i>
                                 </button>
                             </form>
                         </td>
                     </tr>
+                    
+                    {{-- ❌ 3. กรณีตารางว่างเปล่า ไม่มีข้อมูลคำร้องแสดงผล ❌ --}}
                     @empty
                     <tr>
-                        <td colspan="6" class="p-10 text-center text-gray-400 text-xs italic">no portfolio data found</td>
+                        <td colspan="6" class="px-6 py-16 text-center text-slate-400 font-medium">
+                            <div class="flex flex-col items-center justify-center">
+                                <div class="w-14 h-14 bg-slate-50 border border-slate-100 rounded-full flex items-center justify-center mb-3">
+                                    <i class="fa-solid fa-file-circle-exclamation text-2xl text-slate-300"></i>
+                                </div>
+                                <h4 class="text-sm font-bold text-slate-700 mb-0.5">ไม่พบข้อมูลแฟ้มสะสมผลงาน</h4>
+                                <p class="text-xs text-slate-400 font-medium">คลังข้อมูลระบบหลังบ้านยังไม่มีรายการพอร์ตโฟลิโอใดๆ ส่งคำขอเข้ามาในขณะนี้</p>
+                            </div>
+                        </td>
                     </tr>
                     @endforelse
                 </tbody>
             </table>
-            <div class="p-4 border-t border-gray-50">
+            
+            {{-- ชุดปุ่มลิงก์แบ่งหน้าข้อมูล --}}
+            @if(isset($portfolios) && method_exists($portfolios, 'links') && $portfolios->hasPages())
+            <div class="px-6 py-4 border-t border-slate-50 bg-white">
                 {{ $portfolios->links() }}
             </div>
+            @endif
         </div>
-</section>
+    </section>
 @endsection

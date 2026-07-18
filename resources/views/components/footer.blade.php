@@ -31,7 +31,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-8 mb-10">
             {{-- 1. Brand & Description --}}
             <div class="lg:col-span-5 flex flex-col items-center md:items-start text-center md:text-left">
-                <img src="{{ asset('assets/img/steam-logo.png') }}" alt="STEAM Logo" class="h-10 md:h-12 w-auto mb-6 opacity-90 hover:opacity-100 transition-opacity duration-300">
+                <img src="{{ asset('assets/img/steam-logo-white.png') }}" alt="STEAM Logo" class="h-10 md:h-12 w-auto mb-6 opacity-90 hover:opacity-100 transition-opacity duration-300">
                 <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-sm mb-6">
                     จุดประกายไอเดีย เริ่มต้นสร้างโครงงาน STEAM ของคุณที่นี่
                     แหล่งเรียนรู้นวัตกรรมและเทคโนโลยีเพื่ออนาคตสำหรับเยาวชนไทย

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\User;
+use App\Models\Tag; 
 use App\Models\ProjectAdvisor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,10 +13,8 @@ use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
-
     public function index(Request $request)
     {
-
         $query = Project::with(['user', 'advisors.user']);
 
         if ($request->filled('search')) {
@@ -40,9 +39,13 @@ class ProjectController extends Controller
     public function create()
     {
         $users = User::all();
-        return view('backend.projects-create', compact('users'));
+        $tags = Tag::all(); 
+        return view('backend.projects-create', compact('users', 'tags'));
     }
 
+    /**
+     * บันทึกโครงงานใหม่ พร้อมระบบป้องกันแท็กซ้ำ
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -52,6 +55,7 @@ class ProjectController extends Controller
             'status' => 'required|string',
             'description' => 'nullable|string',
             'advisors' => 'nullable|array',
+            'tags' => 'nullable|array', 
             'file_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ]);
 
@@ -81,6 +85,20 @@ class ProjectController extends Controller
                     ]);
                 }
             }
+
+            // 🛠️ ตรวจสอบและซิงค์แท็กในขั้นตอนสร้างใหม่ (ป้องกันการสร้างตัวซ้ำ)
+            $processedTagIds = [];
+            if ($request->has('tags')) {
+                foreach ($request->tags as $tagValue) {
+                    $cleanName = str_replace('#', '', trim($tagValue));
+                    if ($cleanName !== '') {
+                        // ดึงแท็กเดิมที่มีอยู่แล้ว หรือถ้าไม่มีจริงๆ ถึงจะสร้างใหม่
+                        $tag = Tag::firstOrCreate(['name' => $cleanName]);
+                        $processedTagIds[] = $tag->id;
+                    }
+                }
+                $project->tags()->sync($processedTagIds);
+            }
         });
 
         return redirect()->route('backend.projects')->with('success', 'เพิ่มข้อมูลโครงงานเรียบร้อยแล้ว!');
@@ -88,14 +106,19 @@ class ProjectController extends Controller
 
     public function edit($id)
     {
-        $project = Project::with('advisors')->findOrFail($id);
+        $project = Project::with(['advisors', 'tags'])->findOrFail($id);
         $users = User::all();
+        $tags = Tag::all();
         
         $currentAdvisors = $project->advisors->pluck('user_id')->toArray();
+        $currentTags = $project->tags->pluck('id')->toArray();
         
-        return view('backend.projects-edit', compact('project', 'users', 'currentAdvisors'));
+        return view('backend.projects-edit', compact('project', 'users', 'tags', 'currentAdvisors', 'currentTags'));
     }
 
+    /**
+     * บันทึกข้อมูลแก้ไขโครงงาน แก้ไขระบบซิงค์แท็กไม่ให้เพิ่มซ้ำถ้ามีคำนั้นอยู่แล้ว
+     */
     public function update(Request $request, $id)
     {
         $project = Project::findOrFail($id);
@@ -107,6 +130,7 @@ class ProjectController extends Controller
             'status' => 'required|string',
             'description' => 'nullable|string',
             'advisors' => 'nullable|array',
+            'tags' => 'nullable|array', 
             'file_upload' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
         ]);
 
@@ -131,7 +155,6 @@ class ProjectController extends Controller
             $project->save();
 
             ProjectAdvisor::where('project_id', $project->id)->delete();
-            
             if ($request->has('advisors')) {
                 foreach ($request->advisors as $userId) {
                     ProjectAdvisor::create([
@@ -140,11 +163,33 @@ class ProjectController extends Controller
                     ]);
                 }
             }
+
+            // 🌟 🛠️ แก้ไขจุดสำคัญ: ใช้ firstOrCreate เพื่อตรวจจับชื่อแท็กแทนการเช็ค ID สลับไปมา
+            $processedTagIds = [];
+            if ($request->has('tags')) {
+                foreach ($request->tags as $tagValue) {
+                    // เคลียร์ค่าเครื่องหมาย # และตัดช่องว่างออกให้สะอาด
+                    $cleanName = str_replace('#', '', trim($tagValue));
+                    
+                    if ($cleanName !== '') {
+                        // 1. ถ้ามีคำว่า "เกษตร" หรือ "มายคราฟ" อยู่แล้วในฐานข้อมูล มันจะไป get ไอดีเดิมมาทันที 
+                        // 2. แต่ถ้ายังไม่มีใครเคยพิมพ์คำนี้มาก่อนเลย มันถึงจะสั่ง insert ลงตาราง tags ให้ครับ
+                        $tag = Tag::firstOrCreate([
+                            'name' => $cleanName
+                        ]);
+                        
+                        // มั่นใจได้ 100% ว่าจะได้ ID ตัวเลขจริงของแท็กนั้นๆ ใส่กลับเข้าไปในอาเรย์ซิงค์
+                        $processedTagIds[] = $tag->id;
+                    }
+                }
+            }
+            
+            // ซิงค์ส่งข้อมูลไอดีเลขล้วนๆ เข้าไปอัปเดตตารางกลาง project_tags
+            $project->tags()->sync($processedTagIds);
         });
 
         return redirect()->route('backend.projects')->with('success', 'อัปเดตข้อมูลโครงงานเรียบร้อยแล้ว!');
     }
-
 
     public function destroy($id)
     {

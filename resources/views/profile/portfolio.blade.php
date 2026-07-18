@@ -1,182 +1,204 @@
 @extends('profile.profile-layout')
 @section('profile-content')
 
-<section class="max-w-screen-xl mx-auto bg-gray-50/30 min-h-screen">
-
-    <div class="mb-6">
-        <h2 class="text-xl md:text-2xl font-bold text-[#2E8DA3]">อัปโหลดพอร์ตฟอลิโอ</h2>
-        <p class="text-xs md:text-sm text-gray-400 mt-1">เผยแพร่พอร์ตฟอลิโอให้ ผู้คนได้รับชม</p>
+<section class="w-full font-mitr max-w-6xl mx-auto text-slate-700">
+    <div class="mb-8 border-b border-slate-100 pb-4 flex flex-col md:flex-row justify-between items-start md:items-end gap-3">
+        <div>
+            <div class="flex items-center gap-2.5">
+                <div class="w-2.5 h-6 bg-gradient-to-b from-[#5EBEE6] to-blue-500 rounded-full shadow-sm"></div>
+                <h2 class="text-xl md:text-2xl font-extrabold text-slate-900 tracking-tight">จัดการแฟ้มผลงาน</h2>
+            </div>
+            <p class="text-xs text-slate-400 font-medium mt-1">อัปโหลด รวบรวม และเผยแพร่พอร์ตโฟลิโอ (Portfolio) ประวัติกิจกรรมของคุณสู่คลังระบบ</p>
+        </div>
     </div>
 
-    <div class="bg-white border border-gray-100 rounded-xl p-4 md:p-6 mb-8 flex flex-col md:flex-row justify-between items-center shadow-sm">
-        <div>
-            <h3 class="text-base md:text-lg font-bold text-slate-800">ตามหามหาลัย</h3>
-            <p class="text-[10px] md:text-xs text-gray-400 mt-1">ตามหามหาลัยที่คุณใฝ่ฝัน พร้อมอัปโหลดพอร์ตฟอลิโอ</p>
+    <div class="w-full bg-white/80 backdrop-blur-xl rounded-[2rem] p-6 md:p-8 mb-10 flex flex-col md:flex-row items-center justify-between border border-white/60 shadow-[0_8px_30px_rgba(0,0,0,0.03)] gap-6 group">
+        <div class="flex items-center gap-5 w-full md:w-auto">
+            <div class="w-14 h-14 bg-gradient-to-br from-[#5EBEE6] to-blue-500 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20 shrink-0 group-hover:scale-105 transition-transform duration-500">
+                <i class="fa-solid fa-graduation-cap text-white text-2xl"></i>
+            </div>
+            <div>
+                <h3 class="text-lg font-extrabold text-slate-900 tracking-tight">ตามหามหาวิทยาลัยในฝัน</h3>
+                <p class="text-slate-500 text-sm font-medium mt-1">กำหนดและบันทึกเป้าหมายคณะรวมถึงมหาลัยที่คุณใฝ่ฝัน พร้อมเครื่องมือช่วยจัดพอร์ต</p>
+            </div>
         </div>
-        <button class="mt-4 md:mt-0 px-6 py-2 border border-green-400 text-green-500 rounded-full text-xs font-bold hover:bg-green-50 transition shadow-sm whitespace-nowrap">
-            ดาวน์โหลด
+        <button class="w-full md:w-auto flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white px-8 py-3.5 rounded-xl font-semibold text-sm transition-all shadow-md active:scale-95 whitespace-nowrap">
+            ดาวน์โหลดคู่มือ <i class="fa-solid fa-download text-xs ml-1"></i>
         </button>
     </div>
-
-    <div class="bg-white p-5 md:p-6 rounded-xl border border-gray-100 shadow-sm mb-10 max-w-3xl">
-        <div class="flex items-center gap-3 mb-5">
-            <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 shadow-sm">
-                <i class="fa-solid fa-cloud-arrow-up"></i>
+    <div class="bg-white p-5 md:p-6 rounded-2xl border border-slate-100 shadow-lg mb-10 max-w-3xl">
+        <div class="flex items-center gap-3.5 mb-5 text-[#5EBEE6] border-b border-slate-50 pb-3">
+            <div class="w-9 h-9 bg-blue-50 border border-blue-100/50 rounded-xl flex items-center justify-center">
+                <i class="fa-solid fa-cloud-arrow-up text-base"></i>
             </div>
-            <h3 class="text-base font-bold text-slate-800">อัปโหลด</h3>
+            <h3 class="text-sm font-extrabold text-slate-900 tracking-tight">ส่งข้อมูลแฟ้มผลงานใหม่</h3>
         </div>
 
-        <form action="{{ route('profile.portfolio.store') }}" method="POST" enctype="multipart/form-data" id="portfolio-upload-form">
+        <form action="{{ route('profile.portfolio.store') }}" method="POST" enctype="multipart/form-data" id="portfolio-upload-form" class="space-y-4">
             @csrf
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">ชื่อ</label>
-                    <input type="text" name="first_name" class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-2.5 outline-none focus:ring-1 focus:ring-[#5EBEE6] transition shadow-sm" required>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                    <label class="block text-xs font-bold text-slate-500 pl-0.5">ชื่อจริง (ผู้จัดทำ)</label>
+                    <input type="text" name="first_name" placeholder="ป้อนชื่อจริง..." class="w-full bg-slate-50/50 border border-slate-100 text-xs font-medium rounded-xl p-3 outline-none focus:bg-white focus:border-[#5EBEE6] focus:ring-4 focus:ring-[#5EBEE6]/10 transition-all text-slate-700" required>
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 mb-1">นามสกุล</label>
-                    <input type="text" name="last_name" class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-2.5 outline-none focus:ring-1 focus:ring-[#5EBEE6] transition shadow-sm" required>
+                <div class="space-y-1">
+                    <label class="block text-xs font-bold text-slate-500 pl-0.5">นามสกุล</label>
+                    <input type="text" name="last_name" placeholder="ป้อนนามสกุล..." class="w-full bg-slate-50/50 border border-slate-100 text-xs font-medium rounded-xl p-3 outline-none focus:bg-white focus:border-[#5EBEE6] focus:ring-4 focus:ring-[#5EBEE6]/10 transition-all text-slate-700" required>
                 </div>
             </div>
 
-            <div class="mb-4">
-                <label class="block text-xs font-bold text-gray-700 mb-1">รายละเอียด</label>
-                <textarea name="description" rows="3" class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-2.5 outline-none focus:ring-1 focus:ring-[#5EBEE6] transition shadow-sm" required></textarea>
+            <div class="space-y-1">
+                <label class="block text-xs font-bold text-slate-500 pl-0.5">คำอธิบายรายละเอียดเกี่ยวกับผลงาน</label>
+                <textarea name="description" rows="3" placeholder="ระบุสรุปหัวข้อกิจกรรม รายการผลงาน หรือรางวัลเด่นๆ ที่บันทึกไว้ในเล่ม..." class="w-full bg-slate-50/50 border border-slate-100 text-xs font-medium rounded-xl p-3 outline-none focus:bg-white focus:border-[#5EBEE6] focus:ring-4 focus:ring-[#5EBEE6]/10 transition-all text-slate-700 min-h-[70px] resize-none" required></textarea>
             </div>
 
-            <div class="mb-4">
-                <label class="block text-xs font-bold text-gray-700 mb-1">มหาลัย</label>
-                <input type="text" name="university" class="w-full bg-gray-50 border border-gray-200 text-xs rounded-xl p-2.5 outline-none focus:ring-1 focus:ring-[#5EBEE6] transition shadow-sm" required>
+            <div class="space-y-1">
+                <label class="block text-xs font-bold text-slate-500 pl-0.5">มหาวิทยาลัย / คณะเป้าหมาย</label>
+                <input type="text" name="university" placeholder="ระบุมหาวิทยาลัย หรือหน่วยงานที่ใช้ยื่นผลงาน (เช่น คณะวิศวกรรมศาสตร์ จุฬาฯ)..." class="w-full bg-slate-50/50 border border-slate-100 text-xs font-medium rounded-xl p-3 outline-none focus:bg-white focus:border-[#5EBEE6] focus:ring-4 focus:ring-[#5EBEE6]/10 transition-all text-slate-700" required>
             </div>
 
-            <div class="mb-6">
-                <label class="block text-xs font-bold text-[#5EBEE6] mb-1">
-                    เลือกไฟล์พอร์ตฟอลิโอของคุณ <span class="text-gray-400 font-normal text-[10px] ml-1">(ขนาดสูงสุดไม่เกิน 10MB)</span>
+            <div class="space-y-2 pt-1">
+                <label class="block text-xs font-bold text-[#5EBEE6] pl-0.5">
+                    <i class="fa-solid fa-file-arrow-up"></i> เลือกไฟล์พอร์ตฟอลิโอหลัก 
+                    <span class="text-slate-400 font-medium text-[10px] ml-1">(รองรับไฟล์ PDF, JPG, PNG ขนาดห้ามเกิน 10MB)</span>
                 </label>
-                <input type="file" id="portfolio_upload" name="portfolio_file" accept=".pdf,.jpg,.jpeg,.png" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-gray-50 file:text-[#5EBEE6] hover:file:bg-[#eaf6fc] border border-gray-200 rounded-xl bg-white transition cursor-pointer shadow-sm" required>
+                <input type="file" id="portfolio_upload" name="portfolio_file" accept=".pdf,.jpg,.jpeg,.png" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-[#5EBEE6] hover:file:bg-[#eaf6fc] border border-slate-100 rounded-xl bg-white transition cursor-pointer shadow-sm" required>
                 
-                <div id="file_preview_box" class="hidden mt-3 p-3 bg-[#f8fbff] border border-[#BCE3F9] rounded-xl flex-row justify-between items-center shadow-sm">
-                    <div class="flex items-center gap-2 overflow-hidden">
-                        <i class="fa-solid fa-file-lines text-[#5EBEE6]"></i>
-                        <span id="file_preview_name" class="text-xs text-slate-600 font-medium truncate w-48 md:w-auto"></span>
+                <div id="file_preview_box" class="hidden mt-3 p-3 bg-blue-50/30 border border-blue-100/40 rounded-xl flex-row justify-between items-center shadow-inner">
+                    <div class="flex items-center gap-2 overflow-hidden pr-3">
+                        <i class="fa-solid fa-file-lines text-[#5EBEE6] text-sm shrink-0"></i>
+                        <span id="file_preview_name" class="text-xs text-slate-600 font-bold truncate max-w-[200px] md:max-w-none"></span>
                     </div>
-                    <a id="file_preview_btn" href="#" target="_blank" class="px-3 py-1 bg-[#5EBEE6] text-white text-[10px] font-bold rounded-lg hover:bg-[#4fb1d8] transition-colors whitespace-nowrap shadow-sm">
-                        เปิดดูไฟล์
+                    <a id="file_preview_btn" href="#" target="_blank" class="px-3 py-1.5 bg-[#5EBEE6] text-white text-[10px] font-bold rounded-lg hover:bg-[#4fb1d8] transition-colors whitespace-nowrap shadow-sm">
+                        ตรวจสอบไฟล์
                     </a>
                 </div>
             </div>
 
-            <div class="flex justify-center md:justify-start gap-3">
-                <button type="reset" class="px-8 py-2 bg-red-500 hover:bg-red-600 text-white text-xs font-bold rounded-xl transition shadow-sm">ยกเลิก</button>
-                <button type="submit" class="px-8 py-2 bg-white border border-green-400 text-green-500 hover:bg-green-50 text-xs font-bold rounded-xl transition shadow-sm">ยืนยัน</button>
+            <div class="flex justify-end gap-2 border-t border-slate-50 pt-4 mt-2">
+                <button type="reset" class="px-5 py-2.5 bg-slate-100 font-bold hover:bg-slate-200 transition text-slate-500 rounded-xl text-xs active:scale-95">ล้างฟอร์ม</button>
+                <button type="submit" class="px-6 py-2.5 bg-slate-900 font-bold hover:bg-slate-800 transition text-white rounded-xl text-xs shadow-md active:scale-95">ยืนยันส่งผลงาน</button>
             </div>
         </form>
     </div>
 
-    {{-- ส่วนค้นหา คงเดิม --}}
-    <form action="{{ route('profile.portfolio') }}" method="GET" class="flex flex-col md:flex-row items-center gap-3 md:gap-4 mb-8">
-        <div class="relative w-full flex-grow">
-            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            <input type="text" name="search" value="{{ request('search') }}" placeholder="ค้นหาพอร์ตฟอลิโอ, มหาลัย, หรือชื่อ..."
-                class="w-full bg-white border border-gray-100 text-sm rounded-xl pl-10 pr-24 py-3 outline-none focus:ring-1 focus:ring-[#5EBEE6] shadow-sm">
+    <form action="{{ route('profile.portfolio') }}" method="GET" class="flex flex-col md:flex-row items-center gap-4 mb-10 relative z-20">
+        <div class="relative w-full flex-grow shadow-sm">
+            <div class="absolute inset-y-0 left-6 flex items-center pointer-events-none">
+                <i class="fa-solid fa-magnifying-glass text-[#5EBEE6] text-lg"></i>
+            </div>
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="ค้นหาชื่อพอร์ต, มหาวิทยาลัย, หรือชื่อผู้จัดทำ..."
+                class="w-full bg-white border border-slate-100 text-slate-700 text-sm font-medium rounded-2xl py-4.5 pl-14 pr-32 outline-none focus:ring-2 focus:ring-[#5EBEE6]/50 focus:border-[#5EBEE6] transition-all">
             <button type="submit"
-                class="absolute right-2 top-1/2 -translate-y-1/2 bg-white border border-[#5EBEE6] text-[#5EBEE6] hover:bg-[#5EBEE6] hover:text-white transition-colors px-6 py-1.5 rounded-xl text-xs font-bold shadow-sm">
+                class="absolute right-2.5 top-1/2 -translate-y-1/2 bg-gradient-to-r from-[#5EBEE6] to-[#3B9ADE] hover:opacity-90 transition-opacity text-white px-6 py-2 rounded-xl text-sm font-bold shadow-md shadow-blue-500/20">
                 ค้นหา
             </button>
         </div>
-        <select name="sort" onchange="this.form.submit()"
-            class="w-full md:w-48 bg-white border border-gray-100 text-gray-500 text-sm rounded-xl px-4 py-3 outline-none shadow-sm cursor-pointer appearance-none">
-            <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>ล่าสุด</option>
-            <option value="popular" {{ request('sort') == 'popular' ? 'selected' : '' }}>ยอดนิยม</option>
-        </select>
+
+        <div class="relative w-full md:w-48 shrink-0 shadow-sm">
+            <select name="sort" onchange="this.form.submit()"
+                class="appearance-none w-full bg-white border border-slate-100 text-slate-600 font-bold text-sm rounded-2xl px-6 py-4.5 outline-none focus:ring-2 focus:ring-[#5EBEE6]/50 cursor-pointer pr-12 transition-all">
+                <option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>เรียงจาก: ล่าสุด</option>
+                <option value="popular" {{ request('sort') == 'popular' ? 'selected' : '' }}>เรียงจาก: ยอดนิยม</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-5 flex items-center text-slate-400">
+                <i class="fa-solid fa-chevron-down text-xs"></i>
+            </div>
+        </div>
     </form>
 
-    <div class="mb-6 flex justify-between items-center">
-        <h3 class="text-lg font-bold text-slate-800 border-l-4 border-[#5EBEE6] pl-3">รายการผลงาน</h3>
-        <span class="text-xs text-gray-400">ทั้งหมด {{ $portfolios->total() ?? 0 }} รายการ</span>
+    <div class="mb-6 flex justify-between items-center border-b border-slate-100 pb-3">
+        <h3 class="text-base font-extrabold text-slate-900 tracking-tight border-l-4 border-[#5EBEE6] pl-3">รายการแฟ้มผลงานของคุณ</h3>
+        <span class="text-xs text-slate-400 font-bold bg-slate-100 px-3 py-1 rounded-md">ทั้งหมด {{ $portfolios->total() ?? 0 }} รายการ</span>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         
         @forelse($portfolios as $portfolio)
-            <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden relative group hover:shadow-md transition-shadow flex flex-col h-full">
+            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden relative group hover:shadow-lg hover:-translate-y-1.5 transition-all duration-300 flex flex-col h-full">
                 
+                {{-- ป้าย Badge แจ้งสถานะตรวจสอบ --}}
                 <div class="absolute top-3 left-3 z-10">
                     @if($portfolio->status == 'pending')
-                        <span class="bg-amber-100 text-amber-600 text-[9px] font-bold px-2 py-0.5 rounded-full border border-amber-200 shadow-sm uppercase tracking-wider">Pending</span>
+                        <span class="bg-orange-50 border border-orange-100 text-orange-500 text-[9px] font-bold px-2.5 py-1 rounded-md shadow-sm uppercase tracking-wide">Pending</span>
                     @elseif($portfolio->status == 'approved')
-                        <span class="bg-emerald-100 text-emerald-600 text-[9px] font-bold px-2 py-0.5 rounded-full border border-emerald-200 shadow-sm uppercase tracking-wider">Approved</span>
+                        <span class="bg-emerald-50 border border-emerald-100 text-emerald-500 text-[9px] font-bold px-2.5 py-1 rounded-md shadow-sm uppercase tracking-wide">Approved</span>
                     @elseif($portfolio->status == 'rejected')
-                        <span class="bg-rose-100 text-rose-600 text-[9px] font-bold px-2 py-0.5 rounded-full border border-rose-200 shadow-sm uppercase tracking-wider">Rejected</span>
+                        <span class="bg-rose-50 border border-rose-100 text-rose-500 text-[9px] font-bold px-2.5 py-1 rounded-md shadow-sm uppercase tracking-wide">Rejected</span>
                     @endif
                 </div>
 
-                <form action="{{ route('profile.portfolio.destroy', $portfolio->id) }}" method="POST" onsubmit="return confirm('ยืนยันการลบผลงานพอร์ตฟอลิโอนี้?');">
+                <form action="{{ route('profile.portfolio.destroy', $portfolio->id) }}" method="POST" onsubmit="return confirm('ยืนยันประสงค์ต้องการทำการลบแฟ้มผลงานชิ้นนี้ออกจากระบบ?');">
                     @csrf @method('DELETE')
-                    <button type="submit" class="absolute top-3 right-3 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-[10px] opacity-0 group-hover:opacity-100 transition shadow-sm z-10 hover:bg-red-600" title="ลบผลงาน">
+                    <button type="submit" class="absolute top-3 right-3 w-6 h-6 bg-rose-500 text-white rounded-full flex items-center justify-center text-[11px] opacity-0 group-hover:opacity-100 transition shadow-md z-10 hover:bg-rose-600" title="ลบผลงาน">
                         <i class="fa-solid fa-xmark"></i>
                     </button>
                 </form>
 
-                <div class="w-full h-48 bg-gray-100 relative flex items-center justify-center overflow-hidden border-b border-gray-100">
+                <div class="w-full h-48 bg-slate-50 relative flex items-center justify-center overflow-hidden border-b border-slate-50">
                     @php
                         $ext = strtolower(pathinfo($portfolio->file_path, PATHINFO_EXTENSION));
                     @endphp
                     
                     @if($ext == 'pdf')
                         <canvas class="pdf-thumbnail w-full h-full object-cover transition-opacity duration-300 opacity-0" data-pdf-url="{{ asset($portfolio->file_path) }}"></canvas>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center text-gray-400 pdf-loading">
-                            <i class="fa-solid fa-spinner fa-spin text-2xl mb-2"></i>
-                            <span class="text-[10px] font-medium">กำลังโหลดภาพปก...</span>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center text-slate-300 pdf-loading bg-slate-50/50">
+                            <i class="fa-solid fa-spinner fa-spin text-xl mb-1.5 text-[#5EBEE6]"></i>
+                            <span class="text-[9px] font-bold text-slate-400">กำลังประมวลภาพปก...</span>
                         </div>
                     @else
-                        <img src="{{ asset($portfolio->file_path) }}" class="w-full h-full object-cover" alt="Portfolio Cover">
+                        <img src="{{ asset($portfolio->file_path) }}" class="w-full h-full object-cover group-hover:scale-103 transition-transform duration-700 ease-out" alt="Portfolio Cover">
                     @endif
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-900/5 via-transparent to-transparent"></div>
                 </div>
 
-                <div class="p-4 flex flex-col flex-grow">
-                    <div class="flex items-start justify-between mb-3">
-                        <div class="flex items-center gap-1.5">
-                            <div class="w-5 h-5 bg-slate-800 text-white rounded-full flex items-center justify-center text-[8px] shrink-0">
+                {{-- รายละเอียดเนื้อหาภายในการ์ดพอร์ต --}}
+                <div class="p-5 flex flex-col flex-grow bg-white">
+                    <div class="flex items-start justify-between mb-2 overflow-hidden">
+                        <div class="flex items-center gap-1.5 w-full">
+                            <div class="w-5 h-5 bg-blue-50 border border-blue-100/50 text-[#5EBEE6] rounded-full flex items-center justify-center text-[9px] shrink-0">
                                 <i class="fa-solid fa-graduation-cap"></i>
                             </div>
-                            <span class="text-[10px] font-bold text-slate-700 leading-tight w-full line-clamp-1" title="{{ $portfolio->university }}">{{ $portfolio->university }}</span>
+                            <span class="text-[10px] font-bold text-slate-500 line-clamp-1" title="{{ $portfolio->university }}">{{ $portfolio->university }}</span>
                         </div>
                     </div>
 
-                    <h4 class="text-sm font-bold text-slate-800 mb-1 line-clamp-1">{{ $portfolio->first_name }} {{ $portfolio->last_name }}</h4>
-                    <p class="text-[9px] text-gray-400 line-clamp-2 leading-relaxed mb-4 h-[28px]" title="{{ $portfolio->description }}">
+                    <h4 class="text-sm font-bold text-slate-800 mb-1.5 line-clamp-1 group-hover:text-[#5EBEE6] transition-colors">{{ $portfolio->first_name }} {{ $portfolio->last_name }}</h4>
+                    <p class="text-slate-400 text-xs font-medium line-clamp-2 leading-relaxed mb-4 h-[36px]" title="{{ $portfolio->description }}">
                         {{ $portfolio->description }}
                     </p>
 
-                    <div class="flex items-center justify-between mt-auto pt-4 mb-4 border-t border-gray-50">
-                        <div class="flex items-center gap-1.5 text-slate-400">
-                            <i class="fa-regular fa-calendar text-[10px]"></i>
-                            <span class="text-[9px] font-medium">{{ $portfolio->created_at->format('d/m/Y') }}</span>
+                    <div class="flex items-center justify-between mt-auto pt-3 border-t border-slate-50 mb-3 text-[11px] text-slate-400 font-semibold">
+                        <div class="flex items-center gap-1.5">
+                            <i class="fa-regular fa-calendar text-[10px] text-slate-300"></i>
+                            <span>{{ $portfolio->created_at->format('d/m/Y') }}</span>
                         </div>
-                        <div class="flex items-center gap-1.5 text-slate-400">
-                            <i class="fa-regular fa-eye text-[10px]"></i>
-                            <span class="text-[9px] font-medium">{{ number_format($portfolio->views) }}</span>
+                        <div class="flex items-center gap-1.5">
+                            <i class="fa-regular fa-eye text-[10px] text-slate-300"></i>
+                            <span>{{ number_format($portfolio->views) }} <span class="text-[10px] font-normal text-slate-400">วิว</span></span>
                         </div>
                     </div>
 
-                    <a href="{{ asset($portfolio->file_path) }}" target="_blank" class="w-full block text-center py-2 border border-gray-100 text-gray-500 bg-gray-50 rounded-xl text-xs font-bold hover:bg-[#5EBEE6] hover:text-white hover:border-[#5EBEE6] hover:shadow-sm transition-all">
-                        <i class="fa-solid fa-file-pdf mr-1"></i> ดูไฟล์ผลงาน
+                    <a href="{{ asset($portfolio->file_path) }}" target="_blank" class="w-full block text-center py-2.5 border border-slate-100 text-slate-600 bg-slate-50 rounded-xl text-xs font-bold hover:bg-[#5EBEE6] hover:text-white hover:border-[#5EBEE6] shadow-sm transition-all">
+                        <i class="fa-solid fa-file-pdf mr-1"></i> ตรวจสอบเปิดดูผลงาน
                     </a>
                 </div>
             </div>
         @empty
-            <div class="col-span-full py-12 text-center text-gray-400 border border-dashed border-gray-200 rounded-xl bg-white shadow-sm">
-                <i class="fa-regular fa-folder-open text-3xl mb-3 text-gray-300"></i>
-                <p class="text-sm font-medium">ยังไม่มีข้อมูลผลงานพอร์ตฟอลิโอ</p>
+            <div class="col-span-full py-16 text-center border border-dashed border-slate-200 rounded-3xl bg-white shadow-sm flex flex-col items-center justify-center text-slate-400">
+                <div class="w-14 h-14 bg-slate-50 border border-slate-100 rounded-full flex items-center justify-center mb-3">
+                    <i class="fa-solid fa-folder-open text-2xl text-slate-300"></i>
+                </div>
+                <h3 class="text-sm font-bold text-slate-700 mb-0.5">ยังไม่มีการส่งข้อมูลผลงาน</h3>
+                <p class="text-xs text-slate-400 font-medium">คุณยังไม่มีรายการจัดส่งแฟ้มประวัติพอร์ตฟอลิโอเก็บไว้ในคลังระบบ</p>
             </div>
         @endforelse
 
     </div>
 
     @if($portfolios->hasPages())
-        <div class="mt-8 pt-4">
+        <div class="mt-10 pt-4 border-t border-slate-100">
             {{ $portfolios->links() }}
         </div>
     @endif
@@ -193,11 +215,9 @@
 
         if (fileInput) {
             fileInput.addEventListener('change', function() {
-                // ตรวจสอบขนาดไฟล์สูงสุดไม่เกิน 10MB ผ่านฟังก์ชันส่วนกลาง AppAlert ของ sweetalert.js
                 if (typeof AppAlert !== 'undefined') {
                     const isValid = AppAlert.validateFileSize(this, 10);
                     if (!isValid) {
-                        // หากขนาดไฟล์เกิน 10MB ล้างสถานะพรีวิวในหน้าตัวนี้ออก
                         if (previewBox) {
                             previewBox.classList.add('hidden');
                             previewBox.classList.remove('flex');
@@ -208,7 +228,6 @@
             });
         }
 
-        // ดักจับการกด Reset ฟอร์มเพื่อซ่อนพรีวิวไฟล์กลับตามเดิม
         if (formElement) {
             formElement.addEventListener('reset', function() {
                 if (previewBox) {

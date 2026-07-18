@@ -14,7 +14,7 @@ class UserController extends Controller
     {
         $query = DB::table('users');
 
-        // ระบบค้นหา
+        // ระบบค้นหาข้อมูลสมาชิก
         if ($request->search) {
             $query->where(function($q) use ($request) {
                 $q->where('first_name', 'LIKE', "%{$request->search}%")
@@ -40,8 +40,10 @@ class UserController extends Controller
             'nickname' => 'required|string|max:255',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'level' => 'required|in:member,admin',
+            'level' => 'required|in:member,teacher,admin',
+            'is_hall_of_fame' => 'required|in:0,1',
             'email' => 'required|email|unique:users,email,'.$id,
+            'password' => 'nullable|string|min:6',
         ]);
 
         $data = [
@@ -57,10 +59,10 @@ class UserController extends Controller
             'bio' => $request->bio,
             'email' => $request->email,
             'level' => $request->level,
+            'is_hall_of_fame' => (int) $request->is_hall_of_fame,
             'updated_at' => now(),
         ];
 
-        // ถ้ามีการกรอกรหัสผ่านใหม่
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         }
