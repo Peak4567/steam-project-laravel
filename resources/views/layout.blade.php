@@ -28,7 +28,10 @@
     
     {{-- css --}}
     <link rel="stylesheet" href="{{ asset('/assets/css/style.css') }}">
-    <title>Document</title>
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/steam.png') }}">
+    <title>{{ $globalSettings['site_name'] ?? 'ศูนย์โครงการสตรีม | STEAM' }}</title>
+    <meta name="description" content="{{ $globalSettings['seo_description'] ?? '' }}">
+    <meta name="keywords" content="{{ $globalSettings['seo_keywords'] ?? '' }}">
     <style>
         html {
             scroll-behavior: smooth;
@@ -80,7 +83,9 @@
     </main>
 
     <x-footer />
-    
+
+    <x-cookie-consent />
+
     <script src="{{ asset('assets/js/sweetalert.js') }}"></script>
 </body>
 

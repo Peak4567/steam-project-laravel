@@ -33,8 +33,7 @@
             <div class="lg:col-span-5 flex flex-col items-center md:items-start text-center md:text-left">
                 <img src="{{ asset('assets/img/steam-logo-white.png') }}" alt="STEAM Logo" class="h-10 md:h-12 w-auto mb-6 opacity-90 hover:opacity-100 transition-opacity duration-300">
                 <p class="text-gray-400 text-sm md:text-base leading-relaxed max-w-sm mb-6">
-                    จุดประกายไอเดีย เริ่มต้นสร้างโครงงาน STEAM ของคุณที่นี่
-                    แหล่งเรียนรู้นวัตกรรมและเทคโนโลยีเพื่ออนาคตสำหรับเยาวชนไทย
+                    {{ $globalSettings['footer_description'] ?? 'จุดประกายไอเดีย เริ่มต้นสร้างโครงงาน STEAM ของคุณที่นี่ แหล่งเรียนรู้นวัตกรรมและเทคโนโลยีเพื่ออนาคตสำหรับเยาวชนไทย' }}
                 </p>
                 <div class="inline-flex items-center gap-2 px-3.5 py-1.5 bg-white/5 border border-white/10 rounded-full">
                     <span class="relative flex h-1.5 w-1.5">
@@ -118,7 +117,7 @@
         {{-- Bottom bar: legal links + copyright + back to top --}}
         <div class="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
             <p class="text-gray-500 text-[13px] font-medium flex items-center justify-center gap-1.5 flex-wrap order-2 md:order-1">
-                © 2026 <span class="text-gray-300">Steam Project.</span> All rights reserved.
+                {{ $globalSettings['footer_credit'] ?? '© 2026 Steam Project. All rights reserved.' }}
             </p>
 
             <div class="flex items-center gap-5 order-1 md:order-2">

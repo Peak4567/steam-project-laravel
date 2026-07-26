@@ -42,16 +42,10 @@
                         <i class="fa-solid fa-globe text-[11px]" :class="activeSection === 'meta' ? 'text-[#5EBEE6]' : ''"></i> 2. Metadata & SEO
                     </a>
                     
-                    <a href="#design" @click="activeSection = 'design'"
-                       :class="activeSection === 'design' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50'"
-                       class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all duration-200">
-                        <i class="fa-solid fa-palette text-[11px]" :class="activeSection === 'design' ? 'text-[#5EBEE6]' : ''"></i> 3. Theme & Layout
-                    </a>
-                    
                     <a href="#security" @click="activeSection = 'security'"
                        :class="activeSection === 'security' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-500 hover:bg-slate-50'"
                        class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all duration-200">
-                        <i class="fa-solid fa-shield-halved text-[11px]" :class="activeSection === 'security' ? 'text-[#5EBEE6]' : ''"></i> 4. System Security
+                        <i class="fa-solid fa-cookie-bite text-[11px]" :class="activeSection === 'security' ? 'text-[#5EBEE6]' : ''"></i> 3. Cookie Consent
                     </a>
                 </div>
 
@@ -128,58 +122,22 @@
                     </div>
                 </div>
 
-                {{-- กล่องที่ 3: UI Theme Styling & Dynamic Environment --}}
-                <div id="design" 
-                     x-intersect:enter="activeSection = 'design'"
-                     class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4 scroll-mt-6">
-                    <h3 class="text-sm font-black text-slate-800 border-b border-slate-50 pb-2.5 uppercase tracking-wide flex items-center gap-2">
-                        <i class="fa-solid fa-palette text-amber-500"></i> 3. สไตล์และโครงสร้างแม่แบบระบบ (Visual Identity Control)
-                    </h3>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div class="space-y-1.5">
-                            <label class="block text-xs font-bold text-slate-500">สีหลักของระบบ (primary_color)</label>
-                            <div class="flex gap-2">
-                                <input type="color" value="{{ $settings['primary_color'] ?? '#5ebee6' }}" oninput="this.nextElementSibling.value = this.value" class="w-10 h-9 p-0 bg-transparent border-0 cursor-pointer rounded-lg">
-                                <input type="text" name="settings[primary_color]" value="{{ $settings['primary_color'] ?? '#5ebee6' }}" class="w-full px-3 py-1.5 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold outline-none focus:border-[#5EBEE6] text-center text-slate-600">
-                            </div>
-                        </div>
-                        <div class="space-y-1.5">
-                            <label class="block text-xs font-bold text-slate-500">CSS Grid Layout Gap</label>
-                            <select class="w-full px-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-xs font-medium text-slate-600 outline-none">
-                                <option>gap-6 (24px Default)</option>
-                                <option>gap-4 (16px Tight)</option>
-                            </select>
-                        </div>
-                        <div class="space-y-1.5">
-                            <label class="block text-xs font-bold text-slate-500">Image Compression Quality</label>
-                            <input type="number" value="85" max="100" min="50" class="w-full px-4 py-2 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold outline-none text-slate-600 text-center">
-                        </div>
-                    </div>
-                </div>
-
-                {{-- กล่องที่ 4: Session Security & Verification --}}
-                <div id="security" 
+                {{-- กล่องที่ 3: Cookie Consent --}}
+                <div id="security"
                      x-intersect:enter="activeSection = 'security'"
                      class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm space-y-4 scroll-mt-6">
                     <h3 class="text-sm font-black text-slate-800 border-b border-slate-50 pb-2.5 uppercase tracking-wide flex items-center gap-2">
-                        <i class="fa-solid fa-user-lock text-rose-500"></i> 4. มาตรการควบคุมความปลอดภัยบัญชี (Session Security Policy)
+                        <i class="fa-solid fa-cookie-bite text-amber-500"></i> 3. การตั้งค่าคุกกี้ (Cookie Consent)
                     </h3>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-medium text-slate-600">
+
+                    <div class="grid grid-cols-1 gap-4 text-xs font-medium text-slate-600">
                         <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100/70">
                             <div>
-                                <p class="font-bold text-slate-700">บังคับใช้ระบบ CSRF Protection Token</p>
-                                <span class="text-[10px] text-slate-400">ป้องกันการปลอมแปลงคำสั่งข้ามไซต์ทั้งหมด</span>
+                                <p class="font-bold text-slate-700">เปิดใช้งานป๊อปอัปขออนุญาตใช้คุกกี้ (Cookie Consent Banner)</p>
+                                <span class="text-[10px] text-slate-400">แสดงข้อความขออนุญาตใช้คุกกี้แก่ผู้เข้าชมเว็บไซต์เมื่อเข้าเว็บครั้งแรก</span>
                             </div>
-                            <input type="checkbox" checked disabled class="w-4 h-4 rounded text-[#5EBEE6] focus:ring-0">
-                        </div>
-                        <div class="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100/70">
-                            <div>
-                                <p class="font-bold text-slate-700">จำกัดการล็อกอินผิดพลาด (Rate Limiting)</p>
-                                <span class="text-[10px] text-slate-400">บล็อกไอพีชั่วคราวเมื่อกรอกรหัสผิดครบ 5 ครั้ง</span>
-                            </div>
-                            <input type="checkbox" checked class="w-4 h-4 rounded text-[#5EBEE6] focus:ring-0">
+                            <input type="hidden" name="settings[cookie_consent_enabled]" value="0">
+                            <input type="checkbox" name="settings[cookie_consent_enabled]" value="1" {{ ($settings['cookie_consent_enabled'] ?? '1') == '1' ? 'checked' : '' }} class="w-4 h-4 rounded text-[#5EBEE6] focus:ring-0">
                         </div>
                     </div>
                 </div>

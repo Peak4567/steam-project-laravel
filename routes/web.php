@@ -18,6 +18,8 @@ use App\Http\Controllers\Backend\UserController as BackendUserController;
 use App\Http\Controllers\Frontend\HomeController as HomeController;
 
 
+Route::middleware(['maintenance'])->group(function () {
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 
@@ -90,6 +92,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/profile/portfolio', [PortfolioController::class, 'store'])->name('profile.portfolio.store');
     Route::delete('/profile/portfolio/{id}', [PortfolioController::class, 'destroy'])->name('profile.portfolio.destroy');
 });
+
+}); // end maintenance middleware group
 
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'authenticate'])->name('login.post');

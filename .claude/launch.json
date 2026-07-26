@@ -6,6 +6,12 @@
       "runtimeExecutable": "php",
       "runtimeArgs": ["artisan", "serve", "--port=8765"],
       "port": 8765
+    },
+    {
+      "name": "steam-nextjs",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--prefix", "Back_Up_NextJS/frontend"],
+      "port": 3000
     }
   ]
 }

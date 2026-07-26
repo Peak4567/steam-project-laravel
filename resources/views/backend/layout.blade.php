@@ -27,7 +27,8 @@
     <link href="{{ asset('assets/font-awesome/css/all.min.css') }}" rel="stylesheet">
     {{-- css --}}
     <link rel="stylesheet" href="{{ asset('/assets/css/style.css') }}">
-    <title>Document</title>
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/steam.png') }}">
+    <title>แผงควบคุมแอดมิน | STEAM PROJECT</title>
 </head>
 
 <body class="bg-[#feffff] antialiased">

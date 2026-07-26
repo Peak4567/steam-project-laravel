@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Support\Settings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
 
 class SettingController extends Controller
 {
@@ -38,12 +38,12 @@ class SettingController extends Controller
         $request->validate([
             'settings' => 'required|array',
             'settings.site_name' => 'required|string|max:255',
-            'settings.primary_color' => 'required|string|max:7', // เช็ค Code สี เช่น #5ebee6
             'settings.is_maintenance' => 'required|in:0,1',
             'settings.seo_keywords' => 'nullable|string',
             'settings.seo_description' => 'nullable|string',
             'settings.footer_description' => 'nullable|string',
             'settings.footer_credit' => 'nullable|string',
+            'settings.cookie_consent_enabled' => 'required|in:0,1',
         ]);
 
         // เริ่มต้นกระบวนการ Database Transaction เพื่อความปลอดภัยระดับลึก
@@ -51,18 +51,16 @@ class SettingController extends Controller
         try {
             // ลูปข้อมูลอัปเดตค่าทีละ Key ตามที่กรอกมาจากหน้าจอ Advanced Form
             foreach ($request->input('settings') as $key => $value) {
-                DB::table('settings')
-                    ->where('key', $key)
-                    ->update([
-                        'value' => $value,
-                        'updated_at' => now()
-                    ]);
+                DB::table('settings')->updateOrInsert(
+                    ['key' => $key],
+                    ['value' => $value, 'updated_at' => now()]
+                );
             }
 
             DB::commit();
 
             // ⚡ CRITICAL: เคลียร์ Global Cache ระบบทั้งหมดทันที เพื่อให้หน้าเว็บเปลี่ยนสีและข้อความตามค่าใหม่รวดเร็วที่สุด
-            Cache::forget('global_settings');
+            Settings::flush();
 
             return redirect()->back()->with('success', 'สตรีมระบบคอมฟิกูเรชันทำการบันทึกลงตาราง settings เรียบร้อยแล้ว!');
 
