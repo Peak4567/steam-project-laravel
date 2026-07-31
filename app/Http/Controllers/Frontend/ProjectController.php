@@ -17,13 +17,21 @@ class ProjectController extends Controller
 {
     public function index()
     {
-        $project = Project::whereHas('members', function ($query) {
-            $query->where('user_id', Auth::id());
+        $userId = Auth::id();
+
+        // 1. ดึงโครงงานหลักอันแรกที่ผู้ใช้สังกัดอยู่
+        $project = Project::whereHas('members', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
         })->with(['members' => function ($query) {
             $query->withPivot('position', 'status');
         }, 'advisors', 'tags'])->withCount('members')->first();
 
-        $allProjects = Project::with(['advisors', 'tags'])->get();
+        // 2. ✅ แก้ไข: ดึงเฉพาะโครงงานทั้งหมดที่ผู้ใช้ปัจจุบันสังกัดอยู่ (ทั้งในฐานะ Member หรือ Advisor)
+        $allProjects = Project::whereHas('members', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->orWhereHas('advisors', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->with(['advisors', 'tags'])->get();
 
         // 🌟 ดึงข้อมูลรายชื่อนักเรียนดีเด่นสำหรับทำเนียบเกียรติยศ (Hall of Fame)
         $hallOfFameUsers = \Illuminate\Support\Facades\DB::table('users')
@@ -88,9 +96,16 @@ class ProjectController extends Controller
 
     public function showProject($id)
     {
+        $userId = Auth::id();
+
         $project = Project::with(['members', 'advisors', 'tags'])->withCount('members')->findOrFail($id);
 
-        $allProjects = Project::with(['advisors', 'tags'])->get();
+        // ✅ แก้ไข: ดึงเฉพาะโครงงานที่ผู้ใช้ปัจจุบันเป็นสมาชิกหรือที่ปรึกษา
+        $allProjects = Project::whereHas('members', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->orWhereHas('advisors', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->with(['advisors', 'tags'])->get();
 
         return view('profile.projects', compact('project', 'allProjects'));
     }
@@ -280,11 +295,19 @@ class ProjectController extends Controller
 
     public function showReportsWithoutId()
     {
-        $project = Project::whereHas('members', function ($query) {
-            $query->where('user_id', Auth::id());
+        $userId = Auth::id();
+
+        $project = Project::whereHas('members', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
         })->with(['advisors', 'tags'])->withCount('members')->first();
 
-        $allProjects = Project::with(['advisors', 'tags'])->get();
+        // ✅ ดึงเฉพาะโครงงานของผู้ใช้เช่นกัน
+        $allProjects = Project::whereHas('members', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->orWhereHas('advisors', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })->with(['advisors', 'tags'])->get();
+
         $reports = $project ? ProjectReport::where('project_id', $project->id)->get() : collect();
         return view('profile.reports', compact('project', 'allProjects', 'reports'));
     }

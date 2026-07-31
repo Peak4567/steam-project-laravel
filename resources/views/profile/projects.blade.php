@@ -1,4 +1,5 @@
 @extends('profile.profile-layout')
+
 @section('profile-content')
 
     @if (isset($project) && $project)
@@ -16,8 +17,9 @@
             ];
         @endphp
 
+        {{-- Completion Banner --}}
         @if ($project->status == 'completed')
-            <div class="max-w-6xl mx-auto mb-6 bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md p-6 rounded-2xl flex flex-col md:flex-row items-center gap-6 relative overflow-hidden">
+            <div class="max-w-6xl mx-auto mb-6 bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-md p-6 rounded-2xl flex flex-col md:flex-row items-center gap-6 relative overflow-hidden font-mitr">
                 <i class="fa-solid fa-check-circle absolute -right-10 -bottom-10 text-9xl text-white opacity-10"></i>
 
                 <div class="w-14 h-14 shrink-0 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm shadow-inner">
@@ -33,8 +35,10 @@
 
         <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 font-mitr">
 
+            {{-- ฝั่งซ้าย: ข้อมูลสถานะและแบบฟอร์มแก้ไขข้อมูล --}}
             <div class="lg:col-span-4 space-y-5">
 
+                {{-- การ์ดสถานะทีม --}}
                 <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.02)] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                     <div class="w-full sm:w-auto flex-1">
                         <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-2">สถานะทีม</p>
@@ -76,6 +80,7 @@
                     </div>
                 </div>
 
+                {{-- ฟอร์มรายละเอียดรายวิชา --}}
                 <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.02)] space-y-4">
                     <div class="flex items-center gap-2 mb-2 border-b border-slate-50 pb-2">
                         <div class="w-1.5 h-4 bg-[#5EBEE6] rounded-full"></div>
@@ -150,17 +155,18 @@
 
             </div>
 
+            {{-- ฝั่งขวา: รายชื่อสมาชิก และ ที่ปรึกษา --}}
             <div class="lg:col-span-8 space-y-5">
 
-                {{-- ส่วนของระบบสมาชิกและคำขอเข้าร่วม --}}
+                {{-- รายชื่อนักเรียนในทีม --}}
                 <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.02)]">
                     <div class="flex justify-between items-center mb-5 border-b border-slate-50 pb-3">
                         <div class="flex items-center gap-3">
                             <div class="w-2 h-6 bg-gradient-to-b from-[#5EBEE6] to-blue-500 rounded-full shadow-sm"></div>
                             <h3 class="font-extrabold text-slate-900 text-base tracking-tight">รายชื่อนักเรียนในทีม</h3>
                         </div>
-                        
-                        {{-- ระบบ Modal ค้นหาและเชิญแบบสวยหรู --}}
+
+                        {{-- Modal เชิญสมาชิกผ่าน Alpine.js --}}
                         @if ($hasPower)
                             @php
                                 $searchableUsers = \App\Models\User::select('id', 'first_name', 'last_name', 'nickname', 'email', 'profile')->get();
@@ -338,6 +344,7 @@
                     </div>
                 </div>
 
+                {{-- อาจารย์ที่ปรึกษา --}}
                 <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgba(0,0,0,0.02)]">
                     <div class="flex items-center gap-3 mb-5 border-b border-slate-50 pb-3">
                         <div class="w-2 h-6 bg-gradient-to-b from-purple-400 to-indigo-500 rounded-full shadow-sm"></div>
@@ -373,7 +380,8 @@
             </div>
         </div>
 
-        @if (isset($allProjects))
+        {{-- โครงงานทั้งหมดของผู้ใช้ --}}
+        @if (isset($allProjects) && count($allProjects) > 0)
             <div class="max-w-6xl mx-auto mt-12 border-t border-slate-100 pt-10 font-mitr">
                 <div class="flex items-center gap-3 mb-6">
                     <div class="w-2.5 h-6 bg-gradient-to-b from-[#5EBEE6] to-blue-500 rounded-full shadow-sm"></div>
@@ -407,6 +415,7 @@
             </div>
         @endif
     @else
+        {{-- Empty State กรณีผู้ใช้ยังไม่มีโครงงาน --}}
         <div class="max-w-xl mx-auto mt-16 text-center p-10 bg-white rounded-2xl border border-slate-100 shadow-lg font-mitr">
             <div class="w-16 h-16 bg-slate-50 border border-slate-100 rounded-full flex items-center justify-center mx-auto text-3xl mb-4 shadow-inner">📂</div>
             <h2 class="text-xl font-extrabold text-slate-800 tracking-tight">คุณยังไม่มีข้อมูลรายวิชาโครงงาน</h2>
