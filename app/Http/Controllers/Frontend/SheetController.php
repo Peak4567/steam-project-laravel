@@ -72,28 +72,25 @@ class SheetController extends Controller
         ]);
 
         $type = $request->type_check;
-        $filePath = '';
+        $paths = [];
 
         if ($type === 'file') {
             $request->validate([
-                'document' => 'required|file|mimes:pdf,png,jpg,jpeg,doc,docx|max:10240',
+                'document'   => 'required|array|min:1|max:3',
+                'document.*' => 'required|file|mimes:pdf,png,jpg,jpeg,doc,docx|max:10240',
             ]);
 
-            if ($request->hasFile('document')) {
-                $file = $request->file('document');
+            foreach ($request->file('document') as $file) {
                 $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
                 $file->move(public_path('assets/sheets'), $filename);
-                $filePath = 'assets/sheets/' . $filename;
-            } else {
-                return back()->withErrors(['error' => 'ไม่พบไฟล์เอกสาร']);
+                $paths[] = 'assets/sheets/' . $filename;
             }
-
         } else {
             $request->validate([
                 'link_url' => 'required|url',
             ]);
-            
-            $filePath = $request->link_url;
+
+            $paths = [$request->link_url];
         }
 
         Sheet::create([
@@ -102,7 +99,7 @@ class SheetController extends Controller
             'level'      => $request->level,
             'subject'    => $request->subject,
             'term'       => $request->term,
-            'file_path'  => $filePath,
+            'file_path'  => $paths,
             'type'       => $type,
             'status'     => 'pending',
         ]);
@@ -114,8 +111,12 @@ class SheetController extends Controller
     {
         $sheet = Sheet::where('user_id', Auth::id())->findOrFail($id);
 
-        if ($sheet->type === 'file' && File::exists(public_path($sheet->file_path))) {
-            File::delete(public_path($sheet->file_path));
+        if ($sheet->type === 'file') {
+            foreach ($sheet->file_path ?? [] as $path) {
+                if (File::exists(public_path($path))) {
+                    File::delete(public_path($path));
+                }
+            }
         }
 
         $sheet->delete();

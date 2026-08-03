@@ -71,41 +71,43 @@ class PortfolioController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'first_name'     => 'required|string|max:255',
-            'last_name'      => 'required|string|max:255',
-            'description'    => 'required|string',
-            'university'     => 'required|string|max:255',
-            'portfolio_file' => 'required|file|mimes:pdf,png,jpg,jpeg|max:10240',
+            'first_name'       => 'required|string|max:255',
+            'last_name'        => 'required|string|max:255',
+            'description'      => 'required|string',
+            'university'       => 'required|string|max:255',
+            'portfolio_file'   => 'required|array|min:1|max:3',
+            'portfolio_file.*' => 'required|file|mimes:pdf,png,jpg,jpeg|max:10240',
         ]);
 
-        if ($request->hasFile('portfolio_file')) {
-            $file = $request->file('portfolio_file');
+        $paths = [];
+
+        foreach ($request->file('portfolio_file') as $file) {
             $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('assets/portfolios'), $filename);
-            $filePath = 'assets/portfolios/' . $filename;
-
-            Portfolio::create([
-                'user_id'     => Auth::id(),
-                'first_name'  => $request->first_name,
-                'last_name'   => $request->last_name,
-                'description' => $request->description,
-                'university'  => $request->university,
-                'file_path'   => $filePath,
-                'status'      => 'pending',
-            ]);
-
-            return back()->with('success', 'อัปโหลดพอร์ตฟอลิโอสำเร็จแล้ว! กรุณารอแอดมินพิจารณาอนุมัติ');
+            $paths[] = 'assets/portfolios/' . $filename;
         }
 
-        return back()->withErrors(['error' => 'กรุณาอัปโหลดไฟล์']);
+        Portfolio::create([
+            'user_id'     => Auth::id(),
+            'first_name'  => $request->first_name,
+            'last_name'   => $request->last_name,
+            'description' => $request->description,
+            'university'  => $request->university,
+            'file_path'   => $paths,
+            'status'      => 'pending',
+        ]);
+
+        return back()->with('success', 'อัปโหลดพอร์ตฟอลิโอสำเร็จแล้ว! กรุณารอแอดมินพิจารณาอนุมัติ');
     }
 
     public function destroy($id)
     {
         $portfolio = Portfolio::where('user_id', Auth::id())->findOrFail($id);
 
-        if (File::exists(public_path($portfolio->file_path))) {
-            File::delete(public_path($portfolio->file_path));
+        foreach ($portfolio->file_path ?? [] as $path) {
+            if (File::exists(public_path($path))) {
+                File::delete(public_path($path));
+            }
         }
 
         $portfolio->delete();

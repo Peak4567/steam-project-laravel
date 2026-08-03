@@ -316,63 +316,59 @@ class ProjectController extends Controller
     {
         $request->validate([
             'project_name' => 'required|string|max:255',
-            'advisor' => 'required|string|max:255',
-            'subject' => 'required|string|max:255',
-            'document' => 'required|mimes:pdf|max:10240'
+            'advisor'      => 'required|string|max:255',
+            'subject'      => 'required|string|max:255',
+            'document'     => 'required|array|min:1|max:3',
+            'document.*'   => 'required|mimes:pdf|max:10240',
         ]);
 
         $project = Project::findOrFail($id);
+        $timestamp = time();
+        $paths = [];
 
-        if ($request->hasFile('document')) {
-            $file = $request->file('document');
-            $timestamp = time();
-
-            $extension = $file->getClientOriginalExtension();
-            $filename = $timestamp . '_' . uniqid() . '.' . $extension;
-
+        foreach ($request->file('document') as $file) {
+            $filename = $timestamp . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('assets/file'), $filename);
-            $pdfPath = 'assets/file/' . $filename;
-
-            $thumbnailName = $timestamp . '_' . uniqid() . '_thumb.jpg';
-            $thumbnailRelativePath = 'assets/file/thumbnails/' . $thumbnailName;
-            $thumbnailFullPath = public_path($thumbnailRelativePath);
-
-            if (extension_loaded('imagick')) {
-                try {
-                    $pdfInfo = new Pdf(public_path($pdfPath));
-                    $pdfInfo->setResolution(150);
-                    $pdfInfo->saveImage($thumbnailFullPath);
-                } catch (\Exception $e) {
-                    $thumbnailRelativePath = null;
-                }
-            } else {
-                $thumbnailRelativePath = null;
-            }
-
-            ProjectReport::create([
-                'project_id'   => $project->id,
-                'project_name' => $request->project_name,
-                'advisor'      => $request->advisor,
-                'subject'      => $request->subject,
-                'file_path'    => $pdfPath,
-                'cover_image'  => $thumbnailRelativePath,
-                'status'       => 'pending',
-            ]);
-
-            return back()->with('success', 'อัปโหลดเล่มรายงานเรียบร้อยแล้ว');
+            $paths[] = 'assets/file/' . $filename;
         }
 
-        return back()->withErrors(['error' => 'กรุณาอัปโหลดไฟล์']);
+        $thumbnailRelativePath = null;
+
+        if (extension_loaded('imagick')) {
+            try {
+                $thumbnailName = $timestamp . '_' . uniqid() . '_thumb.jpg';
+                $thumbnailRelativePath = 'assets/file/thumbnails/' . $thumbnailName;
+
+                $pdfInfo = new Pdf(public_path($paths[0]));
+                $pdfInfo->setResolution(150);
+                $pdfInfo->saveImage(public_path($thumbnailRelativePath));
+            } catch (\Exception $e) {
+                $thumbnailRelativePath = null;
+            }
+        }
+
+        ProjectReport::create([
+            'project_id'   => $project->id,
+            'project_name' => $request->project_name,
+            'advisor'      => $request->advisor,
+            'subject'      => $request->subject,
+            'file_path'    => $paths,
+            'cover_image'  => $thumbnailRelativePath,
+            'status'       => 'pending',
+        ]);
+
+        return back()->with('success', 'อัปโหลดเล่มรายงานเรียบร้อยแล้ว');
     }
 
     public function deleteReport($id)
     {
         $report = ProjectReport::findOrFail($id);
 
-        $filePath = public_path($report->file_path);
-
-        if (file_exists($filePath)) {
-            unlink($filePath);
+        foreach ($report->file_path ?? [] as $path) {
+            $filePath = public_path($path);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
         }
         $report->delete();
 
@@ -417,27 +413,29 @@ class ProjectController extends Controller
     /**
      * 18. เรียกแสดงเนื้อหาไฟล์รายงานสดบนหน้าต่างเบราว์เซอร์
      */
-    public function viewReport($id)
+    public function viewReport($id, $index = 0)
     {
         $report = ProjectReport::findOrFail($id);
-        $filePath = public_path($report->file_path);
+        $path = $report->file_path[$index] ?? null;
 
-        if (!file_exists($filePath)) {
+        if (!$path || !file_exists(public_path($path))) {
             abort(404, 'ไม่พบไฟล์ในระบบ');
         }
 
-        return response()->file($filePath);
+        return response()->file(public_path($path));
     }
 
-    public function downloadReport($id)
+    public function downloadReport($id, $index = 0)
     {
         $report = ProjectReport::findOrFail($id);
-        $filePath = public_path($report->file_path);
+        $path = $report->file_path[$index] ?? null;
 
-        if (!file_exists($filePath)) {
+        if (!$path || !file_exists(public_path($path))) {
             abort(404, 'ไม่พบไฟล์ในระบบ');
         }
 
-        return response()->download($filePath, 'Report_' . $report->project_name . '.' . pathinfo($filePath, PATHINFO_EXTENSION));
+        $suffix = count($report->file_path) > 1 ? '_' . ($index + 1) : '';
+
+        return response()->download(public_path($path), 'Report_' . $report->project_name . $suffix . '.' . pathinfo($path, PATHINFO_EXTENSION));
     }
 }

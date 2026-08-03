@@ -39,13 +39,12 @@
                                 <span class="text-slate-700 text-sm font-bold tracking-tight group-hover:text-[#5EBEE6] transition-colors">{{ Auth::user()->name }}</span>
                             </div>
 
-                            <div class="w-9 h-9 rounded-full border-2 border-gray-100 overflow-hidden group-hover:border-[#5EBEE6] transition-all shadow-sm">
+                            <div class="w-9 h-9 rounded-full border-2 border-gray-100 overflow-hidden group-hover:border-[#5EBEE6] transition-all shadow-sm bg-slate-50 flex items-center justify-center text-slate-300">
                                 @if (Auth::user()->profile)
                                     <img src="{{ asset('assets/img/profile/' . Auth::user()->profile) }}"
                                         class="w-full h-full object-cover" alt="Profile Photo">
                                 @else
-                                    <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->first_name ?? 'User') }}&color=7F9CF5&background=EBF4FF"
-                                        class="w-full h-full object-cover" alt="Default Profile Photo">
+                                    <i class="fa-solid fa-circle-user text-2xl"></i>
                                 @endif
                             </div>
 

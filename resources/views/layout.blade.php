@@ -78,11 +78,13 @@
 
     <x-navbar />
 
-    <main class="flex-1 w-full h-full overflow-y-visible">
+    <main class="flex-1 w-full h-full overflow-y-visible pb-16 lg:pb-0">
         @yield('content')
     </main>
 
     <x-footer />
+
+    <x-bottom-nav />
 
     <x-cookie-consent />
 

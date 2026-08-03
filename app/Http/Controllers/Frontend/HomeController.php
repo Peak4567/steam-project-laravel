@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Portfolio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -15,7 +16,7 @@ class HomeController extends Controller
         $publicAds = DB::table('ads')
             ->where('status', 'active')
             ->orderBy('id', 'desc')
-            ->take(4)
+            ->take(8)
             ->get();
 
         $query = DB::table('projects')
@@ -49,7 +50,25 @@ class HomeController extends Controller
                 ->get();
         }
 
-        return view('home', compact('projects', 'tags', 'publicAds'));
+        $stats = [
+            'projects'   => DB::table('projects')->count(),
+            'members'    => DB::table('users')->where('level', 'member')->count(),
+            'portfolios' => DB::table('portfolios')->where('status', 'approved')->count(),
+            'activities' => DB::table('activities')->count(),
+        ];
+
+        $featuredSheets = DB::table('sheets')
+            ->where('status', 'approved')
+            ->orderBy('id', 'desc')
+            ->take(4)
+            ->get();
+
+        $featuredPortfolios = Portfolio::where('status', 'approved')
+            ->orderBy('id', 'desc')
+            ->take(5)
+            ->get();
+
+        return view('home', compact('projects', 'tags', 'publicAds', 'stats', 'featuredSheets', 'featuredPortfolios'));
     }
     public function showNews($slug)
     {

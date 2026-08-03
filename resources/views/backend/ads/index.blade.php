@@ -100,7 +100,7 @@
                                 <td class="px-6 py-4">
                                     <div class="flex items-center justify-end gap-1.5">
                                         <a href="{{ route('backend.ads.edit', $ad->id) }}" class="w-7 h-7 rounded-lg bg-slate-50 text-orange-400 flex items-center justify-center hover:bg-orange-400 hover:text-white border border-slate-100 shadow-sm transition-all" title="แก้ไขข้อมูลป้าย"><i class="fa-solid fa-pen-to-square text-[11px]"></i></a>
-                                        <form action="{{ route('backend.ads.destroy', $ad->id) }}" method="POST" onsubmit="return confirm('⚠️ ยืนยันต้องการลบแบนเนอร์ประชาสัมพันธ์นี้ถาวรใช่หรือไม่?')" class="inline-flex">
+                                        <form action="{{ route('backend.ads.destroy', $ad->id) }}" method="POST" data-confirm="ยืนยันต้องการลบแบนเนอร์ประชาสัมพันธ์นี้ถาวรใช่หรือไม่?" data-confirm-title="ยืนยันการลบแบนเนอร์" class="inline-flex">
                                             @csrf @method('DELETE')
                                             <button type="submit" class="w-7 h-7 rounded-lg bg-slate-50 text-rose-500 hover:bg-rose-500 hover:text-white border border-slate-100 shadow-sm transition-all flex items-center justify-center" title="ลบข้อมูล"><i class="fa-regular fa-trash-can text-[11px]"></i></button>
                                         </form>

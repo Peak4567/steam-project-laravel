@@ -22,6 +22,10 @@ class Sheet extends Model
         'downloads'
     ];
 
+    protected $casts = [
+        'file_path' => 'array',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

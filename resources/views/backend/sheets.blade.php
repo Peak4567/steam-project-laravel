@@ -52,12 +52,15 @@
                         
                         {{-- ประเภทสื่อเรียนรู้ --}}
                         <td class="px-4 py-3.5 text-center">
+                            @php $sheetFiles = json_decode($sheet->file_path, true) ?? []; @endphp
                             @if($sheet->type == 'file')
-                                <a href="{{ asset($sheet->file_path) }}" target="_blank" class="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-100/50 text-[#5EBEE6] px-2.5 py-1.5 rounded-xl text-[10px] font-bold shadow-sm transition-all hover:bg-[#5EBEE6] hover:text-white">
-                                    <i class="fa-solid fa-file-pdf"></i> PDF FILE
-                                </a>
+                                @foreach ($sheetFiles as $sheetIndex => $sheetFile)
+                                    <a href="{{ asset($sheetFile) }}" target="_blank" class="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-100/50 text-[#5EBEE6] px-2.5 py-1.5 rounded-xl text-[10px] font-bold shadow-sm transition-all hover:bg-[#5EBEE6] hover:text-white mb-1">
+                                        <i class="fa-solid fa-file-pdf"></i> PDF {{ $sheetIndex + 1 }}
+                                    </a>
+                                @endforeach
                             @else
-                                <a href="{{ $sheet->file_path }}" target="_blank" class="inline-flex items-center gap-1.5 bg-purple-50 border border-purple-100/50 text-purple-500 px-2.5 py-1.5 rounded-xl text-[10px] font-bold shadow-sm transition-all hover:bg-purple-500 hover:text-white">
+                                <a href="{{ $sheetFiles[0] ?? '#' }}" target="_blank" class="inline-flex items-center gap-1.5 bg-purple-50 border border-purple-100/50 text-purple-500 px-2.5 py-1.5 rounded-xl text-[10px] font-bold shadow-sm transition-all hover:bg-purple-500 hover:text-white">
                                     <i class="fa-solid fa-link"></i> URL LINK
                                 </a>
                             @endif
@@ -79,7 +82,7 @@
                         
                         {{-- 🛠️ ปุ่มลบคำสั่งงาน (แสดงเด่นชัดถาวร ไม่ต้องรอ Hover) 🛠️ --}}
                         <td class="px-4 py-3.5 text-center">
-                            <form action="{{ route('backend.sheets.destroy', $sheet->id) }}" method="POST" onsubmit="return confirm('⚠️ ยืนยันประสงค์ต้องการทำการลบข้อมูลไฟล์ชีทวิชานี้ออกจากคลังระบบถาวรใช่หรือไม่?')" class="inline-flex">
+                            <form action="{{ route('backend.sheets.destroy', $sheet->id) }}" method="POST" data-confirm="ยืนยันประสงค์ต้องการทำการลบข้อมูลไฟล์ชีทวิชานี้ออกจากคลังระบบถาวรใช่หรือไม่?" data-confirm-title="ยืนยันการลบชีทสรุป" class="inline-flex">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="w-7 h-7 rounded-lg bg-slate-50 text-slate-400 hover:bg-rose-500 hover:text-white border border-slate-100 shadow-sm transition-all flex items-center justify-center">
                                     <i class="fa-solid fa-trash-can text-[11px]"></i>

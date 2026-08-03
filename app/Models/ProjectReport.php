@@ -18,6 +18,10 @@ class ProjectReport extends Model
         'status',
     ];
 
+    protected $casts = [
+        'file_path' => 'array',
+    ];
+
     public function project()
     {
         return $this->belongsTo(Project::class);

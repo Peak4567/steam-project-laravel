@@ -34,8 +34,9 @@
                         <th class="px-6 py-4 w-80">ข้อมูลสมาชิก / โปรไฟล์</th>
                         <th class="px-6 py-4 w-48">ข้อมูลนักเรียน (Student ID)</th>
                         <th class="px-6 py-4 w-60">บัญชีอีเมล (Email Address)</th>
+                        <th class="px-6 py-4 w-52">เข้าสู่ระบบล่าสุด (IP)</th>
                         <th class="px-6 py-4 text-center w-32">สิทธิ์ระบบ</th>
-                        <th class="px-6 py-4 text-center w-36">การสั่งการ</th>
+                        <th class="px-6 py-4 text-center w-40">การสั่งการ</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-50 text-xs font-medium text-slate-600">
@@ -51,7 +52,7 @@
                                     @if($user->profile)
                                         <img src="{{ asset('assets/img/profile/' . $user->profile) }}" class="w-full h-full object-cover">
                                     @else
-                                        <span class="text-xs font-black text-[#5EBEE6] bg-blue-50 w-full h-full flex items-center justify-center border border-blue-100/30">{{ substr($user->first_name, 0, 1) }}</span>
+                                        <i class="fa-solid fa-circle-user text-2xl text-slate-300"></i>
                                     @endif
                                 </div>
                                 <div class="overflow-hidden">
@@ -71,7 +72,20 @@
                         <td class="px-6 py-4 text-slate-500 font-semibold truncate" title="{{ $user->email }}">
                             <i class="fa-regular fa-envelope text-[10px] text-slate-400 mr-1.5"></i> {{ $user->email }}
                         </td>
-                        
+
+                        {{-- เข้าสู่ระบบล่าสุด / ไอพี --}}
+                        <td class="px-6 py-4">
+                            @if($user->last_login_ip)
+                                <p class="font-mono font-bold text-slate-700 bg-slate-50 border border-slate-100/70 px-2 py-0.5 rounded-md inline-block text-[11px]">{{ $user->last_login_ip }}</p>
+                                <div class="text-[10px] text-slate-400 font-semibold mt-1.5 pl-0.5">{{ \Carbon\Carbon::parse($user->last_login_at)->format('d/m/Y H:i') }}</div>
+                                @if($user->is_banned)
+                                    <span class="inline-flex items-center gap-1 mt-1 bg-rose-50 border border-rose-100 text-rose-500 px-2 py-0.5 rounded-md font-bold text-[9px] uppercase"><i class="fa-solid fa-ban text-[8px]"></i> ถูกแบน</span>
+                                @endif
+                            @else
+                                <span class="text-[10px] text-slate-300 font-medium italic">ยังไม่เคยเข้าสู่ระบบ</span>
+                            @endif
+                        </td>
+
                         {{-- ป้ายสิทธิ์ระบบ (แสดงผลเด่นชัดตลอดเวลา) --}}
                         <td class="px-6 py-4 text-center whitespace-nowrap">
                             @if($user->level == 'admin')
@@ -92,12 +106,29 @@
                         {{-- 🛠️ แถบปุ่มควบคุมการจัดการ (แสดงเด่นชัดถาวร ไม่ต้องรอ Hover) 🛠️ --}}
                         <td class="px-6 py-4">
                             <div class="flex items-center justify-center gap-1.5">
-                                <a href="{{ route('backend.users.edit', $user->id) }}" 
+                                <a href="{{ route('backend.users.edit', $user->id) }}"
                                    class="w-7 h-7 rounded-lg bg-slate-50 text-orange-400 flex items-center justify-center hover:bg-orange-400 hover:text-white border border-slate-100 shadow-sm transition-all"
                                    title="แก้ไขข้อมูลผู้ใช้งาน">
                                     <i class="fa-solid fa-pen-to-square text-[11px]"></i>
                                 </a>
-                                <form action="{{ route('backend.users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('⚠️ ยืนยันประสงค์ต้องการทำการลบสิทธิ์และข้อมูลบัญชีผู้ใช้งานคนนี้ออกจากคลังระบบถาวรใช่หรือไม่?')" class="inline-flex">
+                                @if($user->is_banned)
+                                    <form action="{{ route('backend.users.unbanIp', $user->id) }}" method="POST" data-confirm="ยืนยันปลดแบนไอพีของผู้ใช้งานคนนี้?" data-confirm-title="ปลดแบนไอพี" data-confirm-type="safe" class="inline-flex">
+                                        @csrf
+                                        <button type="submit" title="ปลดแบนไอพี"
+                                                class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-500 hover:bg-emerald-500 hover:text-white border border-slate-100 shadow-sm transition-all flex items-center justify-center">
+                                            <i class="fa-solid fa-lock-open text-[11px]"></i>
+                                        </button>
+                                    </form>
+                                @else
+                                    <form action="{{ route('backend.users.banIp', $user->id) }}" method="POST" data-confirm="ยืนยันแบนไอพี {{ $user->last_login_ip ?? '' }} ของผู้ใช้งานคนนี้?" data-confirm-title="ยืนยันการแบนไอพี" class="inline-flex">
+                                        @csrf
+                                        <button type="submit" title="แบนไอพีผู้ใช้งาน" {{ $user->last_login_ip ? '' : 'disabled' }}
+                                                class="w-7 h-7 rounded-lg bg-slate-50 text-slate-400 hover:bg-rose-500 hover:text-white border border-slate-100 shadow-sm transition-all flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-slate-50 disabled:hover:text-slate-400">
+                                            <i class="fa-solid fa-ban text-[11px]"></i>
+                                        </button>
+                                    </form>
+                                @endif
+                                <form action="{{ route('backend.users.destroy', $user->id) }}" method="POST" data-confirm="ยืนยันประสงค์ต้องการทำการลบสิทธิ์และข้อมูลบัญชีผู้ใช้งานคนนี้ออกจากคลังระบบถาวรใช่หรือไม่?" data-confirm-title="ยืนยันการลบผู้ใช้งาน" class="inline-flex">
                                     @csrf @method('DELETE')
                                     <button type="submit" title="ลบผู้ใช้งานถาวร"
                                             class="w-7 h-7 rounded-lg bg-slate-50 text-rose-500 hover:bg-rose-500 hover:text-white border border-slate-100 shadow-sm transition-all flex items-center justify-center">

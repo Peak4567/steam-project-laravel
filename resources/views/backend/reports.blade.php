@@ -87,10 +87,12 @@
 
                                 {{-- ลิงก์เช็คไฟล์ --}}
                                 <td class="px-6 py-4 text-center">
-                                    <a href="{{ asset($report->file_path) }}" target="_blank" 
-                                       class="inline-flex items-center gap-1.5 bg-blue-50/50 border border-blue-100/50 text-[#5EBEE6] hover:bg-[#5EBEE6] hover:text-white px-3 py-1.5 rounded-xl font-bold text-[11px] shadow-sm transition-all">
-                                        <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> ตรวจสอบ PDF
-                                    </a>
+                                    @foreach ($report->file_path ?? [] as $reportIndex => $reportFile)
+                                        <a href="{{ asset($reportFile) }}" target="_blank"
+                                           class="inline-flex items-center gap-1.5 bg-blue-50/50 border border-blue-100/50 text-[#5EBEE6] hover:bg-[#5EBEE6] hover:text-white px-3 py-1.5 rounded-xl font-bold text-[11px] shadow-sm transition-all mb-1">
+                                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i> ไฟล์ {{ $reportIndex + 1 }}
+                                        </a>
+                                    @endforeach
                                 </td>
 
                                 {{-- ป้ายแสดงสถานะอนุมัติ --}}
@@ -129,7 +131,7 @@
                                         <div class="w-px h-5 bg-slate-100 mx-1"></div>
 
                                         <form action="{{ route('backend.reports.destroy', $report->id) }}" method="POST"
-                                            onsubmit="return confirm('⚠️ คุณต้องการยืนยันคำสั่งเพื่อลบเล่มรายงานโครงงานชิ้นนี้ออกจากระบบถาวรใช่หรือไม่?');" class="inline-flex">
+                                            data-confirm="คุณต้องการยืนยันคำสั่งเพื่อลบเล่มรายงานโครงงานชิ้นนี้ออกจากระบบถาวรใช่หรือไม่?" data-confirm-title="ยืนยันการลบเล่มรายงาน" class="inline-flex">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"

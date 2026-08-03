@@ -176,7 +176,7 @@
                                         </a>
                                         <form action="{{ route('backend.projects.destroy', $project->id) }}" method="POST"
                                             class="inline-flex"
-                                            onsubmit="return confirm('⚠️ คุณต้องการดำเนินการยืนยันคำสั่งเพื่อลบโครงงานวิชา [ {{ $project->name }} ] ออกจากคลังระบบถาวรใช่หรือไม่?');">
+                                            data-confirm="คุณต้องการดำเนินการยืนยันคำสั่งเพื่อลบโครงงานวิชา [ {{ $project->name }} ] ออกจากคลังระบบถาวรใช่หรือไม่?" data-confirm-title="ยืนยันการลบโครงงาน">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"

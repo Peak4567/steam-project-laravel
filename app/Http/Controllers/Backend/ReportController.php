@@ -38,9 +38,11 @@ class ReportController extends Controller
     public function destroy($id)
     {
         $report = ProjectReport::findOrFail($id);
-        
-        if (file_exists(public_path($report->file_path))) {
-            unlink(public_path($report->file_path));
+
+        foreach ($report->file_path ?? [] as $path) {
+            if (file_exists(public_path($path))) {
+                unlink(public_path($path));
+            }
         }
         if ($report->cover_image && file_exists(public_path($report->cover_image))) {
             unlink(public_path($report->cover_image));

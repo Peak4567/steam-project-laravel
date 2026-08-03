@@ -196,7 +196,7 @@
 
                                 <div class="relative bg-slate-50 h-[300px] overflow-hidden flex items-center justify-center border-b border-slate-100">
                                     @php
-                                        $ext = strtolower(pathinfo($report->file_path, PATHINFO_EXTENSION));
+                                        $ext = strtolower(pathinfo($report->file_path[0] ?? '', PATHINFO_EXTENSION));
                                     @endphp
 
                                     <div class="absolute top-3 right-3 bg-white/90 text-slate-800 border border-slate-200 text-[9px] font-bold px-3 py-1 rounded-full z-10 backdrop-blur-md uppercase shadow-sm">
@@ -338,41 +338,48 @@
 </section>
 
     {{-- 🌟 4. Section: STEAM4INNOVATOR 🌟 --}}
-    <section class="w-full bg-slate-900 py-24 px-4 md:px-6 font-mitr overflow-hidden relative">
+    <section class="w-full bg-white py-24 px-4 md:px-6 font-mitr overflow-hidden relative border-t border-slate-100">
         {{-- Background Design --}}
-        <div class="absolute inset-0 bg-[url('{{ asset('assets/img/pattern.svg') }}')] opacity-5 pointer-events-none"></div>
+        <div class="absolute inset-x-0 top-0 h-[420px] bg-grid-steam opacity-40 [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)] pointer-events-none"></div>
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#5EBEE6]/10 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <style>
+            .bg-grid-steam {
+                background-image: radial-gradient(circle, rgba(94,190,230,0.25) 1px, transparent 1px);
+                background-size: 22px 22px;
+            }
+        </style>
 
         <div class="max-w-6xl mx-auto relative z-10">
 
             <div class="text-center mb-24 relative">
-                <h2 class="text-5xl md:text-7xl lg:text-[8rem] font-black text-white/5 absolute inset-0 flex justify-center items-center select-none uppercase tracking-[0.2em] -mt-4">
+                <h2 class="text-5xl md:text-7xl lg:text-[8rem] font-black text-slate-900/5 absolute inset-0 flex justify-center items-center select-none uppercase tracking-[0.2em] -mt-4">
                     INNOVATOR
                 </h2>
                 <div class="relative z-10">
-                    <span class="inline-block px-4 py-1.5 bg-[#5EBEE6]/20 text-[#5EBEE6] border border-[#5EBEE6]/30 font-bold text-xs uppercase tracking-widest rounded-full mb-4">4 Steps to Success</span>
-                    <h3 class="text-white text-4xl md:text-5xl font-black mb-3 tracking-tight">STEAM<span class="text-[#5EBEE6]">4</span>INNOVATOR</h3>
-                    <p class="text-slate-400 text-sm md:text-base font-medium tracking-wide">แผนการพัฒนาศักยภาพด้านนวัตกรรม สู่การลงมือทำจริง</p>
+                    <span class="inline-block px-4 py-1.5 bg-[#5EBEE6]/10 text-[#5EBEE6] border border-[#5EBEE6]/20 font-bold text-xs uppercase tracking-widest rounded-full mb-4">4 Steps to Success</span>
+                    <h3 class="text-slate-900 text-4xl md:text-5xl font-black mb-3 tracking-tight">STEAM<span class="text-[#5EBEE6]">4</span>INNOVATOR</h3>
+                    <p class="text-slate-500 text-sm md:text-base font-medium tracking-wide">แผนการพัฒนาศักยภาพด้านนวัตกรรม สู่การลงมือทำจริง</p>
                 </div>
             </div>
 
             <div class="relative mt-12">
                 {{-- Timeline Line --}}
-                <div class="hidden lg:block absolute top-12 left-[12%] right-[12%] h-0.5 bg-gradient-to-r from-transparent via-[#5EBEE6]/30 to-transparent z-0 border-t border-dashed border-[#5EBEE6]/50"></div>
+                <div class="hidden lg:block absolute top-12 left-[12%] right-[12%] h-0.5 bg-gradient-to-r from-transparent via-[#5EBEE6]/40 to-transparent z-0 border-t border-dashed border-[#5EBEE6]/40"></div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8 relative z-10">
 
                     {{-- Step 1 --}}
                     <div class="group flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-3">
                         <div class="relative mb-6">
-                            <div class="absolute inset-0 bg-[#5EBEE6] rounded-full blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-500"></div>
-                            <div class="w-24 h-24 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center relative z-10 shadow-xl group-hover:border-[#5EBEE6] group-hover:bg-slate-900 transition-colors duration-500">
-                                <span class="absolute -top-2 -right-2 w-7 h-7 bg-[#5EBEE6] text-slate-900 text-[11px] font-black rounded-full flex items-center justify-center shadow-lg border-2 border-slate-900">1</span>
-                                <i class="fa-solid fa-brain text-3xl text-white group-hover:text-[#5EBEE6] transition-colors"></i>
+                            <div class="absolute inset-0 bg-[#5EBEE6] rounded-full blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500"></div>
+                            <div class="w-24 h-24 bg-white border border-slate-100 rounded-full flex items-center justify-center relative z-10 shadow-md group-hover:border-[#5EBEE6] group-hover:bg-blue-50/50 transition-colors duration-500">
+                                <span class="absolute -top-2 -right-2 w-7 h-7 bg-[#5EBEE6] text-white text-[11px] font-black rounded-full flex items-center justify-center shadow-lg border-2 border-white">1</span>
+                                <i class="fa-solid fa-brain text-3xl text-slate-700 group-hover:text-[#5EBEE6] transition-colors"></i>
                             </div>
                         </div>
-                        <h4 class="text-lg font-bold text-white mb-2">รู้ลึกรู้จริง</h4>
-                        <p class="text-xs text-slate-400 leading-relaxed px-2 font-medium">
+                        <h4 class="text-lg font-bold text-slate-900 mb-2">รู้ลึกรู้จริง</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed px-2 font-medium">
                             เริ่มต้นกระบวนการสร้างสรรค์ธุรกิจนวัตกรรมด้วยการรับรู้สิ่งแวดล้อมรอบตัว
                         </p>
                     </div>
@@ -380,14 +387,14 @@
                     {{-- Step 2 --}}
                     <div class="group flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-3">
                         <div class="relative mb-6">
-                            <div class="absolute inset-0 bg-[#5EBEE6] rounded-full blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-500"></div>
-                            <div class="w-24 h-24 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center relative z-10 shadow-xl group-hover:border-[#5EBEE6] group-hover:bg-slate-900 transition-colors duration-500">
-                                <span class="absolute -top-2 -right-2 w-7 h-7 bg-[#5EBEE6] text-slate-900 text-[11px] font-black rounded-full flex items-center justify-center shadow-lg border-2 border-slate-900">2</span>
-                                <i class="fa-solid fa-lightbulb text-3xl text-white group-hover:text-[#5EBEE6] transition-colors"></i>
+                            <div class="absolute inset-0 bg-[#5EBEE6] rounded-full blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500"></div>
+                            <div class="w-24 h-24 bg-white border border-slate-100 rounded-full flex items-center justify-center relative z-10 shadow-md group-hover:border-[#5EBEE6] group-hover:bg-blue-50/50 transition-colors duration-500">
+                                <span class="absolute -top-2 -right-2 w-7 h-7 bg-[#5EBEE6] text-white text-[11px] font-black rounded-full flex items-center justify-center shadow-lg border-2 border-white">2</span>
+                                <i class="fa-solid fa-lightbulb text-3xl text-slate-700 group-hover:text-[#5EBEE6] transition-colors"></i>
                             </div>
                         </div>
-                        <h4 class="text-lg font-bold text-white mb-2">สร้างสรรค์ไอเดีย</h4>
-                        <p class="text-xs text-slate-400 leading-relaxed px-2 font-medium">
+                        <h4 class="text-lg font-bold text-slate-900 mb-2">สร้างสรรค์ไอเดีย</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed px-2 font-medium">
                             ต่อยอดความคิดสร้างสรรค์ กำหนดปัญหาเป้าหมายในการแก้ไขที่ชัดเจน
                         </p>
                     </div>
@@ -395,14 +402,14 @@
                     {{-- Step 3 --}}
                     <div class="group flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-3">
                         <div class="relative mb-6">
-                            <div class="absolute inset-0 bg-[#5EBEE6] rounded-full blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-500"></div>
-                            <div class="w-24 h-24 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center relative z-10 shadow-xl group-hover:border-[#5EBEE6] group-hover:bg-slate-900 transition-colors duration-500">
-                                <span class="absolute -top-2 -right-2 w-7 h-7 bg-[#5EBEE6] text-slate-900 text-[11px] font-black rounded-full flex items-center justify-center shadow-lg border-2 border-slate-900">3</span>
-                                <i class="fa-solid fa-handshake text-3xl text-white group-hover:text-[#5EBEE6] transition-colors"></i>
+                            <div class="absolute inset-0 bg-[#5EBEE6] rounded-full blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500"></div>
+                            <div class="w-24 h-24 bg-white border border-slate-100 rounded-full flex items-center justify-center relative z-10 shadow-md group-hover:border-[#5EBEE6] group-hover:bg-blue-50/50 transition-colors duration-500">
+                                <span class="absolute -top-2 -right-2 w-7 h-7 bg-[#5EBEE6] text-white text-[11px] font-black rounded-full flex items-center justify-center shadow-lg border-2 border-white">3</span>
+                                <i class="fa-solid fa-handshake text-3xl text-slate-700 group-hover:text-[#5EBEE6] transition-colors"></i>
                             </div>
                         </div>
-                        <h4 class="text-lg font-bold text-white mb-2">แผนพัฒนาธุรกิจ</h4>
-                        <p class="text-xs text-slate-400 leading-relaxed px-2 font-medium">
+                        <h4 class="text-lg font-bold text-slate-900 mb-2">แผนพัฒนาธุรกิจ</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed px-2 font-medium">
                             แนวคิดและแผนบริหารจัดการทั้งหมด เชื่อมโยงคนและทรัพยากร
                         </p>
                     </div>
@@ -410,14 +417,14 @@
                     {{-- Step 4 --}}
                     <div class="group flex flex-col items-center text-center transition-all duration-500 hover:-translate-y-3">
                         <div class="relative mb-6">
-                            <div class="absolute inset-0 bg-[#5EBEE6] rounded-full blur-xl opacity-0 group-hover:opacity-40 transition-opacity duration-500"></div>
-                            <div class="w-24 h-24 bg-slate-800 border border-slate-700 rounded-full flex items-center justify-center relative z-10 shadow-xl group-hover:border-[#5EBEE6] group-hover:bg-slate-900 transition-colors duration-500">
-                                <span class="absolute -top-2 -right-2 w-7 h-7 bg-[#5EBEE6] text-slate-900 text-[11px] font-black rounded-full flex items-center justify-center shadow-lg border-2 border-slate-900">4</span>
-                                <i class="fa-solid fa-rocket text-3xl text-white group-hover:text-[#5EBEE6] transition-colors"></i>
+                            <div class="absolute inset-0 bg-[#5EBEE6] rounded-full blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500"></div>
+                            <div class="w-24 h-24 bg-white border border-slate-100 rounded-full flex items-center justify-center relative z-10 shadow-md group-hover:border-[#5EBEE6] group-hover:bg-blue-50/50 transition-colors duration-500">
+                                <span class="absolute -top-2 -right-2 w-7 h-7 bg-[#5EBEE6] text-white text-[11px] font-black rounded-full flex items-center justify-center shadow-lg border-2 border-white">4</span>
+                                <i class="fa-solid fa-rocket text-3xl text-slate-700 group-hover:text-[#5EBEE6] transition-colors"></i>
                             </div>
                         </div>
-                        <h4 class="text-lg font-bold text-white mb-2">ผลิตและกระจาย</h4>
-                        <p class="text-xs text-slate-400 leading-relaxed px-2 font-medium">
+                        <h4 class="text-lg font-bold text-slate-900 mb-2">ผลิตและกระจาย</h4>
+                        <p class="text-xs text-slate-500 leading-relaxed px-2 font-medium">
                             ลงมือสร้างผลงานนวัตกรรมและการลงมือทำอย่างจริงจังให้เกิดผลลัพธ์
                         </p>
                     </div>

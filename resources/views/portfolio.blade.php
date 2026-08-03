@@ -73,18 +73,18 @@
                                 {{-- ตัวอย่างหน้าปก --}}
                                 <div
                                     class="relative h-64 overflow-hidden bg-slate-50 flex items-center justify-center border-b border-slate-50">
-                                    @php $ext = strtolower(pathinfo($portfolio->file_path, PATHINFO_EXTENSION)); @endphp
+                                    @php $ext = strtolower(pathinfo(($portfolio->file_path[0] ?? ''), PATHINFO_EXTENSION)); @endphp
 
                                     @if ($ext == 'pdf')
                                         <canvas
                                             class="pdf-thumbnail w-full h-full object-cover group-hover:scale-105 transition-all duration-700 ease-out opacity-0"
-                                            data-pdf-url="{{ asset($portfolio->file_path) }}"></canvas>
+                                            data-pdf-url="{{ asset(($portfolio->file_path[0] ?? '')) }}"></canvas>
                                         <div
                                             class="absolute inset-0 flex flex-col items-center justify-center text-slate-300 pdf-loading bg-slate-50/50">
                                             <i class="fa-solid fa-spinner fa-spin text-xl mb-2 text-[#5EBEE6]"></i>
                                         </div>
                                     @else
-                                        <img src="{{ asset($portfolio->file_path) }}"
+                                        <img src="{{ asset(($portfolio->file_path[0] ?? '')) }}"
                                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                                             alt="Portfolio Cover">
                                     @endif

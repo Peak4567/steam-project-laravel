@@ -34,6 +34,11 @@ class User extends Authenticatable
         'school_name',
         'dream_university',
         'profile',
+        'last_login_at',
+        'last_login_ip',
+        'is_banned',
+        'banned_at',
+        'ban_reason',
     ];
 
     /**
@@ -56,12 +61,20 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'last_login_at' => 'datetime',
+            'is_banned' => 'boolean',
+            'banned_at' => 'datetime',
         ];
     }
 
     public function projectMembers()
     {
         return $this->hasMany(ProjectMember::class, 'user_id');
+    }
+
+    public function loginLogs()
+    {
+        return $this->hasMany(LoginLog::class)->latest();
     }
     public function user()
     {

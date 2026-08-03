@@ -86,7 +86,7 @@
                                         </a>
 
                                         <form action="{{ route('backend.activity.destroy', $activity->id) }}" method="POST"
-                                            onsubmit="return confirm('⚠️ คุณต้องการดำเนินการยืนยันคำสั่งเพื่อลบกิจกรรม Workshop [ {{ $activity->title }} ] ออกจากคลังระบบถาวรใช่หรือไม่?');" class="inline-flex">
+                                            data-confirm="คุณต้องการดำเนินการยืนยันคำสั่งเพื่อลบกิจกรรม Workshop [ {{ $activity->title }} ] ออกจากคลังระบบถาวรใช่หรือไม่?" data-confirm-title="ยืนยันการลบกิจกรรม" class="inline-flex">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" title="ลบกิจกรรม"

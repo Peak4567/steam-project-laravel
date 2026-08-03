@@ -103,7 +103,7 @@
                                             <td class="py-4">
                                                 {{-- 🛠️ ปรับปรุง: แก้ไขตัวแปรชื่อผู้ส่งเป็นคอลัมน์จริงจาก SQL ($sheet->first_name) พร้อมแก้ลิ้งก์ให้กดได้โดยตรง --}}
                                                 <p class="font-bold text-slate-700 text-sm line-clamp-1 mb-1">
-                                                    <a href="{{ $sheet->type == 'file' ? asset($sheet->file_path) : $sheet->file_path }}" target="_blank" class="hover:text-[#5EBEE6] hover:underline transition-all">
+                                                    <a href="{{ $sheet->type == 'file' ? asset(($sheet->file_path[0] ?? '#')) : ($sheet->file_path[0] ?? '#') }}" target="_blank" class="hover:text-[#5EBEE6] hover:underline transition-all">
                                                         {{ $sheet->sheet_name }}
                                                     </a>
                                                 </p>
@@ -115,11 +115,11 @@
                                             {{-- 🛠️ ปรับปรุง: เพิ่มปุ่มดาวน์โหลด/เปิดลิงก์ที่แสดงผลถาวรให้คลิกทำงานได้ง่ายๆ บนฝั่งคอมพิวเตอร์ Desktop --}}
                                             <td class="py-4 text-right whitespace-nowrap">
                                                 @if($sheet->type == 'file')
-                                                    <a href="{{ asset($sheet->file_path) }}" download target="_blank" class="inline-flex items-center gap-1 bg-[#5EBEE6] text-white px-3 py-1.5 rounded-xl font-bold text-[10px] shadow-sm hover:bg-sky-400 transition-all">
+                                                    <a href="{{ asset(($sheet->file_path[0] ?? '#')) }}" download target="_blank" class="inline-flex items-center gap-1 bg-[#5EBEE6] text-white px-3 py-1.5 rounded-xl font-bold text-[10px] shadow-sm hover:bg-sky-400 transition-all">
                                                         <i class="fa-solid fa-cloud-arrow-down"></i> โหลดไฟล์
                                                     </a>
                                                 @else
-                                                    <a href="{{ $sheet->file_path }}" target="_blank" class="inline-flex items-center gap-1 bg-purple-500 text-white px-3 py-1.5 rounded-xl font-bold text-[10px] shadow-sm hover:bg-purple-600 transition-all">
+                                                    <a href="{{ ($sheet->file_path[0] ?? '#') }}" target="_blank" class="inline-flex items-center gap-1 bg-purple-500 text-white px-3 py-1.5 rounded-xl font-bold text-[10px] shadow-sm hover:bg-purple-600 transition-all">
                                                         <i class="fa-solid fa-arrow-up-right-from-square"></i> เปิดลิงก์
                                                     </a>
                                                 @endif
@@ -172,11 +172,11 @@
                                     {{-- ปุ่มคลิกสั่งดาวน์โหลดบนเวอร์ชันโมบาย --}}
                                     <div class="pt-1">
                                         @if($sheet->type == 'file')
-                                            <a href="{{ asset($sheet->file_path) }}" download target="_blank" class="w-full inline-flex items-center justify-center gap-1 bg-[#5EBEE6] text-white py-2 rounded-xl text-xs font-bold shadow-sm">
+                                            <a href="{{ asset(($sheet->file_path[0] ?? '#')) }}" download target="_blank" class="w-full inline-flex items-center justify-center gap-1 bg-[#5EBEE6] text-white py-2 rounded-xl text-xs font-bold shadow-sm">
                                                 <i class="fa-solid fa-cloud-arrow-down"></i> ดาวน์โหลดไฟล์ PDF
                                             </a>
                                         @else
-                                            <a href="{{ $sheet->file_path }}" target="_blank" class="w-full inline-flex items-center justify-center gap-1 bg-purple-500 text-white py-2 rounded-xl text-xs font-bold shadow-sm">
+                                            <a href="{{ ($sheet->file_path[0] ?? '#') }}" target="_blank" class="w-full inline-flex items-center justify-center gap-1 bg-purple-500 text-white py-2 rounded-xl text-xs font-bold shadow-sm">
                                                 <i class="fa-solid fa-arrow-up-right-from-square"></i> เปิดลิงก์เชื่อมโยงเว็บ
                                             </a>
                                         @endif
@@ -219,7 +219,7 @@
                                                 </div>
                                                 <div class="overflow-hidden">
                                                     {{-- 🛠️ ปรับปรุง: แก้ไขช่อง href ฝั่งขวาลิ้งก์แนะนําให้กดดึงไฟล์ไปรันงานดาวน์โหลดได้จริงตรงตัว --}}
-                                                    <a href="{{ $top->type == 'file' ? asset($top->file_path) : $top->file_path }}" target="_blank" class="text-xs font-bold text-slate-700 group-hover:text-[#5EBEE6] transition-colors line-clamp-1 mb-0.5">
+                                                    <a href="{{ $top->type == 'file' ? asset(($top->file_path[0] ?? '#')) : ($top->file_path[0] ?? '#') }}" target="_blank" class="text-xs font-bold text-slate-700 group-hover:text-[#5EBEE6] transition-colors line-clamp-1 mb-0.5">
                                                         {{ $top->sheet_name }}
                                                     </a>
                                                     <p class="text-[9px] text-slate-400 font-medium truncate">วิชา: {{ $top->subject }}</p>
@@ -254,7 +254,7 @@
                                                 <p class="text-[10px] text-slate-400 font-medium truncate">{{ $recent->sheet_name }}</p>
                                             </div>
                                             {{-- 🛠️ ปรับปรุง: แก้ไขลิงก์ไอคอนวงกลมฝั่งขวาอัปเดตล่าสุดให้ชี้ดึงข้อมูลไปใช้งานได้จริงร้อยเปอร์เซ็นต์ --}}
-                                            <a href="{{ $recent->type == 'file' ? asset($recent->file_path) : $recent->file_path }}" target="_blank" class="w-7 h-7 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0 text-slate-400 hover:bg-[#5EBEE6] hover:text-white hover:border-[#5EBEE6] transition-all">
+                                            <a href="{{ $recent->type == 'file' ? asset(($recent->file_path[0] ?? '#')) : ($recent->file_path[0] ?? '#') }}" target="_blank" class="w-7 h-7 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0 text-slate-400 hover:bg-[#5EBEE6] hover:text-white hover:border-[#5EBEE6] transition-all">
                                                 <i class="fa-solid {{ $recent->type == 'file' ? 'fa-arrow-down' : 'fa-link' }} text-[9px]"></i>
                                             </a>
                                         </div>

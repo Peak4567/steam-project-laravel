@@ -60,19 +60,21 @@
 
             <div class="space-y-2 pt-1">
                 <label class="block text-xs font-bold text-[#5EBEE6] pl-0.5">
-                    <i class="fa-solid fa-file-arrow-up"></i> เลือกไฟล์พอร์ตฟอลิโอหลัก 
-                    <span class="text-slate-400 font-medium text-[10px] ml-1">(รองรับไฟล์ PDF, JPG, PNG ขนาดห้ามเกิน 10MB)</span>
+                    <i class="fa-solid fa-file-arrow-up"></i> เลือกไฟล์พอร์ตฟอลิโอ
+                    <span class="text-slate-400 font-medium text-[10px] ml-1">(รองรับ PDF, JPG, PNG สูงสุด 3 ไฟล์ ไฟล์ละไม่เกิน 10MB)</span>
                 </label>
-                <input type="file" id="portfolio_upload" name="portfolio_file" accept=".pdf,.jpg,.jpeg,.png" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-[#5EBEE6] hover:file:bg-[#eaf6fc] border border-slate-100 rounded-xl bg-white transition cursor-pointer shadow-sm" required>
-                
-                <div id="file_preview_box" class="hidden mt-3 p-3 bg-blue-50/30 border border-blue-100/40 rounded-xl flex-row justify-between items-center shadow-inner">
-                    <div class="flex items-center gap-2 overflow-hidden pr-3">
-                        <i class="fa-solid fa-file-lines text-[#5EBEE6] text-sm shrink-0"></i>
-                        <span id="file_preview_name" class="text-xs text-slate-600 font-bold truncate max-w-[200px] md:max-w-none"></span>
+                <input type="file" id="portfolio_upload" name="portfolio_file" accept=".pdf,.jpg,.jpeg,.png" multiple class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-[#5EBEE6] hover:file:bg-[#eaf6fc] border border-slate-100 rounded-xl bg-white transition cursor-pointer shadow-sm">
+
+                <div id="file_preview_box" class="hidden space-y-2"></div>
+
+                <div id="upload-progress-wrap" class="hidden pt-1">
+                    <div class="flex justify-between text-[10px] font-bold text-slate-400 mb-1">
+                        <span>กำลังอัปโหลด...</span>
+                        <span id="upload-progress-text">0%</span>
                     </div>
-                    <a id="file_preview_btn" href="#" target="_blank" class="px-3 py-1.5 bg-[#5EBEE6] text-white text-[10px] font-bold rounded-lg hover:bg-[#4fb1d8] transition-colors whitespace-nowrap shadow-sm">
-                        ตรวจสอบไฟล์
-                    </a>
+                    <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                        <div id="upload-progress-bar" class="h-full bg-gradient-to-r from-[#5EBEE6] to-blue-500 rounded-full transition-all" style="width: 0%"></div>
+                    </div>
                 </div>
             </div>
 
@@ -138,17 +140,22 @@
 
                 <div class="w-full h-48 bg-slate-50 relative flex items-center justify-center overflow-hidden border-b border-slate-50">
                     @php
-                        $ext = strtolower(pathinfo($portfolio->file_path, PATHINFO_EXTENSION));
+                        $portfolioFiles = $portfolio->file_path ?? [];
+                        $primaryFile = $portfolioFiles[0] ?? null;
+                        $ext = strtolower(pathinfo($primaryFile ?? '', PATHINFO_EXTENSION));
                     @endphp
-                    
+
                     @if($ext == 'pdf')
-                        <canvas class="pdf-thumbnail w-full h-full object-cover transition-opacity duration-300 opacity-0" data-pdf-url="{{ asset($portfolio->file_path) }}"></canvas>
+                        <canvas class="pdf-thumbnail w-full h-full object-cover transition-opacity duration-300 opacity-0" data-pdf-url="{{ asset($primaryFile) }}"></canvas>
                         <div class="absolute inset-0 flex flex-col items-center justify-center text-slate-300 pdf-loading bg-slate-50/50">
                             <i class="fa-solid fa-spinner fa-spin text-xl mb-1.5 text-[#5EBEE6]"></i>
                             <span class="text-[9px] font-bold text-slate-400">กำลังประมวลภาพปก...</span>
                         </div>
                     @else
-                        <img src="{{ asset($portfolio->file_path) }}" class="w-full h-full object-cover group-hover:scale-103 transition-transform duration-700 ease-out" alt="Portfolio Cover">
+                        <img src="{{ asset($primaryFile) }}" class="w-full h-full object-cover group-hover:scale-103 transition-transform duration-700 ease-out" alt="Portfolio Cover">
+                    @endif
+                    @if (count($portfolioFiles) > 1)
+                        <span class="absolute bottom-2 right-2 z-10 bg-slate-900/70 backdrop-blur-sm text-white text-[9px] font-bold px-2 py-1 rounded-md"><i class="fa-solid fa-paperclip"></i> {{ count($portfolioFiles) }} ไฟล์</span>
                     @endif
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-900/5 via-transparent to-transparent"></div>
                 </div>
@@ -180,7 +187,7 @@
                         </div>
                     </div>
 
-                    <a href="{{ asset($portfolio->file_path) }}" target="_blank" class="w-full block text-center py-2.5 border border-slate-100 text-slate-600 bg-slate-50 rounded-xl text-xs font-bold hover:bg-[#5EBEE6] hover:text-white hover:border-[#5EBEE6] shadow-sm transition-all">
+                    <a href="{{ asset($primaryFile) }}" target="_blank" class="w-full block text-center py-2.5 border border-slate-100 text-slate-600 bg-slate-50 rounded-xl text-xs font-bold hover:bg-[#5EBEE6] hover:text-white hover:border-[#5EBEE6] shadow-sm transition-all">
                         <i class="fa-solid fa-file-pdf mr-1"></i> ตรวจสอบเปิดดูผลงาน
                     </a>
                 </div>
@@ -206,36 +213,21 @@
 </section>
 
 <script src="{{asset('assets/js/portfolio-profile.js')}}"></script>
+<script src="{{ asset('assets/js/multi-upload.js') }}"></script>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const fileInput = document.getElementById('portfolio_upload');
-        const previewBox = document.getElementById('file_preview_box');
-        const formElement = document.getElementById('portfolio-upload-form');
-
-        if (fileInput) {
-            fileInput.addEventListener('change', function() {
-                if (typeof AppAlert !== 'undefined') {
-                    const isValid = AppAlert.validateFileSize(this, 10);
-                    if (!isValid) {
-                        if (previewBox) {
-                            previewBox.classList.add('hidden');
-                            previewBox.classList.remove('flex');
-                        }
-                        return;
-                    }
-                }
-            });
-        }
-
-        if (formElement) {
-            formElement.addEventListener('reset', function() {
-                if (previewBox) {
-                    previewBox.classList.add('hidden');
-                    previewBox.classList.remove('flex');
-                }
-            });
-        }
+        MultiUpload.init({
+            formId: 'portfolio-upload-form',
+            fileInputId: 'portfolio_upload',
+            previewListId: 'file_preview_box',
+            progressWrapId: 'upload-progress-wrap',
+            progressBarId: 'upload-progress-bar',
+            progressTextId: 'upload-progress-text',
+            fieldName: 'portfolio_file',
+            maxFiles: 3,
+            maxSizeMb: 10,
+        });
     });
 </script>
 

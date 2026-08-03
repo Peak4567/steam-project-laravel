@@ -1,6 +1,82 @@
 @extends('profile.profile-layout')
 
 @section('profile-content')
+    @php
+        $gradeLevels = [
+            'อนุบาล 1', 'อนุบาล 2', 'อนุบาล 3',
+            'ประถมศึกษาปีที่ 1', 'ประถมศึกษาปีที่ 2', 'ประถมศึกษาปีที่ 3',
+            'ประถมศึกษาปีที่ 4', 'ประถมศึกษาปีที่ 5', 'ประถมศึกษาปีที่ 6',
+            'มัธยมศึกษาปีที่ 1', 'มัธยมศึกษาปีที่ 2', 'มัธยมศึกษาปีที่ 3',
+            'มัธยมศึกษาปีที่ 4', 'มัธยมศึกษาปีที่ 5', 'มัธยมศึกษาปีที่ 6',
+            'มหาวิทยาลัยปีที่ 1 (ปริญญาตรี)', 'มหาวิทยาลัยปีที่ 2 (ปริญญาตรี)',
+            'มหาวิทยาลัยปีที่ 3 (ปริญญาตรี)', 'มหาวิทยาลัยปีที่ 4 (ปริญญาตรี)',
+            'จบการศึกษาระดับปริญญาตรี',
+            'กำลังศึกษาระดับปริญญาโท', 'จบการศึกษาระดับปริญญาโท',
+            'กำลังศึกษาระดับปริญญาเอก', 'จบการศึกษาระดับปริญญาเอก',
+            'จบการศึกษาแล้ว (ทำงานแล้ว)',
+        ];
+
+        $favoriteSubjects = [
+            'ภาษาไทย', 'คณิตศาสตร์', 'วิทยาศาสตร์', 'ฟิสิกส์', 'เคมี', 'ชีววิทยา',
+            'วิทยาการคำนวณ (คอมพิวเตอร์)', 'สังคมศึกษา ศาสนา และวัฒนธรรม', 'ประวัติศาสตร์',
+            'ภาษาอังกฤษ', 'ภาษาต่างประเทศที่ 2 (จีน/ญี่ปุ่น/ฝรั่งเศส ฯลฯ)',
+            'สุขศึกษาและพลศึกษา', 'ศิลปะ', 'ดนตรี', 'นาฏศิลป์', 'การงานอาชีพ', 'แนะแนว',
+        ];
+
+        $dreamUniversities = [
+            'มหาวิทยาลัยรัฐ / ในกำกับของรัฐ' => [
+                'จุฬาลงกรณ์มหาวิทยาลัย', 'มหาวิทยาลัยธรรมศาสตร์', 'มหาวิทยาลัยเกษตรศาสตร์',
+                'มหาวิทยาลัยมหิดล', 'มหาวิทยาลัยศรีนครินทรวิโรฒ', 'มหาวิทยาลัยศิลปากร',
+                'มหาวิทยาลัยเชียงใหม่', 'มหาวิทยาลัยขอนแก่น', 'มหาวิทยาลัยสงขลานครินทร์',
+                'มหาวิทยาลัยนเรศวร', 'มหาวิทยาลัยบูรพา', 'มหาวิทยาลัยแม่โจ้',
+                'มหาวิทยาลัยแม่ฟ้าหลวง', 'มหาวิทยาลัยวลัยลักษณ์', 'มหาวิทยาลัยทักษิณ',
+                'มหาวิทยาลัยมหาสารคาม', 'มหาวิทยาลัยอุบลราชธานี', 'มหาวิทยาลัยนราธิวาสราชนครินทร์',
+                'มหาวิทยาลัยพะเยา', 'มหาวิทยาลัยรามคำแหง', 'มหาวิทยาลัยสุโขทัยธรรมาธิราช',
+                'มหาวิทยาลัยนวมินทราธิราช', 'มหาวิทยาลัยกาฬสินธุ์', 'มหาวิทยาลัยนครพนม',
+                'มหาวิทยาลัยสวนดุสิต', 'มหาวิทยาลัยการกีฬาแห่งชาติ',
+                'สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง',
+                'มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าธนบุรี',
+                'มหาวิทยาลัยเทคโนโลยีพระจอมเกล้าพระนครเหนือ',
+                'มหาวิทยาลัยเทคโนโลยีสุรนารี', 'สถาบันบัณฑิตพัฒนบริหารศาสตร์ (นิด้า)',
+                'สถาบันเทคโนโลยีจิตรลดา', 'ราชวิทยาลัยจุฬาภรณ์', 'สถาบันบัณฑิตพัฒนศิลป์',
+                'สถาบันพระบรมราชชนก',
+            ],
+            'มหาวิทยาลัยราชภัฏ' => [
+                'มหาวิทยาลัยราชภัฏกำแพงเพชร', 'มหาวิทยาลัยราชภัฏจันทรเกษม', 'มหาวิทยาลัยราชภัฏชัยภูมิ',
+                'มหาวิทยาลัยราชภัฏเชียงราย', 'มหาวิทยาลัยราชภัฏเชียงใหม่', 'มหาวิทยาลัยราชภัฏธนบุรี',
+                'มหาวิทยาลัยราชภัฏนครปฐม', 'มหาวิทยาลัยราชภัฏนครราชสีมา', 'มหาวิทยาลัยราชภัฏนครศรีธรรมราช',
+                'มหาวิทยาลัยราชภัฏนครสวรรค์', 'มหาวิทยาลัยราชภัฏบ้านสมเด็จเจ้าพระยา', 'มหาวิทยาลัยราชภัฏบุรีรัมย์',
+                'มหาวิทยาลัยราชภัฏพระนคร', 'มหาวิทยาลัยราชภัฏพระนครศรีอยุธยา', 'มหาวิทยาลัยราชภัฏพิบูลสงคราม',
+                'มหาวิทยาลัยราชภัฏเพชรบุรี', 'มหาวิทยาลัยราชภัฏเพชรบูรณ์', 'มหาวิทยาลัยราชภัฏภูเก็ต',
+                'มหาวิทยาลัยราชภัฏมหาสารคาม', 'มหาวิทยาลัยราชภัฏยะลา', 'มหาวิทยาลัยราชภัฏร้อยเอ็ด',
+                'มหาวิทยาลัยราชภัฏราชนครินทร์', 'มหาวิทยาลัยราชภัฏรำไพพรรณี', 'มหาวิทยาลัยราชภัฏลำปาง',
+                'มหาวิทยาลัยราชภัฏเลย', 'มหาวิทยาลัยราชภัฏวไลยอลงกรณ์ ในพระบรมราชูปถัมภ์', 'มหาวิทยาลัยราชภัฏศรีสะเกษ',
+                'มหาวิทยาลัยราชภัฏสกลนคร', 'มหาวิทยาลัยราชภัฏสงขลา', 'มหาวิทยาลัยราชภัฏสวนสุนันทา',
+                'มหาวิทยาลัยราชภัฏสุราษฎร์ธานี', 'มหาวิทยาลัยราชภัฏสุรินทร์', 'มหาวิทยาลัยราชภัฏหมู่บ้านจอมบึง',
+                'มหาวิทยาลัยราชภัฏอุดรธานี', 'มหาวิทยาลัยราชภัฏอุบลราชธานี', 'มหาวิทยาลัยราชภัฏอุตรดิตถ์',
+            ],
+            'มหาวิทยาลัยเทคโนโลยีราชมงคล' => [
+                'มหาวิทยาลัยเทคโนโลยีราชมงคลธัญบุรี', 'มหาวิทยาลัยเทคโนโลยีราชมงคลกรุงเทพ',
+                'มหาวิทยาลัยเทคโนโลยีราชมงคลตะวันออก', 'มหาวิทยาลัยเทคโนโลยีราชมงคลพระนคร',
+                'มหาวิทยาลัยเทคโนโลยีราชมงคลรัตนโกสินทร์', 'มหาวิทยาลัยเทคโนโลยีราชมงคลล้านนา',
+                'มหาวิทยาลัยเทคโนโลยีราชมงคลศรีวิชัย', 'มหาวิทยาลัยเทคโนโลยีราชมงคลสุวรรณภูมิ',
+                'มหาวิทยาลัยเทคโนโลยีราชมงคลอีสาน',
+            ],
+            'มหาวิทยาลัยเอกชน' => [
+                'มหาวิทยาลัยกรุงเทพ', 'มหาวิทยาลัยหอการค้าไทย', 'มหาวิทยาลัยธุรกิจบัณฑิตย์',
+                'มหาวิทยาลัยรังสิต', 'มหาวิทยาลัยศรีปทุม', 'มหาวิทยาลัยสยาม',
+                'มหาวิทยาลัยกรุงเทพธนบุรี', 'มหาวิทยาลัยเกษมบัณฑิต', 'มหาวิทยาลัยเซนต์จอห์น',
+                'มหาวิทยาลัยเทคโนโลยีมหานคร', 'มหาวิทยาลัยธนบุรี', 'มหาวิทยาลัยนานาชาติแสตมฟอร์ด',
+                'มหาวิทยาลัยเวสเทิร์น', 'มหาวิทยาลัยพายัพ', 'มหาวิทยาลัยฟาร์อีสเทอร์น',
+                'มหาวิทยาลัยวงษ์ชวลิตกุล', 'มหาวิทยาลัยหัวเฉียวเฉลิมพระเกียรติ', 'มหาวิทยาลัยอัสสัมชัญ',
+                'มหาวิทยาลัยอีสเทิร์นเอเชีย', 'มหาวิทยาลัยเอเชียอาคเนย์', 'มหาวิทยาลัยคริสเตียน',
+                'มหาวิทยาลัยเจ้าพระยา', 'มหาวิทยาลัยเนชั่น', 'มหาวิทยาลัยปทุมธานี',
+                'มหาวิทยาลัยภาคตะวันออกเฉียงเหนือ', 'มหาวิทยาลัยรัตนบัณฑิต', 'มหาวิทยาลัยราชธานี',
+                'มหาวิทยาลัยหาดใหญ่', 'มหาวิทยาลัยนอร์ท-เชียงใหม่', 'มหาวิทยาลัยนอร์ทกรุงเทพ',
+                'วิทยาลัยดุสิตธานี', 'วิทยาลัยเซาธ์อีสท์บางกอก',
+            ],
+        ];
+    @endphp
     <div class="text-slate-700 max-w-6xl mx-auto font-mitr">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
@@ -15,20 +91,19 @@
                     </form>
 
                     <div class="relative mb-4 group/avatar">
-                        <div class="w-28 h-24 md:w-28 md:h-28 rounded-full border-4 border-slate-50 overflow-hidden shadow-md bg-white relative">
+                        <div class="w-28 h-24 md:w-28 md:h-28 rounded-full border-4 border-slate-50 overflow-hidden shadow-md bg-white relative flex items-center justify-center text-slate-200">
                             @if (Auth::user()->profile && file_exists(public_path('assets/img/profile/' . Auth::user()->profile)))
                                 <img src="{{ asset('assets/img/profile/' . Auth::user()->profile) }}"
                                     id="avatar-preview" class="w-full h-full object-cover" alt="Profile ของ {{ Auth::user()->nickname }}">
                             @else
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->nickname ?? Auth::user()->name) }}&background=EBF4FF&color=5EBEE6&size=128"
-                                    id="avatar-preview" class="w-full h-full object-cover" alt="Default Profile">
+                                <i id="avatar-preview" class="fa-solid fa-circle-user text-7xl" data-has-photo="0"></i>
                             @endif
                         </div>
                     </div>
 
                     <h3 class="text-base font-bold text-slate-800 mb-0.5">{{ Auth::user()->name }}</h3>
                     <p class="text-xs text-slate-400 font-medium mb-4">
-                        {{ Auth::user()->grade_level == 'M4' ? 'มัธยมศึกษาปีที่ 4' : (Auth::user()->grade_level == 'M5' ? 'มัธยมศึกษาปีที่ 5' : 'มัธยมศึกษาปีที่ 6') }}
+                        {{ Auth::user()->grade_level ?: 'ยังไม่ระบุระดับชั้น' }}
                     </p>
 
                     <button type="button" onclick="document.getElementById('profile-input').click()"
@@ -104,9 +179,10 @@
                                 <label class="text-xs font-bold text-slate-500 pl-0.5">ระดับชั้น</label>
                                 <select name="grade_level" id="field_grade_level"
                                     class="w-full bg-slate-50/50 border border-slate-100 text-slate-700 font-medium text-xs rounded-xl px-3.5 py-3 outline-none focus:bg-white focus:border-[#5EBEE6] focus:ring-4 focus:ring-[#5EBEE6]/10 transition-all cursor-pointer profile-completeness-field">
-                                    <option value="M4" {{ Auth::user()->grade_level == 'M4' ? 'selected' : '' }}>มัธยมศึกษาปีที่ 4</option>
-                                    <option value="M5" {{ Auth::user()->grade_level == 'M5' ? 'selected' : '' }}>มัธยมศึกษาปีที่ 5</option>
-                                    <option value="M6" {{ Auth::user()->grade_level == 'M6' ? 'selected' : '' }}>มัธยมศึกษาปีที่ 6</option>
+                                    <option value="" {{ Auth::user()->grade_level == '' ? 'selected' : '' }}>ไม่ระบุ</option>
+                                    @foreach ($gradeLevels as $level)
+                                        <option value="{{ $level }}" {{ Auth::user()->grade_level == $level ? 'selected' : '' }}>{{ $level }}</option>
+                                    @endforeach
                                 </select>
                             </div>
 
@@ -114,9 +190,10 @@
                                 <label class="text-xs font-bold text-slate-500 pl-0.5">วิชาที่ชื่นชอบ</label>
                                 <select name="favorite_subject" id="field_favorite_subject"
                                     class="w-full bg-slate-50/50 border border-slate-100 text-slate-700 font-medium text-xs rounded-xl px-3.5 py-3 outline-none focus:bg-white focus:border-[#5EBEE6] focus:ring-4 focus:ring-[#5EBEE6]/10 transition-all cursor-pointer profile-completeness-field">
-                                    <option value="พละศึกษา" {{ Auth::user()->favorite_subject == 'พละศึกษา' ? 'selected' : '' }}>พละศึกษา</option>
-                                    <option value="คอมพิวเตอร์" {{ Auth::user()->favorite_subject == 'คอมพิวเตอร์' ? 'selected' : '' }}>คอมพิวเตอร์</option>
-                                    <option value="คณิตศาสตร์" {{ Auth::user()->favorite_subject == 'คณิตศาสตร์' ? 'selected' : '' }}>คณิตศาสตร์</option>
+                                    <option value="" {{ Auth::user()->favorite_subject == '' ? 'selected' : '' }}>ไม่ระบุ</option>
+                                    @foreach ($favoriteSubjects as $subject)
+                                        <option value="{{ $subject }}" {{ Auth::user()->favorite_subject == $subject ? 'selected' : '' }}>{{ $subject }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -170,8 +247,13 @@
                                     <select name="dream_university" id="field_dream_university"
                                         class="w-full bg-slate-50/50 border border-slate-100 text-slate-700 font-medium text-xs rounded-xl px-3.5 py-3 outline-none focus:bg-white focus:border-[#5EBEE6] focus:ring-4 focus:ring-[#5EBEE6]/10 transition-all cursor-pointer profile-completeness-field">
                                         <option value="มหาวิทยาลัย" {{ Auth::user()->dream_university == 'มหาวิทยาลัย' ? 'selected' : '' }}>ยังไม่เลือกเป้าหมาย</option>
-                                        <option value="จุฬาลงกรณ์มหาวิทยาลัย" {{ Auth::user()->dream_university == 'จุฬาลงกรณ์มหาวิทยาลัย' ? 'selected' : '' }}>จุฬาลงกรณ์มหาวิทยาลัย</option>
-                                        <option value="มหาวิทยาลัยเกษตรศาสตร์" {{ Auth::user()->dream_university == 'มหาวิทยาลัยเกษตรศาสตร์' ? 'selected' : '' }}>มหาวิทยาลัยเกษตรศาสตร์</option>
+                                        @foreach ($dreamUniversities as $group => $unis)
+                                            <optgroup label="{{ $group }}">
+                                                @foreach ($unis as $uni)
+                                                    <option value="{{ $uni }}" {{ Auth::user()->dream_university == $uni ? 'selected' : '' }}>{{ $uni }}</option>
+                                                @endforeach
+                                            </optgroup>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -208,7 +290,7 @@
                     }
                 });
 
-                if (avatar && !avatar.src.includes('ui-avatars.com')) {
+                if (avatar && avatar.tagName === 'IMG') {
                     filledCount++;
                 }
 

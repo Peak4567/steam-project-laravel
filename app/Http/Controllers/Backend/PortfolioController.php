@@ -41,8 +41,10 @@ class PortfolioController extends Controller
     {
         $portfolio = DB::table('portfolios')->where('id', $id)->first();
         if ($portfolio) {
-            if ($portfolio->file_path && File::exists(public_path($portfolio->file_path))) {
-                File::delete(public_path($portfolio->file_path));
+            foreach (json_decode($portfolio->file_path, true) ?? [] as $path) {
+                if (File::exists(public_path($path))) {
+                    File::delete(public_path($path));
+                }
             }
             DB::table('portfolios')->where('id', $id)->delete();
             return back()->with('success', 'deleted successfully');

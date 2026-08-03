@@ -36,9 +36,13 @@ class SheetController extends Controller
     public function destroy($id)
     {
         $sheet = DB::table('sheets')->where('id', $id)->first();
-        
-        if ($sheet->type == 'file' && file_exists(public_path($sheet->file_path))) {
-            unlink(public_path($sheet->file_path));
+
+        if ($sheet->type == 'file') {
+            foreach (json_decode($sheet->file_path, true) ?? [] as $path) {
+                if (file_exists(public_path($path))) {
+                    unlink(public_path($path));
+                }
+            }
         }
 
         DB::table('sheets')->where('id', $id)->delete();

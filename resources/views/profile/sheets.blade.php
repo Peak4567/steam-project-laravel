@@ -41,7 +41,7 @@
                 <h3 class="text-sm font-extrabold text-slate-900 tracking-tight">ส่งเอกสารสรุปบทเรียน</h3>
             </div>
 
-            <form action="{{ route('profile.sheets.store') }}" method="POST" enctype="multipart/form-data" id="sheet-upload-form">
+            <form action="{{ route('profile.sheets.store') }}" method="POST" enctype="multipart/form-data" id="sheet-upload-form" data-require-file="true">
                 @csrf
                 
                 <div class="flex flex-wrap items-center gap-6 mb-5 pb-4 border-b border-slate-50">
@@ -106,10 +106,20 @@
 
                 <div id="file-input-container" class="mb-5 block space-y-1.5">
                     <label class="block text-xs font-bold text-[#5EBEE6] pl-0.5">
-                        <i class="fa-solid fa-file-arrow-up"></i> เลือกไฟล์สรุปเอกสารในเครื่องของคุณ 
-                        <span class="text-slate-400 font-medium text-[10px] ml-1">(ขนาดรวมไฟล์ห้ามเกิน 10MB)</span>
+                        <i class="fa-solid fa-file-arrow-up"></i> เลือกไฟล์สรุปเอกสารในเครื่องของคุณ
+                        <span class="text-slate-400 font-medium text-[10px] ml-1">(สูงสุด 3 ไฟล์ ไฟล์ละไม่เกิน 10MB)</span>
                     </label>
-                    <input type="file" name="document" id="document_input" class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-[#5EBEE6] hover:file:bg-[#eaf6fc] border border-slate-100 rounded-xl bg-white transition cursor-pointer shadow-sm" required>
+                    <input type="file" name="document" id="document_input" multiple class="w-full text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-[#5EBEE6] hover:file:bg-[#eaf6fc] border border-slate-100 rounded-xl bg-white transition cursor-pointer shadow-sm">
+                    <div id="document-preview-list" class="hidden space-y-2 pt-1"></div>
+                    <div id="upload-progress-wrap" class="hidden pt-1">
+                        <div class="flex justify-between text-[10px] font-bold text-slate-400 mb-1">
+                            <span>กำลังอัปโหลด...</span>
+                            <span id="upload-progress-text">0%</span>
+                        </div>
+                        <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+                            <div id="upload-progress-bar" class="h-full bg-gradient-to-r from-[#5EBEE6] to-blue-500 rounded-full transition-all" style="width: 0%"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="link-input-container" class="mb-5 hidden space-y-1.5">
@@ -179,15 +189,17 @@
                         <td class="py-4 px-6 text-center">
                             <div class="flex items-center justify-center gap-1.5">
                                 @if($sheet->type == 'file')
-                                    <a href="{{ asset($sheet->file_path) }}" target="_blank" class="w-8 h-8 rounded-xl bg-slate-50 border border-slate-100 text-slate-500 hover:bg-[#5EBEE6] hover:text-white hover:border-[#5EBEE6] transition-all flex items-center justify-center text-xs shadow-sm" title="เปิดดูไฟล์">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </a>
+                                    @foreach ($sheet->file_path ?? [] as $sheetFile)
+                                        <a href="{{ asset($sheetFile) }}" target="_blank" class="w-8 h-8 rounded-xl bg-slate-50 border border-slate-100 text-slate-500 hover:bg-[#5EBEE6] hover:text-white hover:border-[#5EBEE6] transition-all flex items-center justify-center text-xs shadow-sm" title="เปิดดูไฟล์">
+                                            <i class="fa-solid fa-eye"></i>
+                                        </a>
+                                    @endforeach
                                 @else
-                                    <a href="{{ $sheet->file_path }}" target="_blank" class="w-8 h-8 rounded-xl bg-orange-50 border border-orange-100/30 text-orange-500 hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-all flex items-center justify-center text-xs shadow-sm" title="เปิดลิงก์ภายนอก">
+                                    <a href="{{ $sheet->file_path[0] ?? '#' }}" target="_blank" class="w-8 h-8 rounded-xl bg-orange-50 border border-orange-100/30 text-orange-500 hover:bg-orange-500 hover:text-white hover:border-orange-500 transition-all flex items-center justify-center text-xs shadow-sm" title="เปิดลิงก์ภายนอก">
                                         <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
                                     </a>
                                 @endif
-                                
+
                                 <form action="{{ route('profile.sheets.destroy', $sheet->id) }}" method="POST" onsubmit="return confirm('ยืนยันประสงค์ต้องการลบชีทสรุปวิชานี้จากระบบ?')" class="inline-flex">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="w-8 h-8 rounded-xl bg-rose-50 border border-rose-100 text-rose-500 hover:bg-rose-500 hover:text-white hover:border-rose-500 transition-all flex items-center justify-center text-xs shadow-sm" title="ลบข้อมูล">
@@ -217,25 +229,24 @@
 
 </section>
 
+<script src="{{ asset('assets/js/multi-upload.js') }}"></script>
 <script>
     function toggleInputType(type) {
         const fileContainer = document.getElementById('file-input-container');
-        const fileInput = document.getElementById('document_input');
-        
         const linkContainer = document.getElementById('link-input-container');
         const linkInput = document.getElementById('link_input');
+        const form = document.getElementById('sheet-upload-form');
 
         if (type === 'file') {
             fileContainer.classList.remove('hidden');
-            fileInput.setAttribute('required', 'required');
-            
+            form.dataset.requireFile = 'true';
+
             linkContainer.classList.add('hidden');
             linkInput.removeAttribute('required');
         } else {
             fileContainer.classList.add('hidden');
-            fileInput.removeAttribute('required');
-            fileInput.value = ''; 
-            
+            form.dataset.requireFile = 'false';
+
             linkContainer.classList.remove('hidden');
             linkInput.setAttribute('required', 'required');
         }
@@ -254,16 +265,19 @@
 
     document.addEventListener("DOMContentLoaded", function() {
         const clampElements = document.querySelectorAll('.auto-clamp');
-        const fileInput = document.getElementById('document_input');
-        
-        if (fileInput) {
-            fileInput.addEventListener('change', function() {
-                if (typeof AppAlert !== 'undefined') {
-                    AppAlert.validateFileSize(this, 10); 
-                }
-            });
-        }
-        
+
+        MultiUpload.init({
+            formId: 'sheet-upload-form',
+            fileInputId: 'document_input',
+            previewListId: 'document-preview-list',
+            progressWrapId: 'upload-progress-wrap',
+            progressBarId: 'upload-progress-bar',
+            progressTextId: 'upload-progress-text',
+            fieldName: 'document',
+            maxFiles: 3,
+            maxSizeMb: 10,
+        });
+
         function checkTruncation() {
             clampElements.forEach(el => {
                 if (el.scrollWidth > el.clientWidth) {

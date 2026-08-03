@@ -112,40 +112,90 @@
                     
                     <div class="grid grid-cols-2 gap-3 text-center">
                         <div class="bg-slate-50/60 p-3 rounded-xl border border-slate-100/50">
-                            <span class="block text-base font-black text-slate-800">4 เล่ม</span>
+                            <span class="block text-base font-black text-slate-800">{{ number_format($stats['portfolios']) }} เล่ม</span>
                             <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wide">พอร์ตฟอลิโอ</span>
                         </div>
                         <div class="bg-slate-50/60 p-3 rounded-xl border border-slate-100/50">
-                            <span class="block text-base font-black text-[#5EBEE6]">12 ไฟล์</span>
+                            <span class="block text-base font-black text-[#5EBEE6]">{{ number_format($stats['sheets']) }} ไฟล์</span>
                             <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wide">แชร์ชีทสรุป</span>
                         </div>
+                        <div class="bg-slate-50/60 p-3 rounded-xl border border-slate-100/50">
+                            <span class="block text-base font-black text-emerald-500">{{ number_format($stats['sheet_downloads']) }}</span>
+                            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wide">ยอดโหลดชีท</span>
+                        </div>
+                        <div class="bg-slate-50/60 p-3 rounded-xl border border-slate-100/50">
+                            <span class="block text-base font-black text-purple-500">{{ number_format($stats['projects']) }} ทีม</span>
+                            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wide">เข้าร่วมโครงงาน</span>
+                        </div>
                     </div>
-                    
+
                     <div class="pt-1.5 text-[11px] font-medium text-slate-400 space-y-1">
-                        <p class="flex justify-between"><span>วันที่สมัครสมาชิก:</span> <span class="font-bold text-slate-700">{{ $user->created_at ? date('d/m/Y', strtotime($user->created_at)) : '12/02/2026' }}</span></p>
+                        <p class="flex justify-between"><span>วันที่สมัครสมาชิก:</span> <span class="font-bold text-slate-700">{{ $user->created_at ? \Carbon\Carbon::parse($user->created_at)->format('d/m/Y H:i') : '-' }}</span></p>
                         <p class="flex justify-between"><span>สิทธิ์ปัจจุบัน:</span> <span class="font-bold text-[#5EBEE6] uppercase">{{ $user->level }}</span></p>
                     </div>
                 </div>
 
                 <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-3">
-                    <div class="flex items-center gap-2 border-b border-slate-50 pb-2.5">
-                        <i class="fa-solid fa-shield-halved text-amber-500 text-xs"></i>
-                        <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-wider">ประวัติความปลอดภัยไอพี</h4>
-                    </div>
-                    
-                    <div class="space-y-2 pt-1">
-                        <div class="flex items-start gap-2.5 bg-slate-50/40 p-2 rounded-xl border border-slate-100/50">
-                            <div class="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 shrink-0"></div>
-                            <div class="text-[10px] leading-normal font-medium">
-                                <p class="font-bold text-slate-700">ล็อกอินล่าสุดสำเร็จ (Chrome/Windows)</p>
-                                <p class="text-slate-400 mt-0.5">IP: 182.52.4.110 • วันนี้</p>
-                            </div>
+                    <div class="flex items-center justify-between gap-2 border-b border-slate-50 pb-2.5">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-shield-halved text-amber-500 text-xs"></i>
+                            <h4 class="font-extrabold text-slate-800 text-xs uppercase tracking-wider">ประวัติความปลอดภัยไอพี</h4>
                         </div>
+                        @if($user->is_banned)
+                            <span class="inline-flex items-center gap-1 bg-rose-50 border border-rose-100 text-rose-500 px-2 py-0.5 rounded-md font-bold text-[9px] uppercase"><i class="fa-solid fa-ban text-[8px]"></i> ถูกแบน</span>
+                        @endif
+                    </div>
+
+                    @if($user->last_login_ip)
+                        <div class="bg-slate-50/60 p-3 rounded-xl border border-slate-100/50 space-y-1">
+                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wide">ไอพีเข้าสู่ระบบล่าสุด</p>
+                            <p class="font-mono font-black text-slate-800 text-sm">{{ $user->last_login_ip }}</p>
+                            <p class="text-[10px] text-slate-400">{{ \Carbon\Carbon::parse($user->last_login_at)->format('d/m/Y H:i') }} น.</p>
+                        </div>
+
+                        @if($user->is_banned)
+                            <form action="{{ route('backend.users.unbanIp', $user->id) }}" method="POST" data-confirm="ยืนยันปลดแบนไอพีนี้?" data-confirm-title="ปลดแบนไอพี" data-confirm-type="safe">
+                                @csrf
+                                <button type="submit" class="w-full py-2.5 bg-emerald-50 hover:bg-emerald-500 hover:text-white text-emerald-600 border border-emerald-100 rounded-xl text-xs font-bold transition-all">
+                                    <i class="fa-solid fa-lock-open mr-1"></i> ปลดแบนไอพีนี้
+                                </button>
+                                @if($user->ban_reason)
+                                    <p class="text-[10px] text-slate-400 mt-1.5 text-center">เหตุผลที่แบน: {{ $user->ban_reason }}</p>
+                                @endif
+                            </form>
+                        @else
+                            <form action="{{ route('backend.users.banIp', $user->id) }}" method="POST" data-confirm="ยืนยันแบนไอพี {{ $user->last_login_ip }}?" data-confirm-title="ยืนยันการแบนไอพี" class="space-y-2">
+                                @csrf
+                                <input type="text" name="reason" maxlength="255" placeholder="ระบุเหตุผลในการแบน (ไม่บังคับ)"
+                                    class="w-full px-3 py-2 bg-slate-50/50 border border-slate-100 rounded-xl text-[11px] font-medium outline-none focus:bg-white focus:border-rose-300 focus:ring-4 focus:ring-rose-500/10 transition-all text-slate-700">
+                                <button type="submit" class="w-full py-2.5 bg-rose-50 hover:bg-rose-500 hover:text-white text-rose-600 border border-rose-100 rounded-xl text-xs font-bold transition-all">
+                                    <i class="fa-solid fa-ban mr-1"></i> แบนไอพีนี้
+                                </button>
+                            </form>
+                        @endif
+                    @else
+                        <p class="text-[11px] text-slate-400 font-medium text-center py-3 bg-slate-50 rounded-xl border border-dashed border-slate-100">ผู้ใช้งานรายนี้ยังไม่เคยเข้าสู่ระบบ</p>
+                    @endif
+
+                    <div class="pt-2 border-t border-slate-50 space-y-1.5">
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wide mb-1.5">ประวัติเข้า-ออกระบบ (ล่าสุด 10 ครั้ง)</p>
+                        @forelse($loginLogs as $log)
+                            <div class="flex items-start gap-2.5 bg-slate-50/40 p-2 rounded-xl border border-slate-100/50">
+                                <div class="w-1.5 h-1.5 rounded-full {{ $log->action === 'login' ? 'bg-emerald-400' : 'bg-slate-300' }} mt-1.5 shrink-0"></div>
+                                <div class="text-[10px] leading-normal font-medium min-w-0">
+                                    <p class="font-bold text-slate-700">{{ $log->action === 'login' ? 'เข้าสู่ระบบสำเร็จ' : 'ออกจากระบบ' }}</p>
+                                    <p class="text-slate-400 mt-0.5 font-mono">{{ $log->ip_address }} • {{ $log->created_at->format('d/m/Y H:i') }}</p>
+                                    <p class="text-slate-300 mt-0.5 truncate" title="{{ $log->user_agent }}">{{ \Illuminate\Support\Str::limit($log->user_agent, 60) }}</p>
+                                </div>
+                            </div>
+                        @empty
+                            <p class="text-[11px] text-slate-400 font-medium text-center py-3 bg-slate-50 rounded-xl border border-dashed border-slate-100">ยังไม่มีประวัติการเข้าสู่ระบบ</p>
+                        @endforelse
                     </div>
                 </div>
 
             </div>
-            
+
         </div>
     </div>
 </section>

@@ -49,11 +49,14 @@
                         
                         {{-- ปุ่มตรวจสอบเปิดดูไฟล์ผลงาน --}}
                         <td class="px-4 py-4 text-center">
-                            @if($pf->file_path)
-                                <a href="{{ asset($pf->file_path) }}" target="_blank" 
-                                   class="inline-flex items-center gap-1.5 bg-slate-900 border border-slate-800 text-white px-3 py-1.5 rounded-xl text-[10px] font-bold shadow-sm transition-all hover:bg-[#5EBEE6] hover:border-[#5EBEE6] active:scale-95">
-                                   <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i> VIEW PORTFOLIO
-                                </a>
+                            @php $pfFiles = json_decode($pf->file_path, true) ?? []; @endphp
+                            @if(count($pfFiles) > 0)
+                                @foreach ($pfFiles as $pfIndex => $pfFile)
+                                    <a href="{{ asset($pfFile) }}" target="_blank"
+                                       class="inline-flex items-center gap-1.5 bg-slate-900 border border-slate-800 text-white px-3 py-1.5 rounded-xl text-[10px] font-bold shadow-sm transition-all hover:bg-[#5EBEE6] hover:border-[#5EBEE6] active:scale-95 mb-1">
+                                       <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i> FILE {{ $pfIndex + 1 }}
+                                    </a>
+                                @endforeach
                             @else
                                 <span class="text-[10px] font-bold text-slate-300 bg-slate-50 px-2.5 py-1 rounded-lg border border-slate-100/70 inline-block italic"><i class="fa-solid fa-circle-minus text-[9px] mr-1"></i> No File</span>
                             @endif
@@ -75,7 +78,7 @@
                         
                         {{-- 🛠️ ปุ่มลบคำสั่งงาน (แสดงเด่นชัดถาวร ไม่ต้องรอ Hover) 🛠️ --}}
                         <td class="px-4 py-4 text-center">
-                            <form action="{{ route('backend.portfolios.destroy', $pf->id) }}" method="POST" onsubmit="return confirm('⚠️ ยืนยันประสงค์ต้องการทำการลบข้อมูลแฟ้มผลงานพอร์ตโฟลิโอนี้ออกจากคลังระบบถาวรใช่หรือไม่?')" class="inline-flex">
+                            <form action="{{ route('backend.portfolios.destroy', $pf->id) }}" method="POST" data-confirm="ยืนยันประสงค์ต้องการทำการลบข้อมูลแฟ้มผลงานพอร์ตโฟลิโอนี้ออกจากคลังระบบถาวรใช่หรือไม่?" data-confirm-title="ยืนยันการลบผลงาน" class="inline-flex">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="w-7 h-7 rounded-lg bg-slate-50 text-slate-400 hover:bg-rose-500 hover:text-white border border-slate-100 shadow-sm transition-all flex items-center justify-center">
                                     <i class="fa-solid fa-trash-can text-[11px]"></i>

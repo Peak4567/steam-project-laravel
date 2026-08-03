@@ -28,11 +28,25 @@
                 </div>
             </div>
 
-            <a href="{{ asset($portfolio->file_path) }}" download
+            <a href="{{ asset($portfolio->file_path[0] ?? '') }}" download
                 class="px-6 py-2.5 bg-white border border-[#5EBEE6] text-[#5EBEE6] hover:bg-[#5EBEE6] hover:text-white rounded-xl text-sm font-bold shadow-sm transition-all flex items-center justify-center gap-2 whitespace-nowrap">
                 <i class="fa-solid fa-download"></i> โหลดไฟล์ PDF
             </a>
         </div>
+
+        @if (count($portfolio->file_path ?? []) > 1)
+            <div class="flex flex-wrap items-center gap-2 mb-6">
+                <span class="text-xs font-bold text-slate-400">ไฟล์แนบเพิ่มเติม:</span>
+                @foreach ($portfolio->file_path as $index => $file)
+                    @if ($index > 0)
+                        <a href="{{ asset($file) }}" download target="_blank"
+                            class="inline-flex items-center gap-1.5 bg-white border border-slate-100 text-slate-600 hover:bg-[#5EBEE6] hover:text-white hover:border-[#5EBEE6] px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm transition-all">
+                            <i class="fa-solid fa-paperclip text-[10px]"></i> ไฟล์ที่ {{ $index + 1 }}
+                        </a>
+                    @endif
+                @endforeach
+            </div>
+        @endif
 
         @if ($portfolio->description)
             <div class="bg-white p-6 rounded-xl border border-gray-100 shadow-sm mb-6 relative overflow-hidden">
@@ -109,7 +123,7 @@
     </section>
 
     <script>
-        window.PORTFOLIO_PDF_URL = "{{ asset($portfolio->file_path) }}";
+        window.PORTFOLIO_PDF_URL = "{{ asset($portfolio->file_path[0] ?? '') }}";
     </script>
     <script src="{{ asset('assets/js/show-portfolio.js') }}"></script>
 @endsection

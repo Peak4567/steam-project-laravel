@@ -44,8 +44,8 @@ Route::get('/projects/{id}/apply', [ProjectController::class, 'applyPage'])->nam
 
 Route::post('/projects/{id}/apply', [ProjectController::class, 'requestJoin'])->name('projects.requestJoin');
 
-Route::get('/projects/reports/view/{id}', [ProjectController::class, 'viewReport'])->name('projects.viewReport');
-Route::get('/projects/reports/download/{id}', [ProjectController::class, 'downloadReport'])->name('projects.downloadReport');
+Route::get('/projects/reports/view/{id}/{index?}', [ProjectController::class, 'viewReport'])->name('projects.viewReport');
+Route::get('/projects/reports/download/{id}/{index?}', [ProjectController::class, 'downloadReport'])->name('projects.downloadReport');
 
 
 Route::get('/sheets', [SheetController::class, 'publicIndex'])->name('sheets');
@@ -103,7 +103,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/register', [RegisterController::class, 'index'])->name('register');
 Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
 
-Route::prefix('backend')->group(function () {
+Route::prefix('backend')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/home', [BackendHomeController::class, 'index'])->name('backend.home');
     Route::get('/projects', [BackendProjectController::class, 'index'])->name('backend.projects');
     Route::get('/projects/create', [BackendProjectController::class, 'create'])->name('backend.projects.create');
@@ -137,6 +137,8 @@ Route::prefix('backend')->group(function () {
     Route::get('/users', [BackendUserController::class, 'index'])->name('backend.users');
     Route::get('/users/{id}/edit', [BackendUserController::class, 'edit'])->name('backend.users.edit');
     Route::put('/users/{id}', [BackendUserController::class, 'update'])->name('backend.users.update');
+    Route::post('/users/{id}/ban-ip', [BackendUserController::class, 'banIp'])->name('backend.users.banIp');
+    Route::post('/users/{id}/unban-ip', [BackendUserController::class, 'unbanIp'])->name('backend.users.unbanIp');
     Route::delete('/users/{id}', [BackendUserController::class, 'destroy'])->name('backend.users.destroy');
 
     Route::get('/settings', [\App\Http\Controllers\Backend\SettingController::class, 'index'])->name('backend.settings');

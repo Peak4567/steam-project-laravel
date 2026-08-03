@@ -1,4 +1,4 @@
-<div x-data="{ sidebarOpen: false, sidebarCollapsed: true }" class="font-mitr">
+<div class="font-mitr">
     
     <div x-show="sidebarOpen" class="fixed inset-0 z-40 transition-opacity bg-slate-950/40 backdrop-blur-sm lg:hidden"
         @click="sidebarOpen = false" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" style="display: none;">
@@ -32,7 +32,16 @@
             </button>
         </div>
 
-        <nav class="flex-1 px-3 py-6 space-y-1.5 relative">
+        <div class="px-3 pt-4">
+            <a href="{{ route('home') }}"
+               :class="sidebarCollapsed ? 'lg:flex-col lg:py-3 lg:px-1 text-center' : 'flex-row px-4 py-2.5'"
+               class="flex items-center gap-3 text-xs font-bold transition-all rounded-xl duration-300 bg-slate-50 border border-slate-100 text-slate-500 hover:bg-blue-50 hover:text-[#5EBEE6] hover:border-blue-100">
+                <i class="fa-solid fa-arrow-left-long text-sm shrink-0" :class="sidebarCollapsed ? 'w-auto' : 'w-5 text-center'"></i>
+                <span class="tracking-wide" :class="sidebarCollapsed ? 'text-[8px] mt-0.5 font-bold' : 'text-xs font-bold'">กลับสู่หน้าเว็บไซต์หลัก</span>
+            </a>
+        </div>
+
+        <nav class="flex-1 px-3 py-4 space-y-1.5 relative">
 
             <a href="{{ route('backend.home') }}"
                :class="sidebarCollapsed ? 'lg:flex-col lg:py-3.5 lg:px-1 text-center' : 'flex-row px-4 py-3'"
@@ -41,10 +50,10 @@
                 <span class="tracking-wide" :class="sidebarCollapsed ? 'text-[9px] mt-1 font-bold' : 'text-sm font-medium'">แดชบอร์ด</span>
             </a>
 
-            <div x-data="{ open: false }" class="space-y-1" @click.away="open = false">
-                <button @click="open = !open" 
+            <div x-data="{ open: {{ request()->routeIs(['backend.projects*', 'backend.reports*', 'backend.activity*', 'backend.sheets*', 'backend.portfolios*']) ? 'true' : 'false' }} }" class="space-y-1" @click.away="open = false">
+                <button @click="open = !open"
                     :class="sidebarCollapsed ? 'lg:flex-col lg:py-3.5 lg:px-1 text-center' : 'flex-row px-4 py-3'"
-                    class="w-full flex items-center justify-between text-xs font-bold transition-all rounded-xl text-slate-500 hover:bg-slate-50 hover:text-[#5EBEE6] duration-300">
+                    class="w-full flex items-center justify-between text-xs font-bold transition-all rounded-xl duration-300 {{ request()->routeIs(['backend.projects*', 'backend.reports*', 'backend.activity*', 'backend.sheets*', 'backend.portfolios*']) ? 'bg-[#5EBEE6]/10 text-[#5EBEE6]' : 'text-slate-500 hover:bg-slate-50 hover:text-[#5EBEE6]' }}">
                     <div class="flex items-center gap-3" :class="sidebarCollapsed ? 'flex-col' : 'flex-row'">
                         <i class="fa-solid fa-layer-group text-base shrink-0" :class="sidebarCollapsed ? 'w-auto' : 'w-5 text-center'"></i>
                         <span class="tracking-wide" :class="sidebarCollapsed ? 'text-[9px] mt-1 font-bold' : 'text-sm font-medium'">ระบบจัดการ</span>
@@ -58,35 +67,35 @@
                     
                     <a href="{{route('backend.projects')}}" 
                        :class="sidebarCollapsed ? 'lg:flex lg:flex-col lg:items-center lg:justify-center lg:py-2.5 lg:px-1 text-center' : 'block py-2 text-xs relative before:content-[\'\'] before:absolute before:left-[-14px] before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-1 before:rounded-full before:bg-slate-300 hover:before:bg-[#5EBEE6]'"
-                       class="font-semibold text-slate-500 hover:text-[#5EBEE6] transition-colors" title="จัดการโครงงาน">
+                       class="font-semibold transition-colors {{ request()->routeIs('backend.projects*') ? 'text-[#5EBEE6]' : 'text-slate-500 hover:text-[#5EBEE6]' }}" title="จัดการโครงงาน">
                         <i x-show="sidebarCollapsed" class="fa-solid fa-folder-tree text-sm mb-1 text-slate-400 group-hover:text-[#5EBEE6]"></i>
                         <span :class="sidebarCollapsed ? 'text-[8px] font-bold scale-90' : 'text-xs'">จัดการโครงงาน</span>
                     </a>
                     
                     <a href="{{route('backend.reports')}}" 
                        :class="sidebarCollapsed ? 'lg:flex lg:flex-col lg:items-center lg:justify-center lg:py-2.5 lg:px-1 text-center' : 'block py-2 text-xs relative before:content-[\'\'] before:absolute before:left-[-14px] before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-1 before:rounded-full before:bg-slate-300 hover:before:bg-[#5EBEE6]'"
-                       class="font-semibold text-slate-500 hover:text-[#5EBEE6] transition-colors" title="จัดการเล่มโครงงาน">
+                       class="font-semibold transition-colors {{ request()->routeIs('backend.reports*') ? 'text-[#5EBEE6]' : 'text-slate-500 hover:text-[#5EBEE6]' }}" title="จัดการเล่มโครงงาน">
                         <i x-show="sidebarCollapsed" class="fa-solid fa-file-invoice text-sm mb-1 text-slate-400 group-hover:text-[#5EBEE6]"></i>
                         <span :class="sidebarCollapsed ? 'text-[8px] font-bold scale-90' : 'text-xs'">จัดการเล่มโครงงาน</span>
                     </a>
                     
                     <a href="{{route('backend.activity')}}" 
                        :class="sidebarCollapsed ? 'lg:flex lg:flex-col lg:items-center lg:justify-center lg:py-2.5 lg:px-1 text-center' : 'block py-2 text-xs relative before:content-[\'\'] before:absolute before:left-[-14px] before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-1 before:rounded-full before:bg-slate-300 hover:before:bg-[#5EBEE6]'"
-                       class="font-semibold text-slate-500 hover:text-[#5EBEE6] transition-colors" title="จัดการกิจกรรม">
+                       class="font-semibold transition-colors {{ request()->routeIs('backend.activity*') ? 'text-[#5EBEE6]' : 'text-slate-500 hover:text-[#5EBEE6]' }}" title="จัดการกิจกรรม">
                         <i x-show="sidebarCollapsed" class="fa-solid fa-calendar-check text-sm mb-1 text-slate-400 group-hover:text-[#5EBEE6]"></i>
                         <span :class="sidebarCollapsed ? 'text-[8px] font-bold scale-90' : 'text-xs'">จัดการกิจกรรม</span>
                     </a>
                     
                     <a href="{{ route('backend.sheets') }}" 
                        :class="sidebarCollapsed ? 'lg:flex lg:flex-col lg:items-center lg:justify-center lg:py-2.5 lg:px-1 text-center' : 'block py-2 text-xs relative before:content-[\'\'] before:absolute before:left-[-14px] before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-1 before:rounded-full before:bg-slate-300 hover:before:bg-[#5EBEE6]'"
-                       class="font-semibold text-slate-500 hover:text-[#5EBEE6] transition-colors" title="จัดการชีทสรุป">
+                       class="font-semibold transition-colors {{ request()->routeIs('backend.sheets*') ? 'text-[#5EBEE6]' : 'text-slate-500 hover:text-[#5EBEE6]' }}" title="จัดการชีทสรุป">
                         <i x-show="sidebarCollapsed" class="fa-solid fa-book-open-reader text-sm mb-1 text-slate-400 group-hover:text-[#5EBEE6]"></i>
                         <span :class="sidebarCollapsed ? 'text-[8px] font-bold scale-90' : 'text-xs'">จัดการชีทสรุป</span>
                     </a>
                     
                     <a href="{{ route('backend.portfolios') }}" 
                        :class="sidebarCollapsed ? 'lg:flex lg:flex-col lg:items-center lg:justify-center lg:py-2.5 lg:px-1 text-center' : 'justify-between py-2 text-xs relative before:content-[\'\'] before:absolute before:left-[-14px] before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-1 before:rounded-full before:bg-slate-300 hover:before:bg-[#5EBEE6]'"
-                       class="flex items-center font-semibold text-slate-500 hover:text-[#5EBEE6] transition-colors" title="จัดการพอร์ต">
+                       class="flex items-center font-semibold transition-colors {{ request()->routeIs('backend.portfolios*') ? 'text-[#5EBEE6]' : 'text-slate-500 hover:text-[#5EBEE6]' }}" title="จัดการพอร์ต">
                         <i x-show="sidebarCollapsed" class="fa-solid fa-address-card text-sm mb-1 text-slate-400 group-hover:text-[#5EBEE6]"></i>
                         <span :class="sidebarCollapsed ? 'text-[8px] font-bold scale-90' : 'text-xs'">จัดการพอร์ต</span>
                         <span :class="sidebarCollapsed ? 'hidden' : 'inline-block'" class="bg-orange-50 text-orange-500 py-0.5 px-2 rounded-md text-[9px] font-bold border border-orange-100/30 uppercase tracking-wide">New</span>
@@ -96,28 +105,41 @@
 
             <a href="{{ route('backend.users') }}"
                :class="sidebarCollapsed ? 'lg:flex-col lg:py-3.5 lg:px-1 text-center' : 'flex-row px-4 py-3'"
-               class="flex items-center gap-3 text-xs font-bold transition-all rounded-xl text-slate-500 hover:bg-slate-50 hover:text-[#5EBEE6] duration-300">
+               class="flex items-center gap-3 text-xs font-bold transition-all rounded-xl duration-300 {{ request()->routeIs('backend.users*') ? 'bg-[#5EBEE6]/10 text-[#5EBEE6]' : 'text-slate-500 hover:bg-slate-50 hover:text-[#5EBEE6]' }}">
                 <i class="fa-solid fa-users text-base shrink-0" :class="sidebarCollapsed ? 'w-auto' : 'w-5 text-center'"></i>
                 <span class="tracking-wide" :class="sidebarCollapsed ? 'text-[9px] mt-1 font-bold' : 'text-sm font-medium'">จัดการผู้ใช้</span>
             </a>
 
             <a href="{{ route('backend.ads') }}"
                :class="sidebarCollapsed ? 'lg:flex-col lg:py-3.5 lg:px-1 text-center' : 'flex-row px-4 py-3'"
-               class="flex items-center gap-3 text-xs font-bold transition-all rounded-xl text-slate-500 hover:bg-slate-50 hover:text-[#5EBEE6] duration-300">
+               class="flex items-center gap-3 text-xs font-bold transition-all rounded-xl duration-300 {{ request()->routeIs('backend.ads*') ? 'bg-[#5EBEE6]/10 text-[#5EBEE6]' : 'text-slate-500 hover:bg-slate-50 hover:text-[#5EBEE6]' }}">
                 <i class="fa-solid fa-bullhorn text-base shrink-0" :class="sidebarCollapsed ? 'w-auto' : 'w-5 text-center'"></i>
                 <span class="tracking-wide" :class="sidebarCollapsed ? 'text-[9px] mt-1 font-bold' : 'text-sm font-medium'">ตั้งค่าโฆษณา</span>
             </a>
 
             <a href="{{ route('backend.settings') }}"
                :class="sidebarCollapsed ? 'lg:flex-col lg:py-3.5 lg:px-1 text-center' : 'flex-row px-4 py-3'"
-               class="flex items-center gap-3 text-xs font-bold transition-all rounded-xl text-slate-500 hover:bg-slate-50 hover:text-[#5EBEE6] duration-300">
+               class="flex items-center gap-3 text-xs font-bold transition-all rounded-xl duration-300 {{ request()->routeIs('backend.settings*') ? 'bg-[#5EBEE6]/10 text-[#5EBEE6]' : 'text-slate-500 hover:bg-slate-50 hover:text-[#5EBEE6]' }}">
                 <i class="fa-solid fa-gear text-base shrink-0" :class="sidebarCollapsed ? 'w-auto' : 'w-5 text-center'"></i>
                 <span class="tracking-wide" :class="sidebarCollapsed ? 'text-[9px] mt-1 font-bold' : 'text-sm font-medium'">ตั้งค่าระบบ</span>
             </a>
 
         </nav>
 
-        <div class="p-3 border-t border-slate-50 shrink-0">
+        <div class="p-3 border-t border-slate-50 shrink-0 space-y-2">
+            <div class="flex items-center gap-2.5 bg-slate-50/70 rounded-xl p-2.5" :class="sidebarCollapsed ? 'lg:justify-center lg:p-1.5' : ''">
+                <div class="w-8 h-8 rounded-full border-2 border-white shadow-sm overflow-hidden shrink-0 bg-white flex items-center justify-center text-slate-300">
+                    @if (Auth::user()->profile)
+                        <img src="{{ asset('assets/img/profile/' . Auth::user()->profile) }}" class="w-full h-full object-cover" alt="Admin Photo">
+                    @else
+                        <i class="fa-solid fa-circle-user text-2xl"></i>
+                    @endif
+                </div>
+                <div class="min-w-0" x-show="!sidebarCollapsed">
+                    <p class="text-xs font-bold text-slate-800 truncate">{{ Auth::user()->nickname ?? Auth::user()->first_name }}</p>
+                    <p class="text-[9px] font-bold text-[#5EBEE6] uppercase tracking-wider">{{ Auth::user()->level }}</p>
+                </div>
+            </div>
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit"

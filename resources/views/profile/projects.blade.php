@@ -216,12 +216,12 @@
                                             <template x-for="user in filteredUsers()" :key="user.id">
                                                 <div class="flex items-center justify-between p-3 bg-slate-50/50 rounded-xl border border-slate-100/70">
                                                     <div class="flex items-center gap-3">
-                                                        <div class="w-9 h-9 rounded-full overflow-hidden border-2 border-white shadow-sm shrink-0">
+                                                        <div class="w-9 h-9 rounded-full overflow-hidden border-2 border-white shadow-sm shrink-0 bg-slate-50 flex items-center justify-center text-slate-300">
                                                             <template x-if="user.profile">
                                                                 <img :src="'{{ asset('assets/img/profile/') }}/' + user.profile" class="w-full h-full object-cover" alt="Profile">
                                                             </template>
                                                             <template x-if="!user.profile">
-                                                                <img :src="'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.first_name) + '&color=7F9CF5&background=EBF4FF'" class="w-full h-full object-cover" alt="Avatar">
+                                                                <i class="fa-solid fa-circle-user text-xl"></i>
                                                             </template>
                                                         </div>
                                                         <div>
@@ -270,11 +270,11 @@
                                     <tr class="border-b border-slate-50 hover:bg-slate-50/50 transition duration-200">
                                         <td class="py-3.5 pr-4">
                                             <div class="flex items-center gap-3">
-                                                <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-white shadow-sm shrink-0">
+                                                <div class="w-8 h-8 rounded-full overflow-hidden border-2 border-white shadow-sm shrink-0 bg-slate-50 flex items-center justify-center text-slate-300">
                                                     @if ($member->profile)
                                                         <img src="{{ asset('assets/img/profile/' . $member->profile) }}" class="w-full h-full object-cover" alt="Profile">
                                                     @else
-                                                        <img src="https://ui-avatars.com/api/?name={{ urlencode($member->first_name) }}&color=7F9CF5&background=EBF4FF" class="w-full h-full object-cover" alt="Avatar">
+                                                        <i class="fa-solid fa-circle-user text-lg"></i>
                                                     @endif
                                                 </div>
                                                 <span class="font-bold text-slate-800">{{ $member->first_name }}</span>

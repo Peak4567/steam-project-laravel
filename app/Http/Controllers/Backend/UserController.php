@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\BannedIp;
+use App\Models\LoginLog;
+use App\Models\Portfolio;
+use App\Models\Sheet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -31,7 +35,21 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = DB::table('users')->where('id', $id)->first();
-        return view('backend.users_edit', compact('user'));
+
+        $loginLogs = LoginLog::where('user_id', $id)->latest()->take(10)->get();
+
+        $bannedIp = $user->last_login_ip
+            ? BannedIp::where('ip_address', $user->last_login_ip)->first()
+            : null;
+
+        $stats = [
+            'portfolios' => Portfolio::where('user_id', $id)->count(),
+            'sheets'     => Sheet::where('user_id', $id)->count(),
+            'sheet_downloads' => (int) Sheet::where('user_id', $id)->sum('downloads'),
+            'projects'   => DB::table('project_members')->where('user_id', $id)->count(),
+        ];
+
+        return view('backend.users_edit', compact('user', 'loginLogs', 'bannedIp', 'stats'));
     }
 
     public function update(Request $request, $id)
@@ -80,5 +98,58 @@ class UserController extends Controller
 
         DB::table('users')->where('id', $id)->delete();
         return back()->with('success', 'deleted user successfully');
+    }
+
+    public function banIp(Request $request, $id)
+    {
+        if (Auth::id() == $id) {
+            return back()->with('error', 'ไม่สามารถแบนไอพีของบัญชีตัวเองได้');
+        }
+
+        $request->validate([
+            'reason' => 'nullable|string|max:255',
+        ]);
+
+        $user = DB::table('users')->where('id', $id)->first();
+
+        if (!$user || !$user->last_login_ip) {
+            return back()->with('error', 'ไม่พบข้อมูลไอพีของผู้ใช้งานรายนี้ (ยังไม่เคยเข้าสู่ระบบ)');
+        }
+
+        BannedIp::updateOrCreate(
+            ['ip_address' => $user->last_login_ip],
+            ['reason' => $request->reason, 'banned_by' => Auth::id()]
+        );
+
+        DB::table('users')
+            ->where('last_login_ip', $user->last_login_ip)
+            ->update([
+                'is_banned' => 1,
+                'banned_at' => now(),
+                'ban_reason' => $request->reason,
+            ]);
+
+        return back()->with('success', 'แบนไอพี ' . $user->last_login_ip . ' เรียบร้อยแล้ว');
+    }
+
+    public function unbanIp($id)
+    {
+        $user = DB::table('users')->where('id', $id)->first();
+
+        if (!$user || !$user->last_login_ip) {
+            return back()->with('error', 'ไม่พบข้อมูลไอพีของผู้ใช้งานรายนี้');
+        }
+
+        BannedIp::where('ip_address', $user->last_login_ip)->delete();
+
+        DB::table('users')
+            ->where('last_login_ip', $user->last_login_ip)
+            ->update([
+                'is_banned' => 0,
+                'banned_at' => null,
+                'ban_reason' => null,
+            ]);
+
+        return back()->with('success', 'ปลดแบนไอพี ' . $user->last_login_ip . ' เรียบร้อยแล้ว');
     }
 }
